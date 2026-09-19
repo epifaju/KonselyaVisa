@@ -1,0 +1,178 @@
+{
+  "login": {
+    "title": "KonselyaVisa",
+    "subtitle": "Back-office do agente — processos consulares",
+    "cta": "Entrar",
+    "logout": "Sair",
+    "hint": "Acesso reservado a agentes, supervisores e administradores.",
+    "forbidden": "Esta conta não tem o papel de agente. Use agent.dev / AgentDev!23.",
+    "callback": "A concluir o início de sessão…",
+    "error": "Falha no início de sessão. Tente novamente."
+  },
+  "language": { "fr": "Français", "pt": "Português", "en": "English" },
+  "nav": { "cases": "Processos", "slots": "Horários", "catalog": "Catálogo" },
+  "common": { "loading": "A carregar…", "error": "Ocorreu um erro.", "back": "Voltar" },
+  "queue": {
+    "title": "Fila de processos",
+    "filter": "Estado",
+    "all": "Todos",
+    "reference": "Referência",
+    "applicant": "Requerente",
+    "procedure": "Procedimento",
+    "status": "Estado",
+    "open": "Abrir",
+    "empty": "Nenhum processo para este filtro.",
+    "age": "Antiguidade",
+    "ageHint": "Do mais antigo. Laranja a 50 % do prazo de instrução, vermelho depois (senão 48 h / 5 d).",
+    "ageHours_one": "{{count}} h",
+    "ageHours_other": "{{count}} h",
+    "ageDays_one": "{{count}} d",
+    "ageDays_other": "{{count}} d",
+    "slaDays_one": "{{count}} d",
+    "slaDays_other": "{{count}} d",
+    "next": "Seguinte",
+    "nextAction": {
+      "UPLOAD_DOCUMENTS": "Peças",
+      "CORRECT_DOCUMENTS": "Correção",
+      "PAY": "Pagamento",
+      "WAIT_MANUAL_PAYMENT": "Pagamento manual",
+      "BOOK_APPOINTMENT": "Marcação",
+      "WAIT_PROCESSING": "Instrução",
+      "NONE": "—"
+    }
+  },
+  "case": {
+    "applicant": "Requerente",
+    "facts": "Factos de elegibilidade",
+    "procedure": "Procedimento",
+    "documents": "Documentos",
+    "payments": "Pagamentos",
+    "appointments": "Marcações",
+    "download": "Descarregar",
+    "accept": "Aceitar",
+    "correct": "Pedir correção",
+    "sendCorrection": "Enviar o pedido de correção",
+    "reject": "Rejeitar",
+    "confirmPayment": "Validar pagamento manual",
+    "reasonLabel": "Motivo (lista)",
+    "reasonNote": "Nota interna facultativa",
+    "reasonNotePlaceholder": "Complemento livre, se necessário",
+    "reasonPlaceholder": "Motivo (correção / rejeição)",
+    "defaultReason": "Documento a corrigir",
+    "duplicate": "hash já visto",
+    "noDocuments": "Nenhum documento.",
+    "noOrders": "Nenhuma encomenda.",
+    "noAppointments": "Nenhuma marcação."
+  },
+  "slots": {
+    "title": "Horários",
+    "startsAt": "Início",
+    "endsAt": "Fim",
+    "capacity": "Capacidade",
+    "location": "Local",
+    "create": "Criar horário",
+    "cancel": "Cancelar",
+    "remaining": "{{remaining}} / {{capacity}} lugares"
+  },
+  "catalog": {
+    "title": "Catálogo de procedimentos",
+    "subtitle": "Edite nomes, documentos exigidos e JSONLogic, depois publique uma versão. Os processos abertos mantêm a versão congelada.",
+    "empty": "Nenhum procedimento.",
+    "code": "Código",
+    "name": "Nome",
+    "corridor": "Corredor",
+    "category": "Categoria",
+    "version": "Versão publicada",
+    "status": "Estado",
+    "edit": "Editar",
+    "names": "Rótulos",
+    "nameFr": "Nome (FR)",
+    "namePt": "Nome (PT)",
+    "nameEn": "Nome (EN)",
+    "descriptionFr": "Descrição (FR)",
+    "saveNames": "Guardar rótulos",
+    "versions": "Versões",
+    "draftTitle": "Rascunho v{{version}}",
+    "saveDraft": "Guardar rascunho",
+    "publish": "Publicar esta versão",
+    "noDraft": "Sem rascunho. Crie uma versão para alterar exigências e regras sem tocar nos processos congelados.",
+    "newVersion": "Criar versão rascunho",
+    "requirements": "Documentos exigidos",
+    "reqCode": "Código",
+    "reqRequired": "Obrigatório",
+    "addRequirement": "Adicionar documento",
+    "jsonLogic": "Regras de elegibilidade (JSONLogic)",
+    "estimatedDays": "Prazo estimado de instrução (dias)",
+    "estimatedDaysHint": "Congelado em cada processo na criação. Alterar uma versão publicada exige um novo rascunho.",
+    "daysShort_one": "{{count}} d",
+    "daysShort_other": "{{count}} d",
+    "jsonInvalid": "JSONLogic inválido: corrija o objeto JSON antes de guardar ou publicar.",
+    "freezeHint": "Publicar uma versão não atualiza os processos já criados. Eles conservam a versão congelada na abertura.",
+    "versionStatus": {
+      "DRAFT": "Rascunho",
+      "PUBLISHED": "Publicada",
+      "ARCHIVED": "Arquivada"
+    }
+  },
+  "status": {
+    "case": {
+      "CREATED": "Criado",
+      "IN_PROGRESS": "Em curso",
+      "CORRECTION_REQUESTED": "Correção pedida",
+      "COMPLETED": "Concluído",
+      "CANCELLED": "Cancelado"
+    },
+    "document": {
+      "UPLOADED": "Enviado",
+      "ACCEPTED": "Aceite",
+      "CORRECTION_REQUESTED": "Correção",
+      "REPLACED": "Substituído",
+      "REJECTED": "Rejeitado"
+    },
+    "order": {
+      "PENDING_PAYMENT": "Pagamento pendente",
+      "PENDING_MANUAL": "Validação manual",
+      "PAID": "Pago",
+      "CANCELLED": "Cancelado"
+    },
+    "payment": {
+      "PENDING": "Pendente",
+      "PENDING_MANUAL": "Manual",
+      "COMPLETED": "Concluído",
+      "FAILED": "Falhou"
+    },
+    "appointment": { "BOOKED": "Reservado", "CANCELLED": "Cancelado", "COMPLETED": "Concluído" },
+    "slot": { "OPEN": "Aberto", "CANCELLED": "Cancelado" }
+  },
+  "supervisor": {
+    "overdueAlert_one": "{{count}} processo espera há mais de 5 dias.",
+    "overdueAlert_other": "{{count}} processos esperam há mais de 5 dias.",
+    "openOverdue": "Abrir processos fora de prazo",
+    "open": "Processos abertos",
+    "watch": "A vigiar (48 h+)",
+    "breach": "Fora de prazo (5 d+)"
+  },
+  "history": {
+    "title": "Histórico",
+    "empty": "Nenhum evento.",
+    "actor": { "CITIZEN": "Cidadão", "AGENT": "Agente", "SYSTEM": "Sistema" },
+    "event": {
+      "CASE_CREATED": "O processo foi criado.",
+      "DOCUMENT_UPLOADED": "Um documento foi enviado.",
+      "PAYMENT_COMPLETED": "O pagamento foi confirmado.",
+      "APPOINTMENT_BOOKED": "Foi reservada uma marcação.",
+      "APPOINTMENT_CANCELLED": "Uma marcação foi cancelada.",
+      "CORRECTION_REQUESTED": "Foi pedida uma correção.",
+      "CASE_COMPLETED": "O processo foi encerrado."
+    }
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Documento ilegível ou desfocada",
+      "incomplete": "Documento incompleto",
+      "expired": "Documento caducado",
+      "photo_spec": "Fotografia não conforme",
+      "mismatch": "Identidade não coincidente"
+    }
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "login": {
+    "title": "KonselyaVisa",
+    "subtitle": "Back-office agent — dossiers consulaires",
+    "cta": "Se connecter",
+    "logout": "Se déconnecter",
+    "hint": "Connexion réservée aux agents, superviseurs et administrateurs.",
+    "forbidden": "Ce compte n’a pas le rôle agent. Utilisez agent.dev / AgentDev!23.",
+    "callback": "Finalisation de la connexion…",
+    "error": "La connexion a échoué. Réessayez."
+  },
+  "language": { "fr": "Français", "pt": "Português", "en": "English" },
+  "nav": { "cases": "Dossiers", "slots": "Créneaux", "catalog": "Catalogue" },
+  "common": { "loading": "Chargement…", "error": "Une erreur s’est produite.", "back": "Retour" },
+  "queue": {
+    "title": "File des dossiers",
+    "filter": "Statut",
+    "all": "Tous",
+    "reference": "Référence",
+    "applicant": "Demandeur",
+    "procedure": "Procédure",
+    "status": "Statut",
+    "open": "Ouvrir",
+    "empty": "Aucun dossier pour ce filtre.",
+    "age": "Ancienneté",
+    "ageHint": "Tri du plus ancien. Orange à 50 % du délai d’instruction, rouge au-delà (sinon 48 h / 5 j).",
+    "ageHours_one": "{{count}} h",
+    "ageHours_other": "{{count}} h",
+    "ageDays_one": "{{count}} j",
+    "ageDays_other": "{{count}} j",
+    "slaDays_one": "{{count}} j",
+    "slaDays_other": "{{count}} j",
+    "next": "Suite",
+    "nextAction": {
+      "UPLOAD_DOCUMENTS": "Pièces",
+      "CORRECT_DOCUMENTS": "Correction",
+      "PAY": "Paiement",
+      "WAIT_MANUAL_PAYMENT": "Paiement manuel",
+      "BOOK_APPOINTMENT": "RDV",
+      "WAIT_PROCESSING": "Instruction",
+      "NONE": "—"
+    }
+  },
+  "case": {
+    "applicant": "Demandeur",
+    "facts": "Faits d’éligibilité",
+    "procedure": "Procédure",
+    "documents": "Pièces",
+    "payments": "Paiements",
+    "appointments": "Rendez-vous",
+    "download": "Télécharger",
+    "accept": "Accepter",
+    "correct": "Demander une correction",
+    "sendCorrection": "Envoyer la demande de correction",
+    "reject": "Rejeter",
+    "confirmPayment": "Valider le paiement manuel",
+    "reasonLabel": "Motif (liste)",
+    "reasonNote": "Précision facultative (visible interne)",
+    "reasonNotePlaceholder": "Complément libre, si besoin",
+    "reasonPlaceholder": "Motif (correction / rejet)",
+    "defaultReason": "Pièce à corriger",
+    "duplicate": "hash déjà vu",
+    "noDocuments": "Aucune pièce déposée.",
+    "noOrders": "Aucune commande.",
+    "noAppointments": "Aucun rendez-vous."
+  },
+  "slots": {
+    "title": "Créneaux",
+    "startsAt": "Début",
+    "endsAt": "Fin",
+    "capacity": "Capacité",
+    "location": "Lieu (FR)",
+    "create": "Créer le créneau",
+    "cancel": "Annuler",
+    "remaining": "{{remaining}} / {{capacity}} places"
+  },
+  "catalog": {
+    "title": "Catalogue des procédures",
+    "subtitle": "Éditer les libellés, les pièces exigées et les règles JSONLogic, puis publier une version. Les dossiers déjà ouverts gardent leur version.",
+    "empty": "Aucune procédure.",
+    "code": "Code",
+    "name": "Nom",
+    "corridor": "Corridor",
+    "category": "Catégorie",
+    "version": "Version publiée",
+    "status": "Statut",
+    "edit": "Éditer",
+    "names": "Libellés",
+    "nameFr": "Nom (FR)",
+    "namePt": "Nom (PT)",
+    "nameEn": "Nom (EN)",
+    "descriptionFr": "Description (FR)",
+    "saveNames": "Enregistrer les libellés",
+    "versions": "Versions",
+    "draftTitle": "Brouillon v{{version}}",
+    "saveDraft": "Enregistrer le brouillon",
+    "publish": "Publier cette version",
+    "noDraft": "Aucun brouillon. Créez une version pour modifier exigences et règles sans toucher aux dossiers figés.",
+    "newVersion": "Créer une version brouillon",
+    "requirements": "Pièces exigées",
+    "reqCode": "Code",
+    "reqRequired": "Obligatoire",
+    "addRequirement": "Ajouter une pièce",
+    "jsonLogic": "Règles d’éligibilité (JSONLogic)",
+    "estimatedDays": "Délai d’instruction estimé (jours)",
+    "estimatedDaysHint": "Figé sur chaque dossier à sa création. Modifier une version publiée exige un nouveau brouillon.",
+    "daysShort_one": "{{count}} j",
+    "daysShort_other": "{{count}} j",
+    "jsonInvalid": "JSONLogic invalide : corrigez l’objet JSON avant d’enregistrer ou de publier.",
+    "freezeHint": "Publier une version n’actualise pas les dossiers déjà créés. Ils conservent la version figée à l’ouverture.",
+    "versionStatus": {
+      "DRAFT": "Brouillon",
+      "PUBLISHED": "Publiée",
+      "ARCHIVED": "Archivée"
+    }
+  },
+  "status": {
+    "case": {
+      "CREATED": "Créé",
+      "IN_PROGRESS": "En cours",
+      "CORRECTION_REQUESTED": "Correction demandée",
+      "COMPLETED": "Terminé",
+      "CANCELLED": "Annulé"
+    },
+    "document": {
+      "UPLOADED": "Déposé",
+      "ACCEPTED": "Accepté",
+      "CORRECTION_REQUESTED": "Correction",
+      "REPLACED": "Remplacé",
+      "REJECTED": "Rejeté"
+    },
+    "order": {
+      "PENDING_PAYMENT": "Paiement en attente",
+      "PENDING_MANUAL": "Validation manuelle",
+      "PAID": "Payé",
+      "CANCELLED": "Annulé"
+    },
+    "payment": {
+      "PENDING": "En attente",
+      "PENDING_MANUAL": "Manuel",
+      "COMPLETED": "Complété",
+      "FAILED": "Échoué"
+    },
+    "appointment": { "BOOKED": "Réservé", "CANCELLED": "Annulé", "COMPLETED": "Honoré" },
+    "slot": { "OPEN": "Ouvert", "CANCELLED": "Annulé" }
+  },
+  "supervisor": {
+    "overdueAlert_one": "{{count}} dossier dépasse 5 jours d’attente.",
+    "overdueAlert_other": "{{count}} dossiers dépassent 5 jours d’attente.",
+    "openOverdue": "Ouvrir les dossiers hors délai",
+    "open": "Dossiers ouverts",
+    "watch": "À surveiller (48 h+)",
+    "breach": "Hors délai (5 j+)"
+  },
+  "history": {
+    "title": "Historique",
+    "empty": "Aucun événement.",
+    "actor": { "CITIZEN": "Citoyen", "AGENT": "Agent", "SYSTEM": "Système" },
+    "event": {
+      "CASE_CREATED": "Le dossier a été créé.",
+      "DOCUMENT_UPLOADED": "Une pièce a été déposée.",
+      "PAYMENT_COMPLETED": "Le paiement a été confirmé.",
+      "APPOINTMENT_BOOKED": "Un rendez-vous a été réservé.",
+      "APPOINTMENT_CANCELLED": "Un rendez-vous a été annulé.",
+      "CORRECTION_REQUESTED": "Une correction a été demandée.",
+      "CASE_COMPLETED": "Le dossier a été clôturé."
+    }
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Pièce illisible ou floue",
+      "incomplete": "Pièce incomplète",
+      "expired": "Document périmé",
+      "photo_spec": "Photo non conforme",
+      "mismatch": "Identité non concordante"
+    }
+  }
+}

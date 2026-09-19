@@ -1,0 +1,290 @@
+name: konselyavisa
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: konselyavisa-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-konselyavisa}
+      POSTGRES_USER: ${POSTGRES_USER:-konselyavisa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-konselyavisa}
+    ports:
+      - "${POSTGRES_PORT:-5438}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-konselyavisa} -d ${POSTGRES_DB:-konselyavisa}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - konselyavisa
+
+  redis:
+    image: redis:7-alpine
+    container_name: konselyavisa-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6388}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - konselyavisa
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.5
+    container_name: konselyavisa-keycloak
+    command: ["start-dev", "--import-realm", "--http-enabled=true", "--hostname-strict=false"]
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME: ${KC_HOSTNAME:-http://localhost:8081}
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "${KEYCLOAK_PORT:-8081}:8080"
+    volumes:
+      - ./keycloak/konselyavisa-realm.json:/opt/keycloak/data/import/konselyavisa-realm.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    networks:
+      - konselyavisa
+
+  minio:
+    image: minio/minio:latest
+    container_name: konselyavisa-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioDevPass1}
+    ports:
+      - "${MINIO_API_PORT:-9010}:9000"
+      - "${MINIO_CONSOLE_PORT:-9011}:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - konselyavisa
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: konselyavisa-mailpit
+    ports:
+      - "${MAILPIT_SMTP_PORT:-1029}:1025"
+      - "${MAILPIT_UI_PORT:-8029}:8025"
+    networks:
+      - konselyavisa
+
+  tempo:
+    image: grafana/tempo:2.7.2
+    container_name: konselyavisa-tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo_data:/var/tempo
+    ports:
+      - "${TEMPO_PORT:-13200}:3200"
+    networks:
+      - konselyavisa
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: konselyavisa-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "${PROMETHEUS_PORT:-19090}:9090"
+    networks:
+      - konselyavisa
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    container_name: konselyavisa-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_DEFAULT_THEME: light
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    ports:
+      - "${GRAFANA_PORT:-13000}:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - tempo
+    networks:
+      - konselyavisa
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.128.0
+    container_name: konselyavisa-otel-collector
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./otel/otel-collector.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "${OTEL_GRPC_PORT:-14317}:4317"
+      - "${OTEL_HTTP_PORT:-14318}:4318"
+    depends_on:
+      - tempo
+    networks:
+      - konselyavisa
+
+  n8n:
+    image: n8nio/n8n:1.81.4
+    container_name: konselyavisa-n8n
+    command: ["start"]
+    environment:
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      N8N_SECURE_COOKIE: "false"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      WEBHOOK_URL: ${N8N_WEBHOOK_PUBLIC_URL:-http://localhost:15678/}
+      GENERIC_TIMEZONE: Europe/Paris
+      KONSELYAVISA_NOTIFY_TO: ${KONSELYAVISA_NOTIFY_TO:-notify@konselyavisa.local}
+    ports:
+      - "${N8N_PORT:-15678}:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5678/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      - konselyavisa
+
+  n8n-init:
+    image: n8nio/n8n:1.81.4
+    container_name: konselyavisa-n8n-init
+    depends_on:
+      n8n:
+        condition: service_started
+    environment:
+      N8N_BASE_URL: http://n8n:5678
+      N8N_OWNER_EMAIL: ${N8N_OWNER_EMAIL:-n8n@konselyavisa.local}
+      N8N_OWNER_PASSWORD: ${N8N_OWNER_PASSWORD:-N8nDev!23}
+      MAILPIT_HOST: mailpit
+      MAILPIT_SMTP_PORT: "1025"
+    volumes:
+      - ./n8n:/import:ro
+    entrypoint: ["node", "/import/bootstrap.js"]
+    restart: on-failure
+    networks:
+      - konselyavisa
+
+  backend:
+    build:
+      context: ../backend/konselyavisa-api
+      dockerfile: Dockerfile
+    container_name: konselyavisa-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-konselyavisa}
+      SPRING_DATASOURCE_USERNAME: konselyavisa_app
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-konselyavisa}
+      SPRING_FLYWAY_USER: ${POSTGRES_USER:-konselyavisa}
+      SPRING_FLYWAY_PASSWORD: ${POSTGRES_PASSWORD:-konselyavisa}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: ${OIDC_ISSUER:-http://localhost:8081/realms/konselyavisa}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: ${OIDC_INTERNAL_ISSUER:-http://keycloak:8080/realms/konselyavisa}/protocol/openid-connect/certs
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: "6379"
+      KONSELYAVISA_REDIS_ENABLED: "true"
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: http://otel-collector:4318/v1/traces
+      KONSELYAVISA_STORAGE_ENDPOINT: http://minio:9000
+      KONSELYAVISA_STORAGE_ACCESS_KEY: ${MINIO_ROOT_USER:-minio}
+      KONSELYAVISA_STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioDevPass1}
+      KONSELYAVISA_OUTBOX_WEBHOOK_URL: ${KONSELYAVISA_OUTBOX_WEBHOOK_URL:-http://n8n:5678/webhook/konselyavisa-outbox}
+      KONSELYAVISA_OUTBOX_WEBHOOK_SECRET: ${KONSELYAVISA_OUTBOX_WEBHOOK_SECRET:-konselya-outbox-dev}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      STRIPE_SUCCESS_URL: ${STRIPE_SUCCESS_URL:-http://localhost:5175/?stripe=success}
+      STRIPE_CANCEL_URL: ${STRIPE_CANCEL_URL:-http://localhost:5175/?stripe=cancel}
+      CINETPAY_API_KEY: ${CINETPAY_API_KEY:-}
+      CINETPAY_SITE_ID: ${CINETPAY_SITE_ID:-}
+      CINETPAY_SECRET_KEY: ${CINETPAY_SECRET_KEY:-}
+      CINETPAY_NOTIFY_URL: ${CINETPAY_NOTIFY_URL:-http://localhost:18083/api/v1/payments/webhooks/CINETPAY}
+      CINETPAY_RETURN_URL: ${CINETPAY_RETURN_URL:-http://localhost:5175/?cinetpay=return}
+    ports:
+      - "${BACKEND_PORT:-18083}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      otel-collector:
+        condition: service_started
+      n8n:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    networks:
+      - konselyavisa
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: konselyavisa-nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "${NGINX_PORT:-18080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - konselyavisa
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  n8n_data:
+  prometheus_data:
+  grafana_data:
+  tempo_data:
+
+networks:
+  konselyavisa:
+    name: konselyavisa

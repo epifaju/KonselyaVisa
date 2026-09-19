@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5438/konselyavisa
+    username: konselyavisa_app
+    password: konselyavisa
+  flyway:
+    user: konselyavisa
+    password: konselyavisa
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:1/realms/konselyavisa/protocol/openid-connect/certs
+management:
+  tracing:
+    enabled: false
+  otlp:
+    tracing:
+      export:
+        enabled: false
+konselyavisa:
+  redis:
+    enabled: false
+  storage:
+    endpoint: http://127.0.0.1:1
+    bucket: konselyavisa-docs
+    access-key: test
+    secret-key: test
+    auto-create-bucket: false
+  outbox:
+    enabled: false

@@ -1,0 +1,178 @@
+{
+  "login": {
+    "title": "KonselyaVisa",
+    "subtitle": "Agent back office — consular cases",
+    "cta": "Sign in",
+    "logout": "Sign out",
+    "hint": "Sign-in is reserved for agents, supervisors and administrators.",
+    "forbidden": "This account is not an agent. Use agent.dev / AgentDev!23.",
+    "callback": "Completing sign-in…",
+    "error": "Sign-in failed. Please try again."
+  },
+  "language": { "fr": "Français", "pt": "Português", "en": "English" },
+  "nav": { "cases": "Cases", "slots": "Slots", "catalog": "Catalog" },
+  "common": { "loading": "Loading…", "error": "Something went wrong.", "back": "Back" },
+  "queue": {
+    "title": "Case queue",
+    "filter": "Status",
+    "all": "All",
+    "reference": "Reference",
+    "applicant": "Applicant",
+    "procedure": "Procedure",
+    "status": "Status",
+    "open": "Open",
+    "empty": "No cases for this filter.",
+    "age": "Age",
+    "ageHint": "Oldest first. Amber at 50% of the instruction SLA, red when exceeded (else 48 h / 5 days).",
+    "ageHours_one": "{{count}} h",
+    "ageHours_other": "{{count}} h",
+    "ageDays_one": "{{count}} d",
+    "ageDays_other": "{{count}} d",
+    "slaDays_one": "{{count}} d",
+    "slaDays_other": "{{count}} d",
+    "next": "Next",
+    "nextAction": {
+      "UPLOAD_DOCUMENTS": "Docs",
+      "CORRECT_DOCUMENTS": "Correction",
+      "PAY": "Payment",
+      "WAIT_MANUAL_PAYMENT": "Manual pay",
+      "BOOK_APPOINTMENT": "Appointment",
+      "WAIT_PROCESSING": "Review",
+      "NONE": "—"
+    }
+  },
+  "case": {
+    "applicant": "Applicant",
+    "facts": "Eligibility facts",
+    "procedure": "Procedure",
+    "documents": "Documents",
+    "payments": "Payments",
+    "appointments": "Appointments",
+    "download": "Download",
+    "accept": "Accept",
+    "correct": "Request correction",
+    "sendCorrection": "Send correction request",
+    "reject": "Reject",
+    "confirmPayment": "Confirm manual payment",
+    "reasonLabel": "Reason (list)",
+    "reasonNote": "Optional internal note",
+    "reasonNotePlaceholder": "Free-text complement if needed",
+    "reasonPlaceholder": "Reason (correction / rejection)",
+    "defaultReason": "Document needs correction",
+    "duplicate": "hash already seen",
+    "noDocuments": "No documents uploaded.",
+    "noOrders": "No orders.",
+    "noAppointments": "No appointments."
+  },
+  "slots": {
+    "title": "Appointment slots",
+    "startsAt": "Start",
+    "endsAt": "End",
+    "capacity": "Capacity",
+    "location": "Location",
+    "create": "Create slot",
+    "cancel": "Cancel",
+    "remaining": "{{remaining}} / {{capacity}} seats"
+  },
+  "catalog": {
+    "title": "Procedure catalog",
+    "subtitle": "Edit names, document requirements and JSONLogic, then publish a version. Open cases keep the version frozen at creation.",
+    "empty": "No procedures.",
+    "code": "Code",
+    "name": "Name",
+    "corridor": "Corridor",
+    "category": "Category",
+    "version": "Published version",
+    "status": "Status",
+    "edit": "Edit",
+    "names": "Labels",
+    "nameFr": "Name (FR)",
+    "namePt": "Name (PT)",
+    "nameEn": "Name (EN)",
+    "descriptionFr": "Description (FR)",
+    "saveNames": "Save labels",
+    "versions": "Versions",
+    "draftTitle": "Draft v{{version}}",
+    "saveDraft": "Save draft",
+    "publish": "Publish this version",
+    "noDraft": "No draft. Create a version to change requirements and rules without touching frozen cases.",
+    "newVersion": "Create a draft version",
+    "requirements": "Required documents",
+    "reqCode": "Code",
+    "reqRequired": "Required",
+    "addRequirement": "Add a document",
+    "jsonLogic": "Eligibility rules (JSONLogic)",
+    "estimatedDays": "Estimated processing time (days)",
+    "estimatedDaysHint": "Frozen on each case at creation. Changing a published version requires a new draft.",
+    "daysShort_one": "{{count}} d",
+    "daysShort_other": "{{count}} d",
+    "jsonInvalid": "Invalid JSONLogic: fix the JSON object before saving or publishing.",
+    "freezeHint": "Publishing a version does not update cases already created. They keep the version frozen when the case was opened.",
+    "versionStatus": {
+      "DRAFT": "Draft",
+      "PUBLISHED": "Published",
+      "ARCHIVED": "Archived"
+    }
+  },
+  "status": {
+    "case": {
+      "CREATED": "Created",
+      "IN_PROGRESS": "In progress",
+      "CORRECTION_REQUESTED": "Correction requested",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "document": {
+      "UPLOADED": "Uploaded",
+      "ACCEPTED": "Accepted",
+      "CORRECTION_REQUESTED": "Correction",
+      "REPLACED": "Replaced",
+      "REJECTED": "Rejected"
+    },
+    "order": {
+      "PENDING_PAYMENT": "Pending payment",
+      "PENDING_MANUAL": "Manual review",
+      "PAID": "Paid",
+      "CANCELLED": "Cancelled"
+    },
+    "payment": {
+      "PENDING": "Pending",
+      "PENDING_MANUAL": "Manual",
+      "COMPLETED": "Completed",
+      "FAILED": "Failed"
+    },
+    "appointment": { "BOOKED": "Booked", "CANCELLED": "Cancelled", "COMPLETED": "Completed" },
+    "slot": { "OPEN": "Open", "CANCELLED": "Cancelled" }
+  },
+  "supervisor": {
+    "overdueAlert_one": "{{count}} case has been waiting more than 5 days.",
+    "overdueAlert_other": "{{count}} cases have been waiting more than 5 days.",
+    "openOverdue": "Open overdue cases",
+    "open": "Open cases",
+    "watch": "Watch (48h+)",
+    "breach": "Overdue (5d+)"
+  },
+  "history": {
+    "title": "History",
+    "empty": "No events.",
+    "actor": { "CITIZEN": "Citizen", "AGENT": "Agent", "SYSTEM": "System" },
+    "event": {
+      "CASE_CREATED": "The case was created.",
+      "DOCUMENT_UPLOADED": "A document was uploaded.",
+      "PAYMENT_COMPLETED": "Payment was confirmed.",
+      "APPOINTMENT_BOOKED": "An appointment was booked.",
+      "APPOINTMENT_CANCELLED": "An appointment was cancelled.",
+      "CORRECTION_REQUESTED": "A correction was requested.",
+      "CASE_COMPLETED": "The case was closed."
+    }
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Document is unreadable or blurry",
+      "incomplete": "Document is incomplete",
+      "expired": "Document has expired",
+      "photo_spec": "Photo does not meet requirements",
+      "mismatch": "Identity does not match"
+    }
+  }
+}

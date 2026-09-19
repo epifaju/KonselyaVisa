@@ -1,0 +1,117 @@
+spring:
+  application:
+    name: konselyavisa-api
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6388}
+  jackson:
+    default-property-inclusion: non_null
+  datasource:
+    username: ${SPRING_DATASOURCE_USERNAME:konselyavisa_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:konselyavisa}
+    hikari:
+      auto-commit: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    user: ${SPRING_FLYWAY_USER:konselyavisa}
+    password: ${SPRING_FLYWAY_PASSWORD:${SPRING_DATASOURCE_PASSWORD:konselyavisa}}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        connection:
+          provider_disables_autocommit: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OIDC_ISSUER:http://localhost:8081/realms/konselyavisa}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  tracing:
+    sampling:
+      probability: 1.0
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  otlp:
+    tracing:
+      endpoint: ${MANAGEMENT_OTLP_TRACING_ENDPOINT:http://localhost:4318/v1/traces}
+
+server:
+  port: 8080
+  error:
+    include-message: never
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+konselyavisa:
+  redis:
+    enabled: ${KONSELYAVISA_REDIS_ENABLED:true}
+    slot-hold-ttl: 2m
+    catalog-ttl: 2m
+    write-per-minute: 60
+    read-per-minute: 300
+  cors:
+    allowed-origins: http://localhost:5175,http://127.0.0.1:5175,http://localhost:5176,http://127.0.0.1:5176,http://localhost:18080,http://127.0.0.1:18080
+  storage:
+    endpoint: ${KONSELYAVISA_STORAGE_ENDPOINT:http://localhost:9010}
+    region: ${KONSELYAVISA_STORAGE_REGION:us-east-1}
+    bucket: ${KONSELYAVISA_STORAGE_BUCKET:konselyavisa-docs}
+    access-key: ${KONSELYAVISA_STORAGE_ACCESS_KEY:${MINIO_ROOT_USER:minio}}
+    secret-key: ${KONSELYAVISA_STORAGE_SECRET_KEY:${MINIO_ROOT_PASSWORD:minioDevPass1}}
+    auto-create-bucket: true
+  outbox:
+    enabled: true
+    poll-ms: 5000
+    batch-size: 20
+    max-attempts: 8
+    initial-backoff: 2s
+    max-backoff: 60s
+    request-timeout: 5s
+    webhook-url: ${KONSELYAVISA_OUTBOX_WEBHOOK_URL:}
+    webhook-secret: ${KONSELYAVISA_OUTBOX_WEBHOOK_SECRET:}
+  guest:
+    ticket-ttl: 30m
+    default-organization-id: 11111111-1111-1111-1111-111111111111
+  privacy:
+    anonymize-after: 1825d
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY:}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+    success-url: ${STRIPE_SUCCESS_URL:http://localhost:5175/?stripe=success}
+    cancel-url: ${STRIPE_CANCEL_URL:http://localhost:5175/?stripe=cancel}
+  cinetpay:
+    api-key: ${CINETPAY_API_KEY:}
+    site-id: ${CINETPAY_SITE_ID:}
+    secret-key: ${CINETPAY_SECRET_KEY:}
+    api-base-url: ${CINETPAY_API_BASE_URL:https://api-checkout.cinetpay.com}
+    notify-url: ${CINETPAY_NOTIFY_URL:http://localhost:18083/api/v1/payments/webhooks/CINETPAY}
+    return-url: ${CINETPAY_RETURN_URL:http://localhost:5175/?cinetpay=return}
+    channels: ${CINETPAY_CHANNELS:ALL}

@@ -1,0 +1,354 @@
+{
+  "login": {
+    "title": "KonselyaVisa",
+    "subtitle": "Portal do cidadão — formalidades consulares",
+    "cta": "Entrar",
+    "email": "Endereço de e-mail",
+    "emailPlaceholder": "nome@exemplo.com",
+    "password": "Palavra-passe",
+    "forgotPassword": "Palavra-passe esquecida",
+    "or": "ou",
+    "continueGuest": "Continuar sem conta",
+    "continueGuestHint": "Criará uma conta no final do pedido",
+    "agentLink": "Pessoal consular — início de sessão do agente",
+    "organizationName": "Consulado da Guiné-Bissau em França",
+    "logout": "Sair",
+    "hint": "Crie um processo, envie documentos, pague e reserve uma marcação.",
+    "signedInAs": "Ligado como {{name}}",
+    "signedInFallback": "a sua conta",
+    "organization": "Organização",
+    "noOrganization": "Nenhuma organização",
+    "callback": "A concluir o início de sessão…",
+    "error": "Falha no início de sessão. Tente novamente."
+  },
+  "language": {
+    "label": "Idioma",
+    "fr": "Français",
+    "pt": "Português",
+    "en": "English",
+    "short": { "fr": "FR", "pt": "PT", "en": "EN" }
+  },
+  "home": {
+    "nav": {
+      "label": "Navegação",
+      "services": "Serviços",
+      "track": "Acompanhar o pedido",
+      "contact": "Contacto"
+    },
+    "trust": "Sítio oficial de {{organization}} — verifique sempre que está neste domínio antes de pagar",
+    "hero": {
+      "title": "As suas formalidades consulares, simplificadas",
+      "subtitle": "Visto, legalização, apostila, tradução juramentada — verifique o que precisa e apresente o processo em linha.",
+      "start": "Iniciar uma formalidade",
+      "track": "Acompanhar um processo existente"
+    },
+    "formalities": { "title": "Formalidades disponíveis" },
+    "formality": {
+      "VISA": "Visto",
+      "EVISA": "eVisa",
+      "LEGALIZATION": "Legalização",
+      "APOSTILLE": "Apostila",
+      "TRANSLATION": "Tradução juramentada",
+      "INSURANCE": "Seguro de viagem",
+      "APPOINTMENT": "Marcação"
+    },
+    "how": {
+      "title": "Como funciona",
+      "eligibility": { "title": "Verifique a elegibilidade", "text": "Responda a algumas perguntas sobre a sua situação" },
+      "documents": { "title": "Envie os documentos", "text": "A lista exacta necessária aparece para o seu caso" },
+      "pay": { "title": "Pague em linha", "text": "Cartão, Mobile Money ou no balcão" },
+      "follow": { "title": "Acompanhe o processo", "text": "Estado em tempo real até ao levantamento" }
+    },
+    "reassurance": {
+      "secure": "Pagamentos e documentos seguros",
+      "gdpr": "Conforme ao RGPD",
+      "languages": "Assistência em {{languages}}"
+    },
+    "footer": {
+      "links": "Informação legal",
+      "legal": "Menções legais",
+      "privacy": "Confidencialidade"
+    },
+    "legal": {
+      "body": "{{organization}} publica estas páginas a título informativo. As formalidades, taxas e prazos aplicáveis são os da versão no momento do depósito."
+    },
+    "track": {
+      "title": "Acompanhar um processo",
+      "hint": "Indique a referência e o e-mail do requerente, ou a data de nascimento. Não é pedida palavra-passe.",
+      "reference": "Referência do processo",
+      "email": "E-mail do requerente",
+      "or": "ou",
+      "dob": "Data de nascimento",
+      "submit": "Pesquisar",
+      "notFound": "Nenhum processo corresponde a estes dados."
+    }
+  },
+  "common": { "loading": "A carregar…", "error": "Ocorreu um erro.", "back": "Voltar", "retry": "Tentar novamente" },
+  "cases": {
+    "title": "Os meus processos",
+    "new": "Nova formalidade",
+    "open": "Abrir",
+    "correct": "Corrigir",
+    "follow": "Acompanhar",
+    "continue": "Continuar",
+    "closed": "Processos encerrados",
+    "showAll": "Mostrar tudo",
+    "showLess": "Reduzir",
+    "inProgressCount_one": "{{count}} formalidade em curso",
+    "inProgressCount_other": "{{count}} formalidades em curso",
+    "reference": "Ref. {{reference}}",
+    "estimatedDays_one": "prazo estimado {{count}} dia",
+    "estimatedDays_other": "prazo estimado {{count}} dias",
+    "section": {
+      "ACTION_REQUIRED": "Ação necessária",
+      "IN_INSTRUCTION": "Em instrução",
+      "CLOSED": "Encerrados"
+    },
+    "empty": "Ainda não há processos.",
+    "emptyHint": "Utilize « Nova formalidade » para começar.",
+    "nextStep": {
+      "CREATED": "Complete o pedido para avançar",
+      "IN_PROGRESS": "Em instrução",
+      "CORRECTION_REQUESTED": "Um documento deve ser reenviado",
+      "COMPLETED": "Processo encerrado",
+      "CANCELLED": "Processo anulado",
+      "fallback": "Abra o processo para ver o que se segue."
+    }
+  },
+  "company": {
+    "title": "Processos da empresa",
+    "subtitle": "Acompanhe as formalidades submetidas pela equipa.",
+    "new": "Novo processo",
+    "empty": "Nenhum processo neste âmbito.",
+    "all": "Todos",
+    "creator": "Criado por",
+    "role": "Função",
+    "applicant": "Requerente",
+    "status": "Estado",
+    "procedure": "Procedimento",
+    "open": "Abrir",
+    "roles": {
+      "COMPANY_USER": "Colaborador",
+      "COMPANY_ADMIN": "Admin da empresa"
+    }
+  },
+  "case": {
+    "next_action": {
+      "UPLOAD_DOCUMENTS": "Envie os documentos pedidos",
+      "CORRECT_DOCUMENTS": "Um documento deve ser reenviado",
+      "PAY": "Pague as taxas para transmitir o processo",
+      "WAIT_MANUAL_PAYMENT": "Pagamento a aguardar validação",
+      "BOOK_APPOINTMENT": "Reserve uma marcação",
+      "WAIT_PROCESSING": "Processo em instrução",
+      "NONE": "Nenhuma ação necessária"
+    },
+    "list_action": {
+      "UPLOAD_DOCUMENTS": "Enviar",
+      "CORRECT_DOCUMENTS": "Corrigir",
+      "PAY": "Pagar",
+      "WAIT_MANUAL_PAYMENT": "Acompanhar",
+      "BOOK_APPOINTMENT": "Reservar",
+      "WAIT_PROCESSING": "Acompanhar",
+      "NONE": "Consultar"
+    },
+    "list_subtitle": {
+      "UPLOAD_DOCUMENTS": "Documentos a enviar",
+      "CORRECT_DOCUMENTS": "Um documento deve ser reenviado",
+      "PAY": "Pagamento a regularizar",
+      "WAIT_MANUAL_PAYMENT": "Pagamento a aguardar validação",
+      "BOOK_APPOINTMENT": "Marcação a reservar para o depósito",
+      "WAIT_PROCESSING": "Depositado em {{date}}",
+      "NONE": "Processo encerrado"
+    }
+  },
+  "new": {
+    "title": "Novo pedido",
+    "procedure": "Procedimento",
+    "choose": "Escolher um procedimento",
+    "price": "Taxa",
+    "displayName": "Nome",
+    "email": "E-mail",
+    "nationality": "Nacionalidade (passaporte)",
+    "passportValidity": "Validade do passaporte (meses)",
+    "submit": "Criar processo"
+  },
+  "wizard": {
+    "title": "Qual a formalidade?",
+    "progress": "Pergunta {{current}} de {{total}}",
+    "continue": "Continuar",
+    "previous": "Anterior",
+    "quit": "Sair",
+    "quitConfirm": "Sair do assistente? As respostas já dadas serão perdidas.",
+    "stay": "Ficar",
+    "leave": "Sair",
+    "submit": "Criar o processo",
+    "signInToCreate": "Entrar para abrir o processo",
+    "destination": {
+      "question": "Para que país se destina esta formalidade?"
+    },
+    "procedure": {
+      "question": "De que precisa?"
+    },
+    "nationality": {
+      "question": "Qual é a nacionalidade do passaporte?",
+      "FR": "França",
+      "PT": "Portugal",
+      "GW": "Guiné-Bissau"
+    },
+    "passport": {
+      "question": "O passaporte ainda é válido por pelo menos 6 meses?",
+      "hint": "A maioria dos vistos exige este prazo mínimo.",
+      "yes": "Sim, mais de 6 meses",
+      "no": "Não, menos de 6 meses"
+    },
+    "document": {
+      "question": "Que documento deve ser reconhecido no estrangeiro?",
+      "BIRTH_CERTIFICATE": "Certidão de nascimento",
+      "DIPLOMA": "Diploma",
+      "CRIMINAL_RECORD": "Registo criminal"
+    },
+    "hague": {
+      "question": "O país de destino reconhece o selo internacional?",
+      "hint": "Para Portugal a resposta é em geral sim. Isto não vale para todos os países.",
+      "yes": "Sim",
+      "no": "Não / não tenho a certeza"
+    },
+    "confirm": {
+      "title": "Resumo",
+      "summary": "Nacionalidade {{nationality}} · {{price}}",
+      "priceLater": "taxa indicada a seguir",
+      "identity": "Identidade já conhecida"
+    },
+    "ineligible": {
+      "nationality": "Esta formalidade não está disponível para esta nacionalidade.",
+      "passport": "Sem 6 meses de validade, este visto não pode ser pedido aqui.",
+      "hague": "Sem reconhecimento do selo internacional, esta formalidade não se aplica.",
+      "generic": "Com as suas respostas, esta formalidade não é possível. Altere uma resposta anterior."
+    }
+  },
+  "privacy": {
+    "title": "Os meus dados",
+    "checkbox": "Aceito o tratamento dos meus dados para este processo.",
+    "export": "Descarregar os meus dados",
+    "exportDone": "Ficheiro de exportação descarregado.",
+    "requestDeletion": "Pedir anonimização",
+    "deletionScheduled": "Anonimização prevista em {{date}} (conservação consular)."
+  },
+  "journey": {
+    "documents": "Documentos",
+    "payment": "Pagamento",
+    "appointment": "Marcação",
+    "openedOn": "Aberto em {{date}}",
+    "estimatedInstruction_one": "Prazo de instrução estimado: {{count}} dia",
+    "estimatedInstruction_other": "Prazo de instrução estimado: {{count}} dias",
+    "breadcrumb": "Navegação",
+    "bookDepositTitle": "Reserve a marcação de depósito",
+    "instructionTitle": "Processo em instrução",
+    "depositedOn": "Enviado em {{date}}",
+    "viewFile": "Ver o ficheiro",
+    "confirmThisAppointment": "Confirmar esta marcação",
+    "placesAvailable_one": "{{count}} lugar disponível",
+    "placesAvailable_other": "{{count}} lugares disponíveis",
+    "done": {
+      "documents": "Documentos — {{count}} enviados",
+      "payment": "Pagamento — {{amount}} pago",
+      "appointment": "Marcação — {{when}}"
+    },
+    "badge": {
+      "UPLOAD_DOCUMENTS": "Documentos a enviar",
+      "CORRECT_DOCUMENTS": "Documento a reenviar",
+      "PAY": "Pagamento a regularizar",
+      "WAIT_MANUAL_PAYMENT": "Pagamento pendente",
+      "BOOK_APPOINTMENT": "Marcação a reservar",
+      "WAIT_PROCESSING": "Em instrução",
+      "NONE": "Encerrado"
+    },
+    "timeline": {
+      "documents": "Documentos",
+      "payment": "Pagamento",
+      "appointment": "Marcação",
+      "done": "Instrução"
+    },
+    "missing": "Não enviado",
+    "chooseFile": "Escolher um ficheiro",
+    "replaceFile": "Enviar de novo este documento",
+    "duplicate": "documento já visto",
+    "checkout": "Ver o montante",
+    "payAndSubmit": "Pagar e transmitir o processo",
+    "paymentHint": "O processo só é transmitido após confirmação do pagamento.",
+    "mockPay": "Simular pagamento (MOCK)",
+    "stripePay": "Pagar com Stripe",
+    "stripeConfirm": "Confirmar pagamento Stripe",
+    "manualPay": "Pagamento a aguardar validação do agente.",
+    "book": "Reservar",
+    "confirmSlot": "Confirmar a marcação em {{when}}",
+    "cancelAppointment": "Cancelar marcação",
+    "noSlots": "Nenhum horário aberto."
+  },
+  "status": {
+    "case": {
+      "CREATED": "Criado",
+      "IN_PROGRESS": "Em curso",
+      "CORRECTION_REQUESTED": "Correção pedida",
+      "COMPLETED": "Concluído",
+      "CANCELLED": "Cancelado"
+    },
+    "document": {
+      "UPLOADED": "Enviado",
+      "ACCEPTED": "Aceite",
+      "CORRECTION_REQUESTED": "A corrigir",
+      "REPLACED": "Substituído",
+      "REJECTED": "Rejeitado"
+    },
+    "order": {
+      "PENDING_PAYMENT": "Pagamento pendente",
+      "PENDING_MANUAL": "Validação manual",
+      "PAID": "Pago",
+      "CANCELLED": "Cancelado"
+    },
+    "appointment": { "BOOKED": "Reservado", "CANCELLED": "Cancelado", "COMPLETED": "Concluído" }
+  },
+  "error": {
+    "eligibility": { "not_met": "Segundo as regras deste procedimento, a sua situação não é elegível." },
+    "order": { "already_exists": "Já existe uma encomenda aberta para este processo." },
+    "payment": {
+      "stripe_not_configured": "O Stripe não está configurado para esta organização.",
+      "stripe_unavailable": "O Stripe está temporariamente indisponível. Tente novamente.",
+      "cinetpay_not_configured": "O CinetPay não está configurado para esta organização.",
+      "cinetpay_unavailable": "O CinetPay está temporariamente indisponível. Tente novamente.",
+      "cinetpay_amount_invalid": "O montante não é compatível com o CinetPay.",
+      "webhook_invalid": "Notificação de pagamento inválida.",
+      "webhook_signature": "Assinatura de pagamento inválida."
+    },
+    "appointment": {
+      "already_booked": "Já existe uma marcação.",
+      "slot_full": "Este horário está completo.",
+      "hold_unavailable": "Este horário acabou de ser reservado. Escolha outro."
+    },
+    "document": {
+      "content_type_not_allowed": "Tipo de ficheiro não permitido (PDF, JPEG, PNG, WebP).",
+      "too_large": "Ficheiro demasiado grande (máx. 10 MB).",
+      "correction_requested": "Um documento deve ser reenviado. Abra o processo para o voltar a enviar."
+    },
+    "case": { "not_modifiable": "Este processo já não pode ser alterado." },
+    "privacy": {
+      "consent_required": "Aceite o aviso de privacidade para criar o processo.",
+      "notice_stale": "O texto de consentimento mudou. Recarregue a página."
+    },
+    "session_expired": "Sessão expirada. Inicie sessão novamente.",
+    "access": { "denied": "Não tem acesso a este recurso." },
+    "rate_limited": "Demasiados pedidos. Tente novamente dentro de um minuto.",
+    "http": "A API devolveu um erro. Tente novamente.",
+    "not_found": "Recurso não encontrado.",
+    "internal": "Erro interno do servidor."
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Um documento está ilegível ou desfocada.",
+      "incomplete": "Um documento está incompleto.",
+      "expired": "Um documento caducou.",
+      "photo_spec": "A fotografia não respeita o formato pedido.",
+      "mismatch": "A identidade não coincide com os outros documentos."
+    }
+  }
+}

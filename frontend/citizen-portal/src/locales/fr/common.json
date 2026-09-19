@@ -1,0 +1,354 @@
+{
+  "login": {
+    "title": "KonselyaVisa",
+    "subtitle": "Portail citoyen — formalités consulaires",
+    "cta": "Se connecter",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "nom@exemple.com",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié",
+    "or": "ou",
+    "continueGuest": "Continuer sans compte",
+    "continueGuestHint": "Vous créerez un compte à la fin de votre demande",
+    "agentLink": "Personnel consulaire — connexion agent",
+    "organizationName": "Consulat de Guinée-Bissau en France",
+    "logout": "Se déconnecter",
+    "hint": "Créez un dossier, déposez vos pièces, payez et réservez un rendez-vous.",
+    "signedInAs": "Connecté en tant que {{name}}",
+    "signedInFallback": "votre compte",
+    "organization": "Organisation",
+    "noOrganization": "Aucune organisation",
+    "callback": "Finalisation de la connexion…",
+    "error": "La connexion a échoué. Réessayez."
+  },
+  "language": {
+    "label": "Langue",
+    "fr": "Français",
+    "pt": "Português",
+    "en": "English",
+    "short": { "fr": "FR", "pt": "PT", "en": "EN" }
+  },
+  "home": {
+    "nav": {
+      "label": "Navigation",
+      "services": "Services",
+      "track": "Suivre ma demande",
+      "contact": "Contact"
+    },
+    "trust": "Site officiel de {{organization}} — vérifiez toujours que vous êtes sur ce domaine avant de payer",
+    "hero": {
+      "title": "Vos démarches consulaires, simplifiées",
+      "subtitle": "Visa, légalisation, apostille, traduction assermentée — vérifiez ce dont vous avez besoin et déposez votre dossier en ligne.",
+      "start": "Commencer une démarche",
+      "track": "Suivre un dossier existant"
+    },
+    "formalities": { "title": "Formalités disponibles" },
+    "formality": {
+      "VISA": "Visa",
+      "EVISA": "eVisa",
+      "LEGALIZATION": "Légalisation",
+      "APOSTILLE": "Apostille",
+      "TRANSLATION": "Traduction assermentée",
+      "INSURANCE": "Assurance voyage",
+      "APPOINTMENT": "Rendez-vous"
+    },
+    "how": {
+      "title": "Comment ça marche",
+      "eligibility": { "title": "Vérifiez votre éligibilité", "text": "Répondez à quelques questions sur votre situation" },
+      "documents": { "title": "Déposez vos documents", "text": "La liste exacte requise s’affiche pour votre cas" },
+      "pay": { "title": "Payez en ligne", "text": "Carte bancaire, Mobile Money ou au guichet" },
+      "follow": { "title": "Suivez votre dossier", "text": "Statut en temps réel jusqu’au retrait" }
+    },
+    "reassurance": {
+      "secure": "Paiement et documents sécurisés",
+      "gdpr": "Conforme au RGPD",
+      "languages": "Assistance en {{languages}}"
+    },
+    "footer": {
+      "links": "Informations légales",
+      "legal": "Mentions légales",
+      "privacy": "Confidentialité"
+    },
+    "legal": {
+      "body": "{{organization}} publie ces pages à titre d’information. Les formalités, tarifs et délais applicables sont ceux de la procédure au moment du dépôt."
+    },
+    "track": {
+      "title": "Suivre un dossier",
+      "hint": "Saisissez la référence du dossier et l’e-mail du demandeur, ou sa date de naissance. Aucun mot de passe n’est demandé.",
+      "reference": "Référence du dossier",
+      "email": "E-mail du demandeur",
+      "or": "ou",
+      "dob": "Date de naissance",
+      "submit": "Rechercher",
+      "notFound": "Aucun dossier ne correspond à ces informations."
+    }
+  },
+  "common": { "loading": "Chargement…", "error": "Une erreur s’est produite.", "back": "Retour", "retry": "Réessayer" },
+  "cases": {
+    "title": "Mes dossiers",
+    "new": "Nouvelle démarche",
+    "open": "Ouvrir",
+    "correct": "Corriger",
+    "follow": "Suivre",
+    "continue": "Continuer",
+    "closed": "Dossiers clôturés",
+    "showAll": "Tout afficher",
+    "showLess": "Réduire",
+    "inProgressCount_one": "{{count}} démarche en cours",
+    "inProgressCount_other": "{{count}} démarches en cours",
+    "reference": "Réf. {{reference}}",
+    "estimatedDays_one": "délai estimé {{count}} jour",
+    "estimatedDays_other": "délai estimé {{count}} jours",
+    "section": {
+      "ACTION_REQUIRED": "Action requise",
+      "IN_INSTRUCTION": "En instruction",
+      "CLOSED": "Clôturés"
+    },
+    "empty": "Aucun dossier pour le moment.",
+    "emptyHint": "Utilisez « Nouvelle démarche » pour commencer.",
+    "nextStep": {
+      "CREATED": "Complétez votre dossier pour avancer",
+      "IN_PROGRESS": "En instruction",
+      "CORRECTION_REQUESTED": "Une pièce doit être reprise",
+      "COMPLETED": "Dossier clôturé",
+      "CANCELLED": "Dossier annulé",
+      "fallback": "Ouvrez le dossier pour voir la suite."
+    }
+  },
+  "company": {
+    "title": "Dossiers entreprise",
+    "subtitle": "Suivi des démarches déposées par l’équipe.",
+    "new": "Nouveau dossier",
+    "empty": "Aucun dossier dans ce périmètre.",
+    "all": "Tous",
+    "creator": "Créé par",
+    "role": "Rôle",
+    "applicant": "Demandeur",
+    "status": "Statut",
+    "procedure": "Procédure",
+    "open": "Ouvrir",
+    "roles": {
+      "COMPANY_USER": "Collaborateur",
+      "COMPANY_ADMIN": "Admin entreprise"
+    }
+  },
+  "case": {
+    "next_action": {
+      "UPLOAD_DOCUMENTS": "Déposez les pièces demandées",
+      "CORRECT_DOCUMENTS": "Une pièce doit être reprise",
+      "PAY": "Réglez les frais pour transmettre le dossier",
+      "WAIT_MANUAL_PAYMENT": "Paiement en attente de validation",
+      "BOOK_APPOINTMENT": "Réservez un rendez-vous",
+      "WAIT_PROCESSING": "Dossier en instruction",
+      "NONE": "Aucune action requise"
+    },
+    "list_action": {
+      "UPLOAD_DOCUMENTS": "Déposer",
+      "CORRECT_DOCUMENTS": "Corriger",
+      "PAY": "Payer",
+      "WAIT_MANUAL_PAYMENT": "Suivre",
+      "BOOK_APPOINTMENT": "Réserver",
+      "WAIT_PROCESSING": "Suivre",
+      "NONE": "Consulter"
+    },
+    "list_subtitle": {
+      "UPLOAD_DOCUMENTS": "Pièces à déposer",
+      "CORRECT_DOCUMENTS": "Une pièce doit être reprise",
+      "PAY": "Paiement à régler",
+      "WAIT_MANUAL_PAYMENT": "Paiement en attente de validation",
+      "BOOK_APPOINTMENT": "Rendez-vous à réserver pour le dépôt",
+      "WAIT_PROCESSING": "Déposé le {{date}}",
+      "NONE": "Dossier clôturé"
+    }
+  },
+  "new": {
+    "title": "Nouvelle demande",
+    "procedure": "Procédure",
+    "choose": "Choisir une procédure",
+    "price": "Tarif",
+    "displayName": "Nom",
+    "email": "E-mail",
+    "nationality": "Nationalité (passeport)",
+    "passportValidity": "Validité du passeport (mois)",
+    "submit": "Créer le dossier"
+  },
+  "wizard": {
+    "title": "Quelle démarche ?",
+    "progress": "Question {{current}} sur {{total}}",
+    "continue": "Continuer",
+    "previous": "Précédent",
+    "quit": "Quitter",
+    "quitConfirm": "Quitter l’assistant ? Les réponses déjà données seront perdues.",
+    "stay": "Rester",
+    "leave": "Quitter",
+    "submit": "Créer le dossier",
+    "signInToCreate": "Se connecter pour ouvrir le dossier",
+    "destination": {
+      "question": "Pour quel pays cette démarche est-elle destinée ?"
+    },
+    "procedure": {
+      "question": "Quelle formalité souhaitez-vous ?"
+    },
+    "nationality": {
+      "question": "Quelle est la nationalité du passeport ?",
+      "FR": "France",
+      "PT": "Portugal",
+      "GW": "Guinée-Bissau"
+    },
+    "passport": {
+      "question": "Votre passeport est-il encore valable au moins 6 mois ?",
+      "hint": "La plupart des visas exigent cette durée minimale.",
+      "yes": "Oui, plus de 6 mois",
+      "no": "Non, moins de 6 mois"
+    },
+    "document": {
+      "question": "Quel document voulez-vous faire reconnaître à l’étranger ?",
+      "BIRTH_CERTIFICATE": "Acte de naissance",
+      "DIPLOMA": "Diplôme",
+      "CRIMINAL_RECORD": "Extrait de casier judiciaire"
+    },
+    "hague": {
+      "question": "Le pays d’arrivée reconnaît-il le cachet international ?",
+      "hint": "Pour le Portugal, la réponse est en général oui. Ce n’est pas le cas de tous les pays.",
+      "yes": "Oui",
+      "no": "Non / je ne suis pas sûr"
+    },
+    "confirm": {
+      "title": "Récapitulatif",
+      "summary": "Nationalité {{nationality}} · {{price}}",
+      "priceLater": "tarif indiqué ensuite",
+      "identity": "Identité déjà connue"
+    },
+    "ineligible": {
+      "nationality": "Cette formalité n’est pas proposée pour cette nationalité.",
+      "passport": "Sans 6 mois de validité, le visa ne peut pas être demandé ici.",
+      "hague": "Sans reconnaissance du cachet international, cette démarche ne s’applique pas.",
+      "generic": "D’après vos réponses, cette démarche n’est pas possible. Modifiez une réponse précédente."
+    }
+  },
+  "privacy": {
+    "title": "Mes données",
+    "checkbox": "J’accepte le traitement de mes données pour ce dossier.",
+    "export": "Télécharger mes données",
+    "exportDone": "Fichier d’export téléchargé.",
+    "requestDeletion": "Demander l’anonymisation",
+    "deletionScheduled": "Anonymisation planifiée le {{date}} (conservation consulaire)."
+  },
+  "journey": {
+    "documents": "Pièces à déposer",
+    "payment": "Paiement",
+    "appointment": "Rendez-vous",
+    "openedOn": "Ouvert le {{date}}",
+    "estimatedInstruction_one": "Délai d’instruction estimé : {{count}} jour",
+    "estimatedInstruction_other": "Délai d’instruction estimé : {{count}} jours",
+    "breadcrumb": "Fil d’Ariane",
+    "bookDepositTitle": "Réserver votre rendez-vous de dépôt",
+    "instructionTitle": "Dossier en instruction",
+    "depositedOn": "Déposé le {{date}}",
+    "viewFile": "Voir le fichier",
+    "confirmThisAppointment": "Confirmer ce rendez-vous",
+    "placesAvailable_one": "{{count}} place disponible",
+    "placesAvailable_other": "{{count}} places disponibles",
+    "done": {
+      "documents": "Pièces — {{count}} documents déposés",
+      "payment": "Paiement — {{amount}} payé",
+      "appointment": "Rendez-vous — {{when}}"
+    },
+    "badge": {
+      "UPLOAD_DOCUMENTS": "Pièces à déposer",
+      "CORRECT_DOCUMENTS": "Pièce à reprendre",
+      "PAY": "Paiement à régler",
+      "WAIT_MANUAL_PAYMENT": "Paiement en attente",
+      "BOOK_APPOINTMENT": "Rendez-vous à réserver",
+      "WAIT_PROCESSING": "En instruction",
+      "NONE": "Clôturé"
+    },
+    "timeline": {
+      "documents": "Pièces",
+      "payment": "Paiement",
+      "appointment": "Rendez-vous",
+      "done": "Instruction"
+    },
+    "missing": "Non déposé",
+    "chooseFile": "Choisir un fichier",
+    "replaceFile": "Renvoyer cette pièce",
+    "duplicate": "document déjà vu",
+    "checkout": "Voir le montant",
+    "payAndSubmit": "Payer et transmettre le dossier",
+    "paymentHint": "Le dossier n’est transmis qu’après confirmation du paiement.",
+    "mockPay": "Simuler le paiement (MOCK)",
+    "stripePay": "Payer avec Stripe",
+    "stripeConfirm": "Confirmer le paiement Stripe",
+    "manualPay": "Paiement en attente de validation par un agent.",
+    "book": "Réserver",
+    "confirmSlot": "Confirmer le rendez-vous le {{when}}",
+    "cancelAppointment": "Annuler le rendez-vous",
+    "noSlots": "Aucun créneau ouvert."
+  },
+  "status": {
+    "case": {
+      "CREATED": "Créé",
+      "IN_PROGRESS": "En cours",
+      "CORRECTION_REQUESTED": "Correction demandée",
+      "COMPLETED": "Terminé",
+      "CANCELLED": "Annulé"
+    },
+    "document": {
+      "UPLOADED": "Déposé",
+      "ACCEPTED": "Accepté",
+      "CORRECTION_REQUESTED": "À corriger",
+      "REPLACED": "Remplacé",
+      "REJECTED": "Rejeté"
+    },
+    "order": {
+      "PENDING_PAYMENT": "Paiement en attente",
+      "PENDING_MANUAL": "Validation manuelle",
+      "PAID": "Payé",
+      "CANCELLED": "Annulé"
+    },
+    "appointment": { "BOOKED": "Réservé", "CANCELLED": "Annulé", "COMPLETED": "Honoré" }
+  },
+  "error": {
+    "eligibility": { "not_met": "D’après les règles de cette procédure, votre situation n’est pas éligible." },
+    "order": { "already_exists": "Une commande est déjà ouverte pour ce dossier." },
+    "payment": {
+      "stripe_not_configured": "Stripe n’est pas configuré pour cette organisation.",
+      "stripe_unavailable": "Stripe est temporairement indisponible. Réessayez.",
+      "cinetpay_not_configured": "CinetPay n’est pas configuré pour cette organisation.",
+      "cinetpay_unavailable": "CinetPay est temporairement indisponible. Réessayez.",
+      "cinetpay_amount_invalid": "Le montant n’est pas compatible avec CinetPay.",
+      "webhook_invalid": "Notification de paiement invalide.",
+      "webhook_signature": "Signature de paiement invalide."
+    },
+    "appointment": {
+      "already_booked": "Un rendez-vous est déjà réservé.",
+      "slot_full": "Ce créneau est complet.",
+      "hold_unavailable": "Ce créneau vient d’être réservé par quelqu’un d’autre. Choisissez un autre horaire."
+    },
+    "document": {
+      "content_type_not_allowed": "Type de fichier non autorisé (PDF, JPEG, PNG, WebP).",
+      "too_large": "Fichier trop volumineux (10 Mo max).",
+      "correction_requested": "Une pièce doit être reprise. Ouvrez le dossier pour la renvoyer."
+    },
+    "case": { "not_modifiable": "Ce dossier ne peut plus être modifié." },
+    "privacy": {
+      "consent_required": "Cochez la case de consentement pour créer le dossier.",
+      "notice_stale": "Le texte de consentement a changé. Rechargez la page."
+    },
+    "session_expired": "Session expirée. Reconnectez-vous.",
+    "access": { "denied": "Vous n’avez pas accès à cette ressource." },
+    "rate_limited": "Trop de requêtes. Réessayez dans une minute.",
+    "http": "L’API a renvoyé une erreur. Réessayez.",
+    "not_found": "Ressource introuvable.",
+    "internal": "Erreur interne du serveur."
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Une pièce est illisible ou floue.",
+      "incomplete": "Une pièce est incomplète.",
+      "expired": "Un document est périmé.",
+      "photo_spec": "La photo ne respecte pas le format demandé.",
+      "mismatch": "L’identité ne correspond pas aux autres pièces."
+    }
+  }
+}

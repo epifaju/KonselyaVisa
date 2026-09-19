@@ -1,0 +1,112 @@
+# KonselyaVisa — Règles pour Cursor AI
+
+Tu travailles sur KonselyaVisa (Consular Services Platform) : plateforme multi-pays,
+multi-procédures, multi-organisations de gestion de formalités consulaires (visa,
+eVisa, légalisation, apostille, traduction assermentée, assurance voyage, rendez-vous).
+
+La source de vérité produit/architecture est `docs/PRD_KonselyaVisa_v2_Optimise_CursorAI.md`.
+Relis-la avant toute décision de conception qui n'est pas déjà tranchée ci-dessous.
+
+## Principe non négociable
+
+**Spring Boot est l'unique source de vérité métier. n8n orchestre autour de cet état,
+il ne prend jamais de décision métier.** Aucune règle d'éligibilité, aucun calcul de
+tarif, aucune transition de statut de dossier ne doit exister dans un workflow n8n.
+
+## Stack
+
+- Backend : Java 21, Spring Boot 3 (Web, Security en Resource Server OAuth2/JWT,
+  Data JPA, Validation, Flyway, Actuator, springdoc-openapi), MapStruct, Lombok
+- Frontend : React 18 + TypeScript + Vite, shadcn/ui, Tailwind CSS, TanStack Query v5,
+  Zustand, React Hook Form + Zod, react-i18next
+- PostgreSQL 16 (+ pgcrypto pour les colonnes sensibles)
+- Redis 7 (cache, rate limiting, verrous)
+- Keycloak (OIDC/JWT), MinIO (S3-compatible), n8n, Docker Compose
+
+## Conventions backend obligatoires
+
+- Toute entité JPA hérite de `BaseEntity` (id UUID, createdAt, updatedAt, createdBy,
+  updatedBy). Ne jamais dupliquer ces champs sur une entité.
+- Toute réponse de contrôleur passe par `ApiResponse<T>` (objet unique) ou
+  `PageResponse<T>` (liste paginée). Jamais de DTO brut retourné directement.
+- Mapping entité ↔ DTO via MapStruct. Pas de mapping manuel champ par champ.
+- Migrations de schéma exclusivement via Flyway, versionnées, jamais de
+  `spring.jpa.hibernate.ddl-auto=update` en dehors du profil `dev`.
+- Authentification par JWT Keycloak avec rotation du refresh token. Ne jamais stocker
+  de token en clair côté serveur.
+- Toute nouvelle fonctionnalité va dans de **nouveaux fichiers**. Ne pas réécrire en
+  profondeur un fichier existant qui fonctionne — étendre plutôt que modifier, sauf
+  correction de bug explicitement demandée.
+
+## Multi-tenant (`organization_id`) — critique
+
+- Toute table métier (cases, documents, orders, payments, appointments, etc.) porte
+  un `organization_id`.
+- Aucune requête JPA/JPQL/native ne doit être écrite sans passer par le filtre
+  Hibernate de tenancy (`TenantContext` alimenté depuis le JWT). Si tu écris une
+  requête qui contourne ce filtre, explique pourquoi et signale-le explicitement au
+  lieu de le faire silencieusement.
+- Les tables sensibles (`cases`, `documents`, `orders`, `payments`) ont en plus une
+  policy PostgreSQL Row-Level Security en filet de sécurité. Toute migration créant
+  une nouvelle table sensible doit inclure sa policy RLS dans le même script Flyway.
+
+## Événements métier — pattern Outbox
+
+- Un changement d'état métier significatif (`CASE_CREATED`, `DOCUMENT_UPLOADED`,
+  `PAYMENT_COMPLETED`, `CORRECTION_REQUESTED`, `CASE_COMPLETED`) doit être écrit dans
+  `outbox_events` **dans la même transaction** que le changement d'état, jamais
+  envoyé en appel HTTP direct et synchrone vers n8n depuis le code métier.
+- Le publisher qui lit `outbox_events` et déclenche le webhook n8n est un composant
+  séparé (scheduler), avec retry/backoff et passage en `FAILED` après N tentatives.
+
+## Moteur de règles
+
+- Les règles d'éligibilité et les exigences documentaires sont des données
+  (JSONLogic), jamais du code Java en dur dans un service ou un contrôleur.
+- Un dossier créé conserve la version de procédure utilisée à sa création
+  (`procedure_versions`) — ne jamais réévaluer un dossier existant avec une règle
+  plus récente sans action explicite.
+
+## Contenu multilingue
+
+- Tout contenu métier destiné à l'utilisateur final (nom de procédure, description,
+  libellé de document requis) est stocké en JSONB `{"fr": "...", "pt": "...", "en": "..."}`,
+  jamais en colonne texte unique. Langues prioritaires : français, portugais, anglais.
+- Les messages d'erreur backend utilisent des clés de traduction (`message_key`), pas
+  du texte en dur.
+
+## Paiement
+
+- Toute intégration de paiement passe par l'interface `PaymentProvider`
+  (`createCheckout`, `verify`, `handleWebhook`). Ne jamais coder un appel direct à
+  l'API d'un prestataire de paiement en dehors de son implémentation dédiée.
+- Tout traitement de webhook de paiement est idempotent (clé d'idempotence
+  vérifiée avant tout effet de bord — génération de facture, déblocage d'étape).
+
+## Sécurité et données sensibles
+
+- Toute donnée d'identité extraite (numéro de passeport, etc.) est chiffrée en
+  base (pgcrypto) et ne doit jamais apparaître en clair dans un log applicatif ou
+  dans `audit_logs.details_json`.
+- Contrôle de rôle Keycloak (`@PreAuthorize`) **et** contrôle de propriété/périmètre
+  organisationnel systématiques sur chaque endpoint manipulant un dossier ou un
+  document — le rôle seul ne suffit jamais.
+
+## Tests
+
+- Tout nouveau module backend touchant la base de données est couvert par un test
+  d'intégration Testcontainers (PostgreSQL a minima).
+- Toute règle d'éligibilité ajoutée ou modifiée a un test associé avec un jeu de
+  données représentatif.
+
+## Ce qu'il ne faut jamais faire
+
+- Ne jamais introduire Drools ou un moteur de règles lourd pour le MVP.
+- Ne jamais faire porter une décision métier par n8n.
+- Ne jamais ajouter une dépendance frontend hors shadcn/ui, Tailwind, TanStack Query,
+  Zustand, React Hook Form, Zod, react-i18next sans le signaler explicitement avant
+  de l'ajouter.
+- Ne jamais donner au conteneur OCR/IA un accès réseau direct à PostgreSQL — il ne
+  communique qu'à travers l'API Spring Boot.
+  
+  voir aussi docs/UX_GUIDELINES.md et docs/DESIGN_TOKENS.md pour toute décision d'interface

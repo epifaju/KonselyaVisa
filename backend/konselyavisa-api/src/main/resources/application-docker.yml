@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/konselyavisa}
+    username: ${SPRING_DATASOURCE_USERNAME:konselyavisa_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:konselyavisa}
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:redis}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    user: ${SPRING_FLYWAY_USER:konselyavisa}
+    password: ${SPRING_FLYWAY_PASSWORD:${SPRING_DATASOURCE_PASSWORD:konselyavisa}}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8081/realms/konselyavisa}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI:http://keycloak:8080/realms/konselyavisa/protocol/openid-connect/certs}
+
+konselyavisa:
+  redis:
+    enabled: true
+  storage:
+    endpoint: ${KONSELYAVISA_STORAGE_ENDPOINT:http://minio:9000}

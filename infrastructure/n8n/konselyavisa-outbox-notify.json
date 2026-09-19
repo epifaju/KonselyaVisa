@@ -1,0 +1,59 @@
+{
+  "name": "KonselyaVisa outbox notify",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "konselyavisa-outbox",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-outbox",
+      "name": "Outbox Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "konselyavisa-outbox"
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@konselyavisa.local",
+        "toEmail": "notify@konselyavisa.local",
+        "subject": "=[KonselyaVisa] {{ $json.body.eventType || $json.eventType }} {{ ($json.body.payload || $json.payload || {}).reference || $json.body.aggregateId || $json.aggregateId }}",
+        "emailFormat": "text",
+        "text": "=n8n orchestre autour de l'état Spring Boot. Aucune décision métier ici.\n\nType: {{ $json.body.eventType || $json.eventType }}\nDossier: {{ $json.body.aggregateId || $json.aggregateId }}\nOrganisation: {{ $json.body.organizationId || $json.organizationId }}\n\n{{ JSON.stringify($json.body.payload || $json.payload || $json.body || $json, null, 2) }}\n",
+        "options": {}
+      },
+      "id": "email-mailpit",
+      "name": "Notify Mailpit",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [560, 300],
+      "credentials": {
+        "smtp": {
+          "id": "PLACEHOLDER_SMTP_ID",
+          "name": "Mailpit SMTP"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Outbox Webhook": {
+      "main": [
+        [
+          {
+            "node": "Notify Mailpit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "staticData": null
+}

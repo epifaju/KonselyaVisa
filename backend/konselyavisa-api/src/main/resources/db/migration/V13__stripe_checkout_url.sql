@@ -1,0 +1,2 @@
+ALTER TABLE payments
+    ALTER COLUMN checkout_url TYPE VARCHAR(2048);

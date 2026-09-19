@@ -1,0 +1,211 @@
+{
+  "realm": "konselyavisa",
+  "enabled": true,
+  "displayName": "KonselyaVisa",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["fr", "pt", "en"],
+  "defaultLocale": "fr",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "revokeRefreshToken": true,
+  "refreshTokenMaxReuse": 0,
+  "roles": {
+    "realm": [
+      { "name": "CITIZEN", "description": "Portail citoyen" },
+      { "name": "COMPANY_USER", "description": "Utilisateur entreprise / mandataire" },
+      { "name": "AGENT", "description": "Agent consulaire" },
+      { "name": "SUPERVISOR", "description": "Superviseur" },
+      { "name": "BUSINESS_ADMIN", "description": "Administrateur métier d'une organisation" },
+      { "name": "PLATFORM_ADMIN", "description": "Administrateur plateforme (cross-tenant)" }
+    ]
+  },
+  "attributes": {
+    "frontendUrl": "http://localhost:8081"
+  },
+  "clients": [
+    {
+      "clientId": "citizen-portal",
+      "name": "Citizen portal",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "http://localhost:5175",
+      "baseUrl": "http://localhost:5175",
+      "redirectUris": ["http://localhost:5175/*"],
+      "webOrigins": ["http://localhost:5175"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5175/*"
+      },
+      "defaultClientScopes": ["web-origins", "acr", "basic", "profile", "roles", "email"],
+      "optionalClientScopes": ["address", "phone", "offline_access"],
+      "protocolMappers": [
+        {
+          "name": "organization_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "organization_id",
+            "claim.name": "organization_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "agent-portal",
+      "name": "Agent back-office",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "http://localhost:5176",
+      "baseUrl": "http://localhost:5176",
+      "redirectUris": ["http://localhost:5176/*"],
+      "webOrigins": ["http://localhost:5176"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5176/*"
+      },
+      "defaultClientScopes": ["web-origins", "acr", "basic", "profile", "roles", "email"],
+      "optionalClientScopes": ["address", "phone", "offline_access"],
+      "protocolMappers": [
+        {
+          "name": "organization_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "organization_id",
+            "claim.name": "organization_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "konselyavisa-api",
+      "name": "KonselyaVisa API (resource server)",
+      "enabled": true,
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "bearerOnly": false,
+      "secret": "api-dev-not-used-jwt-only",
+      "protocolMappers": [
+        {
+          "name": "organization_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "organization_id",
+            "claim.name": "organization_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "citizen.dev",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "citizen.dev@konselyavisa.local",
+      "firstName": "Camara",
+      "lastName": "Citizen",
+      "credentials": [
+        { "type": "password", "value": "CitizenDev!23", "temporary": false }
+      ],
+      "realmRoles": ["CITIZEN"],
+      "attributes": {
+        "organization_id": ["11111111-1111-1111-1111-111111111111"]
+      }
+    },
+    {
+      "username": "agent.dev",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "agent.dev@konselyavisa.local",
+      "firstName": "Awa",
+      "lastName": "Agent",
+      "credentials": [
+        { "type": "password", "value": "AgentDev!23", "temporary": false }
+      ],
+      "realmRoles": ["AGENT"],
+      "attributes": {
+        "organization_id": ["11111111-1111-1111-1111-111111111111"]
+      }
+    },
+    {
+      "username": "admin.dev",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "admin.dev@konselyavisa.local",
+      "firstName": "Platform",
+      "lastName": "Admin",
+      "credentials": [
+        { "type": "password", "value": "AdminDev!23", "temporary": false }
+      ],
+      "realmRoles": ["PLATFORM_ADMIN"]
+    },
+    {
+      "username": "company.dev",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "company.dev@konselyavisa.local",
+      "firstName": "Fatou",
+      "lastName": "Mandataire",
+      "credentials": [
+        { "type": "password", "value": "CompanyDev!23", "temporary": false }
+      ],
+      "realmRoles": ["COMPANY_USER"],
+      "attributes": {
+        "organization_id": ["11111111-1111-1111-1111-111111111111"]
+      }
+    },
+    {
+      "username": "company.admin.dev",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "company.admin.dev@konselyavisa.local",
+      "firstName": "Ibrahima",
+      "lastName": "Mandataire",
+      "credentials": [
+        { "type": "password", "value": "CompanyAdminDev!23", "temporary": false }
+      ],
+      "realmRoles": ["COMPANY_USER", "BUSINESS_ADMIN"],
+      "attributes": {
+        "organization_id": ["11111111-1111-1111-1111-111111111111"]
+      }
+    }
+  ]
+}

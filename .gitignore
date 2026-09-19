@@ -1,0 +1,44 @@
+# Env / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.p12
+*.jks
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java / Maven
+backend/**/target/
+*.class
+*.jar
+*.war
+!backend/konselyavisa-api/.mvn/wrapper/maven-wrapper.jar
+hs_err_pid*
+
+# Node
+node_modules/
+dist/
+frontend/**/dist/
+*.tsbuildinfo
+.vite/
+
+# Logs
+*.log
+logs/
+
+# Docker volumes leftovers
+infrastructure/postgres/data/
+infrastructure/minio/data/
+
+# Test / coverage
+coverage/
+.nyc_output/

@@ -1,0 +1,354 @@
+{
+  "login": {
+    "title": "KonselyaVisa",
+    "subtitle": "Citizen portal — consular formalities",
+    "cta": "Sign in",
+    "email": "Email address",
+    "emailPlaceholder": "name@example.com",
+    "password": "Password",
+    "forgotPassword": "Forgot password",
+    "or": "or",
+    "continueGuest": "Continue without an account",
+    "continueGuestHint": "You will create an account at the end of your application",
+    "agentLink": "Consular staff — agent sign-in",
+    "organizationName": "Guinea-Bissau Consulate in France",
+    "logout": "Sign out",
+    "hint": "Create a case, upload documents, pay and book an appointment.",
+    "signedInAs": "Signed in as {{name}}",
+    "signedInFallback": "your account",
+    "organization": "Organization",
+    "noOrganization": "No organization",
+    "callback": "Completing sign-in…",
+    "error": "Sign-in failed. Please try again."
+  },
+  "language": {
+    "label": "Language",
+    "fr": "Français",
+    "pt": "Português",
+    "en": "English",
+    "short": { "fr": "FR", "pt": "PT", "en": "EN" }
+  },
+  "home": {
+    "nav": {
+      "label": "Navigation",
+      "services": "Services",
+      "track": "Track my application",
+      "contact": "Contact"
+    },
+    "trust": "Official website of {{organization}} — always check you are on this domain before paying",
+    "hero": {
+      "title": "Consular procedures, made simpler",
+      "subtitle": "Visa, legalisation, apostille, sworn translation — check what you need and file your case online.",
+      "start": "Start an application",
+      "track": "Track an existing case"
+    },
+    "formalities": { "title": "Available procedures" },
+    "formality": {
+      "VISA": "Visa",
+      "EVISA": "eVisa",
+      "LEGALIZATION": "Legalisation",
+      "APOSTILLE": "Apostille",
+      "TRANSLATION": "Sworn translation",
+      "INSURANCE": "Travel insurance",
+      "APPOINTMENT": "Appointment"
+    },
+    "how": {
+      "title": "How it works",
+      "eligibility": { "title": "Check your eligibility", "text": "Answer a few questions about your situation" },
+      "documents": { "title": "Upload your documents", "text": "The exact list required is shown for your case" },
+      "pay": { "title": "Pay online", "text": "Card, Mobile Money or at the counter" },
+      "follow": { "title": "Track your case", "text": "Live status until collection" }
+    },
+    "reassurance": {
+      "secure": "Secure payments and documents",
+      "gdpr": "GDPR compliant",
+      "languages": "Support in {{languages}}"
+    },
+    "footer": {
+      "links": "Legal information",
+      "legal": "Legal notice",
+      "privacy": "Privacy"
+    },
+    "legal": {
+      "body": "{{organization}} publishes these pages for information. Applicable procedures, fees and timelines are those of the version used when you file."
+    },
+    "track": {
+      "title": "Track a case",
+      "hint": "Enter the case reference and the applicant email, or date of birth. No password is required.",
+      "reference": "Case reference",
+      "email": "Applicant email",
+      "or": "or",
+      "dob": "Date of birth",
+      "submit": "Search",
+      "notFound": "No case matches this information."
+    }
+  },
+  "common": { "loading": "Loading…", "error": "Something went wrong.", "back": "Back", "retry": "Try again" },
+  "cases": {
+    "title": "My cases",
+    "new": "New application",
+    "open": "Open",
+    "correct": "Correct",
+    "follow": "Track",
+    "continue": "Continue",
+    "closed": "Closed cases",
+    "showAll": "Show all",
+    "showLess": "Show less",
+    "inProgressCount_one": "{{count}} application in progress",
+    "inProgressCount_other": "{{count}} applications in progress",
+    "reference": "Ref. {{reference}}",
+    "estimatedDays_one": "estimated {{count}} day",
+    "estimatedDays_other": "estimated {{count}} days",
+    "section": {
+      "ACTION_REQUIRED": "Action required",
+      "IN_INSTRUCTION": "Under review",
+      "CLOSED": "Closed"
+    },
+    "empty": "No cases yet.",
+    "emptyHint": "Use “New application” to get started.",
+    "nextStep": {
+      "CREATED": "Complete your application to move forward",
+      "IN_PROGRESS": "Under review",
+      "CORRECTION_REQUESTED": "A document needs to be resubmitted",
+      "COMPLETED": "Case closed",
+      "CANCELLED": "Case cancelled",
+      "fallback": "Open the case to see what comes next."
+    }
+  },
+  "company": {
+    "title": "Company cases",
+    "subtitle": "Track applications filed by your team.",
+    "new": "New case",
+    "empty": "No cases in this scope.",
+    "all": "All",
+    "creator": "Created by",
+    "role": "Role",
+    "applicant": "Applicant",
+    "status": "Status",
+    "procedure": "Procedure",
+    "open": "Open",
+    "roles": {
+      "COMPANY_USER": "Collaborator",
+      "COMPANY_ADMIN": "Company admin"
+    }
+  },
+  "case": {
+    "next_action": {
+      "UPLOAD_DOCUMENTS": "Upload the required documents",
+      "CORRECT_DOCUMENTS": "A document needs to be resubmitted",
+      "PAY": "Pay the fees to submit your case",
+      "WAIT_MANUAL_PAYMENT": "Payment awaiting staff confirmation",
+      "BOOK_APPOINTMENT": "Book an appointment",
+      "WAIT_PROCESSING": "Your case is under review",
+      "NONE": "No action required"
+    },
+    "list_action": {
+      "UPLOAD_DOCUMENTS": "Upload",
+      "CORRECT_DOCUMENTS": "Correct",
+      "PAY": "Pay",
+      "WAIT_MANUAL_PAYMENT": "Track",
+      "BOOK_APPOINTMENT": "Book",
+      "WAIT_PROCESSING": "Track",
+      "NONE": "View"
+    },
+    "list_subtitle": {
+      "UPLOAD_DOCUMENTS": "Documents to upload",
+      "CORRECT_DOCUMENTS": "A document must be resubmitted",
+      "PAY": "Payment due",
+      "WAIT_MANUAL_PAYMENT": "Payment awaiting confirmation",
+      "BOOK_APPOINTMENT": "Appointment to book for submission",
+      "WAIT_PROCESSING": "Submitted on {{date}}",
+      "NONE": "Case closed"
+    }
+  },
+  "new": {
+    "title": "New application",
+    "procedure": "Procedure",
+    "choose": "Choose a procedure",
+    "price": "Fee",
+    "displayName": "Name",
+    "email": "Email",
+    "nationality": "Nationality (passport)",
+    "passportValidity": "Passport validity (months)",
+    "submit": "Create case"
+  },
+  "wizard": {
+    "title": "Which formality?",
+    "progress": "Question {{current}} of {{total}}",
+    "continue": "Continue",
+    "previous": "Back",
+    "quit": "Quit",
+    "quitConfirm": "Leave the assistant? Answers already given will be lost.",
+    "stay": "Stay",
+    "leave": "Leave",
+    "submit": "Create the case",
+    "signInToCreate": "Sign in to open your case",
+    "destination": {
+      "question": "Which country is this application for?"
+    },
+    "procedure": {
+      "question": "What do you need to do?"
+    },
+    "nationality": {
+      "question": "What is the passport nationality?",
+      "FR": "France",
+      "PT": "Portugal",
+      "GW": "Guinea-Bissau"
+    },
+    "passport": {
+      "question": "Is your passport still valid for at least 6 months?",
+      "hint": "Most visas require this minimum remaining validity.",
+      "yes": "Yes, more than 6 months",
+      "no": "No, less than 6 months"
+    },
+    "document": {
+      "question": "Which document should be recognised abroad?",
+      "BIRTH_CERTIFICATE": "Birth certificate",
+      "DIPLOMA": "Diploma",
+      "CRIMINAL_RECORD": "Criminal record extract"
+    },
+    "hague": {
+      "question": "Does the destination country recognise the international stamp?",
+      "hint": "For Portugal the answer is usually yes. This is not true for every country.",
+      "yes": "Yes",
+      "no": "No / I am not sure"
+    },
+    "confirm": {
+      "title": "Summary",
+      "summary": "Nationality {{nationality}} · {{price}}",
+      "priceLater": "fee shown next",
+      "identity": "Identity already known"
+    },
+    "ineligible": {
+      "nationality": "This formality is not available for this nationality.",
+      "passport": "Without 6 months of validity, this visa cannot be requested here.",
+      "hague": "Without recognition of the international stamp, this formality does not apply.",
+      "generic": "Based on your answers, this formality is not possible. Change a previous answer."
+    }
+  },
+  "privacy": {
+    "title": "My data",
+    "checkbox": "I consent to the processing of my data for this case.",
+    "export": "Download my data",
+    "exportDone": "Export file downloaded.",
+    "requestDeletion": "Request anonymisation",
+    "deletionScheduled": "Anonymisation scheduled on {{date}} (consular retention)."
+  },
+  "journey": {
+    "documents": "Documents",
+    "payment": "Payment",
+    "appointment": "Appointment",
+    "openedOn": "Opened on {{date}}",
+    "estimatedInstruction_one": "Estimated processing time: {{count}} day",
+    "estimatedInstruction_other": "Estimated processing time: {{count}} days",
+    "breadcrumb": "Breadcrumb",
+    "bookDepositTitle": "Book your submission appointment",
+    "instructionTitle": "Case under review",
+    "depositedOn": "Submitted on {{date}}",
+    "viewFile": "View file",
+    "confirmThisAppointment": "Confirm this appointment",
+    "placesAvailable_one": "{{count}} place available",
+    "placesAvailable_other": "{{count}} places available",
+    "done": {
+      "documents": "Documents — {{count}} uploaded",
+      "payment": "Payment — {{amount}} paid",
+      "appointment": "Appointment — {{when}}"
+    },
+    "badge": {
+      "UPLOAD_DOCUMENTS": "Documents to upload",
+      "CORRECT_DOCUMENTS": "Document to resubmit",
+      "PAY": "Payment due",
+      "WAIT_MANUAL_PAYMENT": "Payment pending",
+      "BOOK_APPOINTMENT": "Appointment to book",
+      "WAIT_PROCESSING": "Under review",
+      "NONE": "Closed"
+    },
+    "timeline": {
+      "documents": "Documents",
+      "payment": "Payment",
+      "appointment": "Appointment",
+      "done": "Review"
+    },
+    "missing": "Not uploaded",
+    "chooseFile": "Choose a file",
+    "replaceFile": "Send this document again",
+    "duplicate": "document already seen",
+    "checkout": "See the amount",
+    "payAndSubmit": "Pay and submit the case",
+    "paymentHint": "The case is only submitted after payment is confirmed.",
+    "mockPay": "Simulate payment (MOCK)",
+    "stripePay": "Pay with Stripe",
+    "stripeConfirm": "Confirm Stripe payment",
+    "manualPay": "Payment waiting for agent confirmation.",
+    "book": "Book",
+    "confirmSlot": "Confirm the appointment on {{when}}",
+    "cancelAppointment": "Cancel appointment",
+    "noSlots": "No open slots."
+  },
+  "status": {
+    "case": {
+      "CREATED": "Created",
+      "IN_PROGRESS": "In progress",
+      "CORRECTION_REQUESTED": "Correction requested",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "document": {
+      "UPLOADED": "Uploaded",
+      "ACCEPTED": "Accepted",
+      "CORRECTION_REQUESTED": "Needs correction",
+      "REPLACED": "Replaced",
+      "REJECTED": "Rejected"
+    },
+    "order": {
+      "PENDING_PAYMENT": "Pending payment",
+      "PENDING_MANUAL": "Manual review",
+      "PAID": "Paid",
+      "CANCELLED": "Cancelled"
+    },
+    "appointment": { "BOOKED": "Booked", "CANCELLED": "Cancelled", "COMPLETED": "Completed" }
+  },
+  "error": {
+    "eligibility": { "not_met": "Based on this procedure’s rules, your situation is not eligible." },
+    "order": { "already_exists": "An order is already open for this case." },
+    "payment": {
+      "stripe_not_configured": "Stripe is not configured for this organization.",
+      "stripe_unavailable": "Stripe is temporarily unavailable. Please retry.",
+      "cinetpay_not_configured": "CinetPay is not configured for this organization.",
+      "cinetpay_unavailable": "CinetPay is temporarily unavailable. Please retry.",
+      "cinetpay_amount_invalid": "This amount cannot be sent to CinetPay.",
+      "webhook_invalid": "Invalid payment notification.",
+      "webhook_signature": "Invalid payment signature."
+    },
+    "appointment": {
+      "already_booked": "An appointment is already booked.",
+      "slot_full": "This slot is full.",
+      "hold_unavailable": "This slot was just reserved by someone else. Please pick another time."
+    },
+    "document": {
+      "content_type_not_allowed": "File type not allowed (PDF, JPEG, PNG, WebP).",
+      "too_large": "File too large (10 MB max).",
+      "correction_requested": "A document needs to be resubmitted. Open the case to upload it again."
+    },
+    "case": { "not_modifiable": "This case can no longer be modified." },
+    "privacy": {
+      "consent_required": "Please accept the privacy notice to create the case.",
+      "notice_stale": "The privacy notice has changed. Reload the page."
+    },
+    "session_expired": "Session expired. Please sign in again.",
+    "access": { "denied": "You do not have access to this resource." },
+    "rate_limited": "Too many requests. Try again in a minute.",
+    "http": "The API returned an error. Please retry.",
+    "not_found": "Resource not found.",
+    "internal": "Internal server error."
+  },
+  "document": {
+    "correction": {
+      "unreadable": "A document is unreadable or blurry.",
+      "incomplete": "A document is incomplete.",
+      "expired": "A document has expired.",
+      "photo_spec": "The photo does not meet the required format.",
+      "mismatch": "The identity does not match the other documents."
+    }
+  }
+}

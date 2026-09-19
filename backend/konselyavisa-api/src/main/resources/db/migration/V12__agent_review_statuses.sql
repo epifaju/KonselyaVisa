@@ -1,0 +1,10 @@
+ALTER TABLE cases DROP CONSTRAINT chk_cases_status;
+ALTER TABLE cases ADD CONSTRAINT chk_cases_status CHECK (
+    status IN ('CREATED', 'IN_PROGRESS', 'CORRECTION_REQUESTED', 'COMPLETED', 'CANCELLED')
+);
+
+ALTER TABLE documents DROP CONSTRAINT chk_documents_status;
+ALTER TABLE documents ALTER COLUMN status TYPE VARCHAR(32);
+ALTER TABLE documents ADD CONSTRAINT chk_documents_status CHECK (
+    status IN ('UPLOADED', 'ACCEPTED', 'CORRECTION_REQUESTED', 'REPLACED', 'REJECTED')
+);
