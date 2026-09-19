@@ -1,5 +1,6 @@
+import { useEffect, useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, Languages } from "lucide-react";
+import { AlertCircle, Languages, Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { apiGet, loc, type ApiResponse } from "@/api/client";
 import { Button } from "@/components/ui/button";
@@ -20,10 +21,26 @@ export type PublicSite = {
   openingHoursI18n: Record<string, string>;
   contactEmail?: string | null;
   contactPhone?: string | null;
-  formalities: { category: string }[];
+  formalities: { category: string; nameI18n: Record<string, string> }[];
 };
 
+function formalityGridClass(count: number): string {
+  if (count <= 1) {
+    return "mx-auto grid max-w-sm grid-cols-1 gap-4";
+  }
+  if (count === 2) {
+    return "mx-auto grid max-w-3xl grid-cols-1 gap-4 md:grid-cols-2";
+  }
+  if (count === 3) {
+    return "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3";
+  }
+  return "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4";
+}
+
 export const PUBLIC_ORG = import.meta.env.VITE_ORGANIZATION_ID ?? "11111111-1111-1111-1111-111111111111";
+
+const NAV_FOCUS =
+  "rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 export function usePublicSite() {
   return useQuery({
@@ -42,8 +59,12 @@ type Props = {
   onNav: (view: Nav) => void;
 };
 
+const agentPortalUrl = import.meta.env.VITE_AGENT_PORTAL_URL ?? "http://localhost:5176";
+
 export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
   const { t, i18n } = useTranslation();
+  const menuId = useId();
+  const [menuOpen, setMenuOpen] = useState(false);
   const siteQuery = usePublicSite();
   const site = siteQuery.data;
   const orgName = loc(site?.nameI18n, i18n.language, t("login.organizationName"));
@@ -53,60 +74,129 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
   const hours = loc(site?.openingHoursI18n, i18n.language, "");
   const languageNames = languages.map((code) => t(`language.${code}`, { defaultValue: code.toUpperCase() }));
 
+  useEffect(() => {
+    if (!menuOpen) {
+      return;
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  const languageSwitcher = (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button type="button" variant="outline" size="sm" className="gap-1" aria-label={t("language.label")}>
+          <Languages className="h-4 w-4" aria-hidden />
+          {t(`language.short.${currentLang}`, { defaultValue: currentLang.toUpperCase() })}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {languages.map((code) => (
+          <DropdownMenuItem key={code} onSelect={() => void i18n.changeLanguage(code)}>
+            {t(`language.${code}`, { defaultValue: code.toUpperCase() })}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
+  const navLinks = (
+    <>
+      <a className={NAV_FOCUS} href="#services" onClick={() => setMenuOpen(false)}>
+        {t("home.nav.services")}
+      </a>
+      <button
+        className={NAV_FOCUS}
+        type="button"
+        onClick={() => {
+          setMenuOpen(false);
+          onTrack();
+        }}
+      >
+        {t("home.nav.track")}
+      </button>
+      <a
+        className={NAV_FOCUS}
+        href="#contact"
+        onClick={() => {
+          setMenuOpen(false);
+          onNav("home");
+        }}
+      >
+        {t("home.nav.contact")}
+      </a>
+    </>
+  );
+
   return (
     <div className="login-theme min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between md:px-6">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
+          <div className="flex min-w-0 items-center gap-3">
             <div className="h-10 w-10 shrink-0 rounded-lg bg-primary" aria-hidden />
             <div className="min-w-0">
-              <p className="font-medium text-body text-foreground">{t("login.title")}</p>
-              <p className="text-caption text-muted-foreground">{orgName}</p>
+              <p className="truncate text-body text-heading-3 font-medium text-foreground">{orgName}</p>
+              <p className="text-caption text-muted-foreground">{t("login.title")}</p>
             </div>
           </div>
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-body-sm" aria-label={t("home.nav.label")}>
-            <a className="text-foreground underline-offset-4 hover:underline" href="#services" onClick={() => onNav("home")}>
-              {t("home.nav.services")}
-            </a>
-            <button className="text-foreground underline-offset-4 hover:underline" type="button" onClick={onTrack}>
-              {t("home.nav.track")}
-            </button>
-            <a className="text-foreground underline-offset-4 hover:underline" href="#contact" onClick={() => onNav("home")}>
-              {t("home.nav.contact")}
-            </a>
+          <nav className="hidden items-center gap-x-6 text-body-sm lg:flex" aria-label={t("home.nav.label")}>
+            {navLinks}
           </nav>
-          <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button type="button" variant="outline" size="sm" className="gap-1" aria-label={t("language.label")}>
-                  <Languages className="h-4 w-4" aria-hidden />
-                  {t(`language.short.${currentLang}`, { defaultValue: currentLang.toUpperCase() })}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {languages.map((code) => (
-                  <DropdownMenuItem key={code} onSelect={() => void i18n.changeLanguage(code)}>
-                    {t(`language.${code}`, { defaultValue: code.toUpperCase() })}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="hidden items-center gap-2 lg:flex">
+            {languageSwitcher}
             <Button type="button" variant="outline" onClick={onSignIn}>
               {t("login.cta")}
             </Button>
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="lg:hidden"
+            aria-expanded={menuOpen}
+            aria-controls={menuId}
+            aria-label={menuOpen ? t("home.nav.closeMenu", { defaultValue: "Fermer le menu" }) : t("home.nav.openMenu", { defaultValue: "Ouvrir le menu" })}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? <X className="h-4 w-4" aria-hidden /> : <Menu className="h-4 w-4" aria-hidden />}
+          </Button>
         </div>
+        {menuOpen ? (
+          <div id={menuId} className="border-t border-border px-4 py-4 lg:hidden md:px-6">
+            <nav className="flex flex-col gap-3 text-body-sm" aria-label={t("home.nav.label")}>
+              {navLinks}
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                {languageSwitcher}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onSignIn();
+                  }}
+                >
+                  {t("login.cta")}
+                </Button>
+              </div>
+            </nav>
+          </div>
+        ) : null}
       </header>
 
-      <div className="bg-success/10 text-success">
+      <div className="bg-muted text-foreground">
         <p className="mx-auto flex max-w-6xl items-start gap-2 px-4 py-2 text-caption md:items-center md:px-6">
-          <TrustShield className="mt-0.5 h-4 w-4 shrink-0 md:mt-0" />
+          <TrustShield className="mt-0.5 h-4 w-4 shrink-0 text-primary md:mt-0" />
           <span>{t("home.trust", { organization: orgName })}</span>
         </p>
       </div>
 
       <main>
-        <section className="mx-auto max-w-3xl px-4 py-16 text-center md:px-6 md:py-20">
+        <section className="mx-auto max-w-3xl px-4 py-10 text-center md:px-6 md:py-12">
           <h1 className="text-heading-1 font-medium text-foreground">{t("home.hero.title")}</h1>
           <p className="mx-auto mt-4 max-w-xl text-body text-muted-foreground">{t("home.hero.subtitle")}</p>
           <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
@@ -117,22 +207,18 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
               {t("home.hero.track")}
             </Button>
           </div>
-          <div className="mt-10 flex justify-center text-muted-foreground">
-            <a href="#how" aria-label={t("home.how.title")}>
-              <ChevronDown className="h-6 w-6" />
-            </a>
-          </div>
         </section>
 
         <section id="services" className="mx-auto max-w-6xl scroll-mt-8 px-4 pb-16 md:px-6">
           <h2 className="mb-6 text-center text-body-sm text-muted-foreground">{t("home.formalities.title")}</h2>
           {siteQuery.isLoading ? <p className="text-center text-body-sm text-muted-foreground">{t("common.loading")}</p> : null}
           {siteQuery.isError ? (
-            <p className="text-center text-body-sm text-destructive" role="alert">
-              {t("common.error")}
+            <p className="flex items-center justify-center gap-2 text-body-sm text-destructive" role="alert">
+              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden />
+              <span>{t("common.error")}</span>
             </p>
           ) : null}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className={formalityGridClass(site?.formalities?.length ?? 0)}>
             {(site?.formalities ?? []).map((item) => (
               <button
                 key={item.category}
@@ -141,7 +227,13 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
                 onClick={() => onStart(item.category)}
               >
                 {formalityIcon(item.category)}
-                <span>{t(`home.formality.${item.category}`, { defaultValue: item.category })}</span>
+                <span>
+                  {loc(
+                    item.nameI18n,
+                    i18n.language,
+                    t(`home.formality.${item.category}`, { defaultValue: item.category }),
+                  )}
+                </span>
               </button>
             ))}
           </div>
@@ -190,7 +282,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
             {hours ? <p className="text-body-sm text-muted-foreground">{hours}</p> : null}
             {site?.contactEmail ? (
               <p className="mt-1 text-body-sm text-muted-foreground">
-                <a className="underline" href={`mailto:${site.contactEmail}`}>
+                <a className={`${NAV_FOCUS} underline`} href={`mailto:${site.contactEmail}`}>
                   {site.contactEmail}
                 </a>
               </p>
@@ -198,16 +290,21 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
             {site?.contactPhone ? <p className="text-body-sm text-muted-foreground">{site.contactPhone}</p> : null}
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-body-sm" aria-label={t("home.footer.links")}>
-            <button className="underline-offset-4 hover:underline" type="button" onClick={() => onNav("legal")}>
+            <button className={NAV_FOCUS} type="button" onClick={() => onNav("legal")}>
               {t("home.footer.legal")}
             </button>
-            <button className="underline-offset-4 hover:underline" type="button" onClick={() => onNav("privacy")}>
+            <button className={NAV_FOCUS} type="button" onClick={() => onNav("privacy")}>
               {t("home.footer.privacy")}
             </button>
-            <button className="underline-offset-4 hover:underline" type="button" onClick={() => onNav("contact")}>
+            <a className={NAV_FOCUS} href="#contact">
               {t("home.nav.contact")}
-            </button>
+            </a>
           </nav>
+        </div>
+        <div className="mx-auto max-w-6xl px-4 pb-6 md:px-6">
+          <a className={`${NAV_FOCUS} text-caption text-muted-foreground`} href={agentPortalUrl}>
+            {t("login.agentLink")}
+          </a>
         </div>
       </footer>
     </div>

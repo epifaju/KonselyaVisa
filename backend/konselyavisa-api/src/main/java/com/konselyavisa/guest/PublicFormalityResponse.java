@@ -1,3 +1,5 @@
 package com.konselyavisa.guest;
 
-public record PublicFormalityResponse(String category) {}
+import java.util.Map;
+
+public record PublicFormalityResponse(String category, Map<String, String> nameI18n) {}

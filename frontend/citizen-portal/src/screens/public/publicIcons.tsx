@@ -39,7 +39,7 @@ export function formalityIcon(category: string, className = "h-6 w-6 text-primar
 }
 
 export function reassuranceIcon(kind: "lock" | "shield" | "languages") {
-  const className = "h-5 w-5 text-accent";
+  const className = "h-5 w-5 text-primary";
   if (kind === "lock") {
     return <Lock className={className} aria-hidden />;
   }

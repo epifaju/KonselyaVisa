@@ -52,7 +52,7 @@ public class PublicSiteService {
             }
             String category = procedure.getCategory().name();
             if (categories.add(category)) {
-                formalities.add(new PublicFormalityResponse(category));
+                formalities.add(new PublicFormalityResponse(category, Map.copyOf(procedure.getNameI18n())));
             }
         }
         return new PublicSiteResponse(
