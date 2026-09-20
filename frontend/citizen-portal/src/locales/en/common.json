@@ -35,7 +35,7 @@
       "track": "Track my application",
       "contact": "Contact"
     },
-    "trust": "Official website of {{organization}} — always check you are on this domain before paying",
+    "trust": "Official website — {{organization}} — always check you are on this domain before paying",
     "hero": {
       "title": "Consular procedures, made simpler",
       "subtitle": "Visa, legalisation, apostille, sworn translation — check what you need and file your case online.",

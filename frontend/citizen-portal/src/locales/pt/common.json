@@ -35,7 +35,7 @@
       "track": "Acompanhar o pedido",
       "contact": "Contacto"
     },
-    "trust": "Sítio oficial de {{organization}} — verifique sempre que está neste domínio antes de pagar",
+    "trust": "Sítio oficial — {{organization}} — verifique sempre que está neste domínio antes de pagar",
     "hero": {
       "title": "As suas formalidades consulares, simplificadas",
       "subtitle": "Visto, legalização, apostila, tradução juramentada — verifique o que precisa e apresente o processo em linha.",

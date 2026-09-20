@@ -35,7 +35,7 @@
       "track": "Suivre ma demande",
       "contact": "Contact"
     },
-    "trust": "Site officiel de {{organization}} — vérifiez toujours que vous êtes sur ce domaine avant de payer",
+    "trust": "Site officiel — {{organization}} — vérifiez toujours que vous êtes sur ce domaine avant de payer",
     "hero": {
       "title": "Vos démarches consulaires, simplifiées",
       "subtitle": "Visa, légalisation, apostille, traduction assermentée — vérifiez ce dont vous avez besoin et déposez votre dossier en ligne.",
