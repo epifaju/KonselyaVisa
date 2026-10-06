@@ -2,9 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ApiError, apiPost, loc, type ApiResponse } from "@/api/client";
+import { getPublicOrganizationId } from "@/api/publicOrganization";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PUBLIC_ORG } from "@/screens/public/PublicHome";
 
 type Result = {
   reference: string;
@@ -26,7 +26,7 @@ export function PublicTrackCase({ onBack }: Props) {
   const lookup = useMutation({
     mutationFn: () =>
       apiPost<ApiResponse<Result>>("", "/api/v1/public/case-status", {
-        organizationId: PUBLIC_ORG,
+        organizationId: getPublicOrganizationId(),
         reference: reference.trim(),
         email: email.trim() || undefined,
         dateOfBirth: dateOfBirth.trim() || undefined,

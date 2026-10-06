@@ -1,0 +1,10 @@
+{
+  "supervisor": {
+    "overdueAlert_one": "{{count}} processo espera há mais de 5 dias.",
+    "overdueAlert_other": "{{count}} processos esperam há mais de 5 dias.",
+    "openOverdue": "Abrir processos fora de prazo",
+    "open": "Processos abertos",
+    "watch": "A vigiar (48 h+)",
+    "breach": "Fora de prazo (5 d+)"
+  }
+}

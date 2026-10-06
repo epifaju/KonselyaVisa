@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { loc } from "@/api/client";
+import { usePublicOrg } from "@/api/usePublicOrg";
 import { OrganizationBrand } from "@/components/OrganizationBrand";
 import { userManager } from "@/auth/userManager";
 import { Button } from "@/components/ui/button";
@@ -14,8 +16,11 @@ const agentPortalUrl = import.meta.env.VITE_AGENT_PORTAL_URL ?? "http://localhos
 
 export function LoginScreen({ bootstrapError, onContinueGuest, onBack }: Props) {
   const { t, i18n } = useTranslation();
+  const orgQuery = usePublicOrg();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(Boolean(bootstrapError));
+  const languages = orgQuery.data?.activeLanguages?.length ? orgQuery.data.activeLanguages : ["fr", "pt", "en"];
+  const orgName = loc(orgQuery.data?.nameI18n, i18n.language, t("login.organizationName"));
 
   const onSignIn = async () => {
     setSubmitting(true);
@@ -33,7 +38,7 @@ export function LoginScreen({ bootstrapError, onContinueGuest, onBack }: Props) 
   return (
     <div className="login-theme min-h-screen bg-background text-foreground">
       <div className="absolute right-4 top-4 flex gap-1">
-        {(["fr", "pt", "en"] as const).map((lng) => (
+        {languages.map((lng) => (
           <Button
             key={lng}
             type="button"
@@ -42,12 +47,12 @@ export function LoginScreen({ bootstrapError, onContinueGuest, onBack }: Props) 
             className="h-8 px-2 text-caption"
             onClick={() => void i18n.changeLanguage(lng)}
           >
-            {t(`language.${lng}`)}
+            {t(`language.${lng}`, { defaultValue: lng.toUpperCase() })}
           </Button>
         ))}
       </div>
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 py-12">
-        <OrganizationBrand layout="login" />
+        <OrganizationBrand layout="login" organizationName={orgName} />
 
         <div className="mt-10 w-full space-y-5">
           {onBack ? (
@@ -56,7 +61,12 @@ export function LoginScreen({ bootstrapError, onContinueGuest, onBack }: Props) 
             </Button>
           ) : null}
           {error ? <p className="text-center text-body-sm text-destructive">{t("login.error")}</p> : null}
-          <Button className="h-12 w-full rounded-md text-body-lg" type="button" disabled={submitting} onClick={() => void onSignIn()}>
+          <Button
+            className="h-12 w-full rounded-md text-body-lg text-primary-foreground"
+            type="button"
+            disabled={submitting}
+            onClick={() => void onSignIn()}
+          >
             {submitting ? t("common.loading") : t("login.cta")}
           </Button>
           <p className="text-center text-caption text-muted-foreground">{t("login.or")}</p>

@@ -10,8 +10,8 @@
     --card-foreground: 152 30% 12%;
     --popover: 0 0% 100%;
     --popover-foreground: 152 30% 12%;
-    --primary: 152 76% 21%;
-    --primary-foreground: 0 0% 100%;
+    --primary: var(--org-primary, 152 76% 21%);
+    --primary-foreground: var(--org-primary-foreground, 0 0% 100%);
     --secondary: 150 16% 92%;
     --secondary-foreground: 152 30% 12%;
     --muted: 150 16% 92%;
@@ -27,25 +27,26 @@
     --border: 150 12% 86%;
     --input: 0 0% 100%;
     --input-foreground: 152 30% 12%;
-    --ring: 152 76% 21%;
+    --ring: var(--org-primary, 152 76% 21%);
     --popover: 0 0% 100%;
     --popover-foreground: 152 30% 12%;
     --radius: 0.65rem;
   }
 
   .login-theme {
-    --background: 0 0% 100%;
+    /* Soft blue wash (falls back when no org brand); brand sets --org-background / --org-muted */
+    --background: var(--org-background, 213 48% 96%);
     --foreground: 0 0% 10%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 10%;
-    --primary: 213 90% 52%;
-    --primary-foreground: 0 0% 100%;
-    --muted: 0 0% 96%;
+    --primary: var(--org-primary, 213 90% 52%);
+    --primary-foreground: var(--org-primary-foreground, 0 0% 100%);
+    --muted: var(--org-muted, 213 32% 93%);
     --muted-foreground: 0 0% 42%;
     --border: 0 0% 86%;
     --input: 0 0% 100%;
     --input-foreground: 0 0% 10%;
-    --ring: 213 90% 52%;
+    --ring: var(--org-primary, 213 90% 52%);
   }
 
   .dark {
@@ -55,8 +56,8 @@
     --card-foreground: 0 0% 93%;
     --popover: 0 0% 6%;
     --popover-foreground: 0 0% 93%;
-    --primary: 213 90% 52%;
-    --primary-foreground: 0 0% 100%;
+    --primary: var(--org-primary, 213 90% 52%);
+    --primary-foreground: var(--org-primary-foreground, 0 0% 100%);
     --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 93%;
     --muted: 0 0% 12%;
@@ -72,7 +73,7 @@
     --border: 0 0% 18%;
     --input: 0 0% 100%;
     --input-foreground: 152 30% 12%;
-    --ring: 213 90% 52%;
+    --ring: var(--org-primary, 213 90% 52%);
   }
 
   * {

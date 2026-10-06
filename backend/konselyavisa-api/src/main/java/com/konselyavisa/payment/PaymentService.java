@@ -275,6 +275,7 @@ public class PaymentService {
     private static Map<String, Object> completedPayload(Payment payment) {
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("caseId", payment.getOrder().getCaseFile().getId().toString());
+        payload.put("caseReference", payment.getOrder().getCaseFile().getReference());
         payload.put("orderId", payment.getOrder().getId().toString());
         payload.put("paymentId", payment.getId().toString());
         payload.put("reference", payment.getOrder().getReference());

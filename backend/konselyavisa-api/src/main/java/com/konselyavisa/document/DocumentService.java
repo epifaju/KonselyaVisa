@@ -1,7 +1,6 @@
 package com.konselyavisa.document;
 
 import com.konselyavisa.common.exception.BusinessException;
-import com.konselyavisa.document.api.DocumentMapper;
 import com.konselyavisa.document.api.DocumentResponse;
 import com.konselyavisa.document.domain.CaseDocument;
 import com.konselyavisa.document.domain.DocumentAccessAction;
@@ -32,7 +31,9 @@ public class DocumentService {
     private final DocumentAccessLogRepository documentAccessLogRepository;
     private final ObjectStorage objectStorage;
     private final OutboxAppender outboxAppender;
-    private final DocumentMapper documentMapper;
+    private final DocumentResponseFactory documentResponseFactory;
+    private final DocumentHashAlertService documentHashAlertService;
+    private final DocumentUploadRefusalService documentUploadRefusalService;
 
     public DocumentService(
             CaseService caseService,
@@ -40,18 +41,31 @@ public class DocumentService {
             DocumentAccessLogRepository documentAccessLogRepository,
             ObjectStorage objectStorage,
             OutboxAppender outboxAppender,
-            DocumentMapper documentMapper) {
+            DocumentResponseFactory documentResponseFactory,
+            DocumentHashAlertService documentHashAlertService,
+            DocumentUploadRefusalService documentUploadRefusalService) {
         this.caseService = caseService;
         this.caseDocumentRepository = caseDocumentRepository;
         this.documentAccessLogRepository = documentAccessLogRepository;
         this.objectStorage = objectStorage;
         this.outboxAppender = outboxAppender;
-        this.documentMapper = documentMapper;
+        this.documentResponseFactory = documentResponseFactory;
+        this.documentHashAlertService = documentHashAlertService;
+        this.documentUploadRefusalService = documentUploadRefusalService;
     }
 
     @Transactional
     public DocumentResponse upload(UUID caseId, String requirementCode, MultipartFile file) {
         CaseFile caseFile = caseService.requireAccessible(caseId);
+        try {
+            return uploadAccepted(caseFile, requirementCode, file);
+        } catch (BusinessException ex) {
+            documentUploadRefusalService.record(caseFile, requirementCode, file, ex.getMessageKey());
+            throw ex;
+        }
+    }
+
+    private DocumentResponse uploadAccepted(CaseFile caseFile, String requirementCode, MultipartFile file) {
         assertCaseAcceptsDocuments(caseFile);
         if (!DocumentRequirementCodes.isDeclared(caseFile.getProcedureVersion(), requirementCode)) {
             throw BusinessException.badRequest("error.document.requirement_unknown");
@@ -84,11 +98,12 @@ public class DocumentService {
             document.setStatus(DocumentStatus.UPLOADED);
             document.setDuplicateHash(duplicateHash);
             caseDocumentRepository.saveAndFlush(document);
+            documentHashAlertService.flagCrossApplicantDuplicates(document);
             if (caseFile.getStatus() == CaseStatus.CREATED) {
                 caseFile.setStatus(CaseStatus.IN_PROGRESS);
             }
             outboxAppender.appendDocumentUploaded(caseFile.getId(), uploadedPayload(document));
-            return documentMapper.toResponse(document);
+            return documentResponseFactory.toResponse(document);
         } catch (RuntimeException ex) {
             objectStorage.delete(storageKey);
             throw ex;
@@ -99,7 +114,7 @@ public class DocumentService {
     public List<DocumentResponse> list(UUID caseId) {
         caseService.requireAccessible(caseId);
         return caseDocumentRepository.findByCaseFile_IdOrderByCreatedAtAsc(caseId).stream()
-                .map(documentMapper::toResponse)
+                .map(documentResponseFactory::toResponse)
                 .toList();
     }
 

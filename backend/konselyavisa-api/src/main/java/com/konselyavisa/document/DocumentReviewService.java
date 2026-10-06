@@ -1,7 +1,6 @@
 package com.konselyavisa.document;
 
 import com.konselyavisa.common.exception.BusinessException;
-import com.konselyavisa.document.api.DocumentMapper;
 import com.konselyavisa.document.api.DocumentResponse;
 import com.konselyavisa.document.api.DocumentReviewRequest;
 import com.konselyavisa.document.ReviewMessageKeys;
@@ -25,17 +24,17 @@ public class DocumentReviewService {
     private final CaseService caseService;
     private final CaseDocumentRepository caseDocumentRepository;
     private final OutboxAppender outboxAppender;
-    private final DocumentMapper documentMapper;
+    private final DocumentResponseFactory documentResponseFactory;
 
     public DocumentReviewService(
             CaseService caseService,
             CaseDocumentRepository caseDocumentRepository,
             OutboxAppender outboxAppender,
-            DocumentMapper documentMapper) {
+            DocumentResponseFactory documentResponseFactory) {
         this.caseService = caseService;
         this.caseDocumentRepository = caseDocumentRepository;
         this.outboxAppender = outboxAppender;
-        this.documentMapper = documentMapper;
+        this.documentResponseFactory = documentResponseFactory;
     }
 
     @Transactional
@@ -51,7 +50,7 @@ public class DocumentReviewService {
                         caseId, DocumentStatus.CORRECTION_REQUESTED)) {
             caseFile.setStatus(CaseStatus.IN_PROGRESS);
         }
-        return documentMapper.toResponse(document);
+        return documentResponseFactory.toResponse(document);
     }
 
     @Transactional
@@ -67,7 +66,7 @@ public class DocumentReviewService {
             caseFile.setStatus(CaseStatus.CORRECTION_REQUESTED);
         }
         outboxAppender.appendCorrectionRequested(caseFile.getId(), correctionPayload(document, request.reason()));
-        return documentMapper.toResponse(document);
+        return documentResponseFactory.toResponse(document);
     }
 
     @Transactional
@@ -80,7 +79,7 @@ public class DocumentReviewService {
         document.setStatus(DocumentStatus.REJECTED);
         document.setReviewMessageKey(ReviewMessageKeys.fromReason(request.reason()));
         outboxAppender.appendCorrectionRequested(document.getCaseFile().getId(), rejectPayload(document, request.reason()));
-        return documentMapper.toResponse(document);
+        return documentResponseFactory.toResponse(document);
     }
 
     private CaseFile requireStaffCase(UUID caseId) {
@@ -103,6 +102,7 @@ public class DocumentReviewService {
     private static Map<String, Object> correctionPayload(CaseDocument document, String reason) {
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("caseId", document.getCaseFile().getId().toString());
+        payload.put("reference", document.getCaseFile().getReference());
         payload.put("documentId", document.getId().toString());
         payload.put("requirementCode", document.getRequirementCode());
         payload.put("reason", reason);
@@ -114,6 +114,7 @@ public class DocumentReviewService {
     private static Map<String, Object> rejectPayload(CaseDocument document, String reason) {
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("caseId", document.getCaseFile().getId().toString());
+        payload.put("reference", document.getCaseFile().getReference());
         payload.put("documentId", document.getId().toString());
         payload.put("requirementCode", document.getRequirementCode());
         payload.put("reason", reason);

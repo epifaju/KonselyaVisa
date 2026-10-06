@@ -1,0 +1,31 @@
+{
+  "orgSettings": {
+    "title": "Definições da organização",
+    "hint": "Cor da marca, domínio público e prestador de pagamento (em organization_settings).",
+    "brandColor": "Cor da marca",
+    "brandColorHint": "Hex (#RGB ou #RRGGBB). Vazio = tema predefinido.",
+    "brandColorInvalid": "Cor inválida — use hex #RGB ou #RRGGBB.",
+    "logo": "Logótipo",
+    "logoHint": "PNG / JPEG / WebP, máx. 512 KB. Mostrado nos cabeçalhos do portal.",
+    "favicon": "Favicon",
+    "faviconHint": "ICO / PNG / WebP, máx. 128 KB. Ícone do separador do browser.",
+    "uploadAsset": "Escolher ficheiro",
+    "clearAsset": "Remover",
+    "assetError": "Falha ao carregar ou remover o asset.",
+    "domain": "Domínio personalizado",
+    "domainHint": "Host público (ex. visa.acme.com), sem https://. Vazio = sem resolução por domínio. Ver docs/WHITE_LABEL.md para DNS/TLS.",
+    "domainInvalid": "Domínio inválido — apenas o host, sem caminho.",
+    "paymentProvider": "Prestador de pagamento",
+    "paymentProviderHint": "A feature flag payment.provider.* também deve estar ativa para Stripe / CinetPay / PayDunya.",
+    "providers": {
+      "MOCK": "Mock (demo)",
+      "MANUAL": "Manual (balcão)",
+      "STRIPE": "Stripe",
+      "CINETPAY": "CinetPay",
+      "PAYDUNYA": "PayDunya"
+    },
+    "save": "Guardar",
+    "saved": "Definições guardadas.",
+    "saveError": "Não foi possível guardar. Verifique os valores e as permissões."
+  }
+}

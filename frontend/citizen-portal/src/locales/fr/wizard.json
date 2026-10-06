@@ -1,0 +1,91 @@
+{
+  "wizard": {
+    "title": "Quelle démarche ?",
+    "progress": "Question {{current}} sur {{total}}",
+    "continue": "Continuer",
+    "previous": "Précédent",
+    "quit": "Quitter",
+    "quitConfirm": "Quitter l’assistant ? Les réponses déjà données seront perdues.",
+    "stay": "Rester",
+    "leave": "Quitter",
+    "submit": "Créer le dossier",
+    "signInToCreate": "Se connecter pour ouvrir le dossier",
+    "createAccount": "Créer un compte pour ouvrir le dossier",
+    "destination": {
+      "question": "Pour quel pays cette démarche est-elle destinée ?"
+    },
+    "procedure": {
+      "question": "Quelle formalité souhaitez-vous ?"
+    },
+    "nationality": {
+      "question": "Quelle est la nationalité du passeport ?",
+      "FR": "France",
+      "PT": "Portugal",
+      "GW": "Guinée-Bissau"
+    },
+    "passport": {
+      "question": "Votre passeport est-il encore valable au moins 6 mois ?",
+      "hint": "La plupart des visas et eVisa exigent cette durée minimale.",
+      "yes": "Oui, plus de 6 mois",
+      "no": "Non, moins de 6 mois"
+    },
+    "document": {
+      "question": "Quel document voulez-vous faire reconnaître à l’étranger ?",
+      "BIRTH_CERTIFICATE": "Acte de naissance",
+      "DIPLOMA": "Diplôme",
+      "CRIMINAL_RECORD": "Extrait de casier judiciaire"
+    },
+    "translation": {
+      "question": "Quel document voulez-vous faire traduire (FR → PT) ?",
+      "hint": "Traduction assermentée français vers portugais pour usage en Guinée-Bissau."
+    },
+    "trip": {
+      "question": "Votre séjour en Guinée-Bissau dure-t-il entre 1 et 90 jours ?",
+      "hint": "Cette assurance démo couvre les séjours jusqu’à 90 jours.",
+      "yes": "Oui, entre 1 et 90 jours",
+      "no": "Non / plus de 90 jours"
+    },
+    "hague": {
+      "question": "Le pays d’arrivée reconnaît-il le cachet international ?",
+      "hint": "Pour le Portugal, la réponse est en général oui. Ce n’est pas le cas de tous les pays.",
+      "yes": "Oui",
+      "no": "Non / je ne suis pas sûr"
+    },
+    "confirm": {
+      "title": "Récapitulatif",
+      "summary": "Nationalité {{nationality}} · {{price}}",
+      "priceLater": "tarif indiqué ensuite",
+      "identity": "Identité déjà connue"
+    },
+    "register": {
+      "title": "Créez votre compte",
+      "hint": "Votre démarche éligible sera rattachée à ce compte dès la connexion.",
+      "email": "Adresse e-mail",
+      "password": "Mot de passe",
+      "passwordConfirm": "Confirmer le mot de passe",
+      "passwordHint": "Au moins 12 caractères, avec une lettre et un chiffre.",
+      "passwordMismatch": "Les deux mots de passe doivent être identiques.",
+      "submit": "Créer le compte et se connecter",
+      "haveAccount": "J’ai déjà un compte — se connecter",
+      "missingTicket": "Reprenez l’assistant d’éligibilité pour créer un compte."
+    },
+    "ineligible": {
+      "nationality": "Cette formalité n’est pas proposée pour cette nationalité.",
+      "passport": "Sans 6 mois de validité, le visa ou eVisa ne peut pas être demandé ici.",
+      "hague": "Sans reconnaissance du cachet international, cette démarche ne s’applique pas.",
+      "trip": "Cette assurance ne couvre que les séjours de 1 à 90 jours.",
+      "generic": "D’après vos réponses, cette démarche n’est pas possible. Modifiez une réponse précédente."
+    }
+  },
+  "new": {
+    "title": "Nouvelle demande",
+    "procedure": "Procédure",
+    "choose": "Choisir une procédure",
+    "price": "Tarif",
+    "displayName": "Nom",
+    "email": "E-mail",
+    "nationality": "Nationalité (passeport)",
+    "passportValidity": "Validité du passeport (mois)",
+    "submit": "Créer le dossier"
+  }
+}

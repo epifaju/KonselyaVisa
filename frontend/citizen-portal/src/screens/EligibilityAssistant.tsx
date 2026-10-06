@@ -23,7 +23,7 @@ import {
   WizardShell,
 } from "@/screens/wizard/WizardChrome";
 
-const PUBLIC_ORG = import.meta.env.VITE_ORGANIZATION_ID ?? "11111111-1111-1111-1111-111111111111";
+import { getPublicOrganizationId } from "@/api/publicOrganization";
 
 const NATIONALITIES = [
   { code: "FR", nameKey: "wizard.nationality.FR" },
@@ -51,6 +51,7 @@ type ExtraFacts = {
   passportOk?: boolean;
   documentType?: string;
   hague?: boolean;
+  tripOk?: boolean;
 };
 
 function uniqueDestinations(procedures: Procedure[]) {
@@ -61,11 +62,19 @@ function uniqueDestinations(procedures: Procedure[]) {
   return [...seen.values()];
 }
 
+function needsPassport(category: string) {
+  return category === "VISA" || category === "EVISA";
+}
+
+function needsDocumentType(category: string) {
+  return category === "LEGALIZATION" || category === "TRANSLATION";
+}
+
 function clientEligible(procedure: Procedure, nationality: string, extra: ExtraFacts): boolean {
-  if (procedure.category === "VISA") {
+  if (needsPassport(procedure.category)) {
     return ["FR", "PT", "GW"].includes(nationality) && extra.passportOk === true;
   }
-  if (procedure.category === "LEGALIZATION") {
+  if (needsDocumentType(procedure.category)) {
     return (
       ["FR", "PT", "GW"].includes(nationality) &&
       DOCUMENT_TYPES.some((item) => item.code === extra.documentType)
@@ -74,18 +83,32 @@ function clientEligible(procedure: Procedure, nationality: string, extra: ExtraF
   if (procedure.category === "APOSTILLE") {
     return ["FR", "PT"].includes(nationality) && extra.hague === true;
   }
+  if (procedure.category === "INSURANCE") {
+    return ["FR", "PT", "GW"].includes(nationality) && extra.tripOk === true;
+  }
   return true;
 }
 
 function applicantFacts(procedure: Procedure, nationality: string, extra: ExtraFacts): Record<string, unknown> {
-  if (procedure.category === "VISA") {
+  if (needsPassport(procedure.category)) {
     return { nationality, passportValidityMonths: extra.passportOk ? 12 : 3 };
   }
   if (procedure.category === "LEGALIZATION") {
     return { nationality, documentType: extra.documentType };
   }
+  if (procedure.category === "TRANSLATION") {
+    return {
+      nationality,
+      documentType: extra.documentType,
+      sourceLanguage: "fr",
+      targetLanguage: "pt",
+    };
+  }
   if (procedure.category === "APOSTILLE") {
     return { nationality, hagueConvention: extra.hague === true };
+  }
+  if (procedure.category === "INSURANCE") {
+    return { nationality, tripDurationDays: extra.tripOk ? 14 : 0 };
   }
   return { nationality };
 }
@@ -163,22 +186,30 @@ export function EligibilityAssistant({
       : null;
 
   const extraReady =
-    selected?.category === "VISA"
+    selected && needsPassport(selected.category)
       ? extra.passportOk !== undefined
-      : selected?.category === "LEGALIZATION"
+      : selected && needsDocumentType(selected.category)
         ? Boolean(extra.documentType)
         : selected?.category === "APOSTILLE"
           ? extra.hague !== undefined
-          : true;
+          : selected?.category === "INSURANCE"
+            ? extra.tripOk !== undefined
+            : true;
   const eligible = selected && nationality ? clientEligible(selected, nationality, extra) : false;
   const hasAnswers = Boolean(
-    destinationCode || procedureId || nationality || extra.passportOk !== undefined || extra.documentType || extra.hague !== undefined,
+    destinationCode ||
+      procedureId ||
+      nationality ||
+      extra.passportOk !== undefined ||
+      extra.documentType ||
+      extra.hague !== undefined ||
+      extra.tripOk !== undefined,
   );
 
   const evaluateGuest = useMutation({
     mutationFn: () =>
       apiPost<ApiResponse<{ eligible: boolean; ticketId?: string }>>(token, "/api/v1/public/eligibility-tickets", {
-        organizationId: PUBLIC_ORG,
+        organizationId: getPublicOrganizationId(),
         procedureDefinitionId: procedureId,
         facts: selected ? applicantFacts(selected, nationality, extra) : { nationality },
       }),
@@ -259,19 +290,27 @@ export function EligibilityAssistant({
         : step === 2
           ? t("wizard.nationality.question")
           : step === 3
-            ? selected?.category === "VISA"
+            ? selected && needsPassport(selected.category)
               ? t("wizard.passport.question")
-              : selected?.category === "LEGALIZATION"
-                ? t("wizard.document.question")
-                : t("wizard.hague.question")
+              : selected && needsDocumentType(selected.category)
+                ? selected.category === "TRANSLATION"
+                  ? t("wizard.translation.question")
+                  : t("wizard.document.question")
+                : selected?.category === "INSURANCE"
+                  ? t("wizard.trip.question")
+                  : t("wizard.hague.question")
             : t("wizard.confirm.title");
 
   const hint =
-    step === 3 && selected?.category === "VISA"
+    step === 3 && selected && needsPassport(selected.category)
       ? t("wizard.passport.hint")
       : step === 3 && selected?.category === "APOSTILLE"
         ? t("wizard.hague.hint")
-        : undefined;
+        : step === 3 && selected?.category === "INSURANCE"
+          ? t("wizard.trip.hint")
+          : step === 3 && selected?.category === "TRANSLATION"
+            ? t("wizard.translation.hint")
+            : undefined;
 
   const onContinue = () => {
     if (step === 4) {
@@ -304,7 +343,7 @@ export function EligibilityAssistant({
       onStay={() => setQuitConfirm(false)}
       onLeave={onCancel}
       backLabel={t("wizard.previous")}
-      continueLabel={step === 4 ? (guest ? t("wizard.signInToCreate") : t("wizard.submit")) : t("wizard.continue")}
+      continueLabel={step === 4 ? (guest ? t("wizard.createAccount") : t("wizard.submit")) : t("wizard.continue")}
       backDisabled={step === 0}
       continueDisabled={!canContinue}
       continuePending={create.isPending || evaluateGuest.isPending}
@@ -386,7 +425,7 @@ export function EligibilityAssistant({
 
       {step === 3 && selected ? (
         <div className="space-y-3">
-          {selected.category === "VISA" ? (
+          {needsPassport(selected.category) ? (
             <>
               <RadioGroup
                 value={extra.passportOk === undefined ? "" : extra.passportOk ? "yes" : "no"}
@@ -403,7 +442,7 @@ export function EligibilityAssistant({
               ) : null}
             </>
           ) : null}
-          {selected.category === "LEGALIZATION" ? (
+          {needsDocumentType(selected.category) ? (
             <RadioGroup value={extra.documentType ?? ""} onValueChange={(value) => setExtra({ documentType: value })}>
               {DOCUMENT_TYPES.map((item) => (
                 <WizardOption
@@ -429,6 +468,23 @@ export function EligibilityAssistant({
                 <p className="flex items-start gap-2 text-body-sm text-destructive" role="status">
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
                   <span>{t("wizard.ineligible.hague")}</span>
+                </p>
+              ) : null}
+            </>
+          ) : null}
+          {selected.category === "INSURANCE" ? (
+            <>
+              <RadioGroup
+                value={extra.tripOk === undefined ? "" : extra.tripOk ? "yes" : "no"}
+                onValueChange={(value) => setExtra({ tripOk: value === "yes" })}
+              >
+                <WizardOption value="yes" selected={extra.tripOk === true} label={t("wizard.trip.yes")} />
+                <WizardOption value="no" selected={extra.tripOk === false} label={t("wizard.trip.no")} />
+              </RadioGroup>
+              {extra.tripOk === false ? (
+                <p className="flex items-start gap-2 text-body-sm text-destructive" role="status">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+                  <span>{t("wizard.ineligible.trip")}</span>
                 </p>
               ) : null}
             </>

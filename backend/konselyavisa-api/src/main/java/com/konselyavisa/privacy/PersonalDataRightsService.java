@@ -18,6 +18,7 @@ import com.konselyavisa.privacy.api.PersonalDataExportResponse.DeletionExport;
 import com.konselyavisa.privacy.api.PersonalDataExportResponse.DocumentExport;
 import com.konselyavisa.privacy.domain.DataDeletionRequest;
 import com.konselyavisa.privacy.domain.DataDeletionStatus;
+import com.konselyavisa.privacy.domain.OrganizationDpaAgreement;
 import com.konselyavisa.privacy.domain.PrivacyConsent;
 import com.konselyavisa.privacy.persistence.DataDeletionRequestRepository;
 import com.konselyavisa.privacy.persistence.PrivacyConsentRepository;
@@ -41,6 +42,7 @@ public class PersonalDataRightsService {
     private final CaseDocumentRepository caseDocumentRepository;
     private final PrivacyConsentRepository privacyConsentRepository;
     private final DataDeletionRequestRepository dataDeletionRequestRepository;
+    private final OrganizationDpaService organizationDpaService;
     private final OutboxAppender outboxAppender;
     private final KonselyaPrivacyProperties properties;
 
@@ -50,6 +52,7 @@ public class PersonalDataRightsService {
             CaseDocumentRepository caseDocumentRepository,
             PrivacyConsentRepository privacyConsentRepository,
             DataDeletionRequestRepository dataDeletionRequestRepository,
+            OrganizationDpaService organizationDpaService,
             OutboxAppender outboxAppender,
             KonselyaPrivacyProperties properties) {
         this.applicantRepository = applicantRepository;
@@ -57,6 +60,7 @@ public class PersonalDataRightsService {
         this.caseDocumentRepository = caseDocumentRepository;
         this.privacyConsentRepository = privacyConsentRepository;
         this.dataDeletionRequestRepository = dataDeletionRequestRepository;
+        this.organizationDpaService = organizationDpaService;
         this.outboxAppender = outboxAppender;
         this.properties = properties;
     }
@@ -123,9 +127,8 @@ public class PersonalDataRightsService {
     }
 
     private DataDeletionRequestResponse createDeletionRequest(String subject) {
-        Duration delay = properties.getAnonymizeAfter() == null || properties.getAnonymizeAfter().isNegative()
-                ? Duration.ofDays(1825)
-                : properties.getAnonymizeAfter();
+        UUID organizationId = requireOrganization();
+        Duration delay = retentionDelay(organizationId);
         Instant now = Instant.now();
         DataDeletionRequest request = new DataDeletionRequest();
         request.setKeycloakSubject(subject);
@@ -138,6 +141,17 @@ public class PersonalDataRightsService {
         payload.put("scheduledAnonymizeAt", request.getScheduledAnonymizeAt().toString());
         outboxAppender.appendDataDeletionRequested(request.getId(), payload);
         return toDeletionResponse(request);
+    }
+
+    private Duration retentionDelay(UUID organizationId) {
+        return organizationDpaService
+                .findActiveEntity(organizationId)
+                .map(OrganizationDpaAgreement::getRetentionDays)
+                .map(Duration::ofDays)
+                .orElseGet(() -> properties.getAnonymizeAfter() == null
+                                || properties.getAnonymizeAfter().isNegative()
+                        ? Duration.ofDays(1825)
+                        : properties.getAnonymizeAfter());
     }
 
     private ConsentExport toConsentExport(PrivacyConsent consent) {

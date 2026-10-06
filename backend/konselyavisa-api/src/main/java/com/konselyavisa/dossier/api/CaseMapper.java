@@ -25,5 +25,6 @@ public interface CaseMapper {
     @Mapping(target = "listUrgencyGroup", ignore = true)
     @Mapping(target = "listActionMessageKey", ignore = true)
     @Mapping(target = "listSubtitleMessageKey", ignore = true)
+    @Mapping(target = "duplicateDocumentHash", constant = "false")
     CaseResponse toResponse(CaseFile caseFile);
 }

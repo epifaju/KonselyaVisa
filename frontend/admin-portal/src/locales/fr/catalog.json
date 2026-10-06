@@ -1,0 +1,42 @@
+{
+  "catalog": {
+    "title": "Catalogue des procédures",
+    "subtitle": "Éditer les libellés, les pièces exigées et les règles JSONLogic, puis publier une version. Les dossiers déjà ouverts gardent leur version.",
+    "empty": "Aucune procédure.",
+    "code": "Code",
+    "name": "Nom",
+    "corridor": "Corridor",
+    "category": "Catégorie",
+    "version": "Version publiée",
+    "status": "Statut",
+    "edit": "Éditer",
+    "names": "Libellés",
+    "nameFr": "Nom (FR)",
+    "namePt": "Nom (PT)",
+    "nameEn": "Nom (EN)",
+    "descriptionFr": "Description (FR)",
+    "saveNames": "Enregistrer les libellés",
+    "versions": "Versions",
+    "draftTitle": "Brouillon v{{version}}",
+    "saveDraft": "Enregistrer le brouillon",
+    "publish": "Publier cette version",
+    "noDraft": "Aucun brouillon. Créez une version pour modifier exigences et règles sans toucher aux dossiers figés.",
+    "newVersion": "Créer une version brouillon",
+    "requirements": "Pièces exigées",
+    "reqCode": "Code",
+    "reqRequired": "Obligatoire",
+    "addRequirement": "Ajouter une pièce",
+    "jsonLogic": "Règles d’éligibilité (JSONLogic)",
+    "estimatedDays": "Délai d’instruction estimé (jours)",
+    "estimatedDaysHint": "Figé sur chaque dossier à sa création. Modifier une version publiée exige un nouveau brouillon.",
+    "daysShort_one": "{{count}} j",
+    "daysShort_other": "{{count}} j",
+    "jsonInvalid": "JSONLogic invalide : corrigez l’objet JSON avant d’enregistrer ou de publier.",
+    "freezeHint": "Publier une version n’actualise pas les dossiers déjà créés. Ils conservent la version figée à l’ouverture.",
+    "versionStatus": {
+      "DRAFT": "Brouillon",
+      "PUBLISHED": "Publiée",
+      "ARCHIVED": "Archivée"
+    }
+  }
+}

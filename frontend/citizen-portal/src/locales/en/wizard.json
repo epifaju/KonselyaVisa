@@ -1,0 +1,91 @@
+{
+  "wizard": {
+    "title": "Which formality?",
+    "progress": "Question {{current}} of {{total}}",
+    "continue": "Continue",
+    "previous": "Back",
+    "quit": "Quit",
+    "quitConfirm": "Leave the assistant? Answers already given will be lost.",
+    "stay": "Stay",
+    "leave": "Leave",
+    "submit": "Create the case",
+    "signInToCreate": "Sign in to open your case",
+    "createAccount": "Create an account to open your case",
+    "destination": {
+      "question": "Which country is this application for?"
+    },
+    "procedure": {
+      "question": "What do you need to do?"
+    },
+    "nationality": {
+      "question": "What is the passport nationality?",
+      "FR": "France",
+      "PT": "Portugal",
+      "GW": "Guinea-Bissau"
+    },
+    "passport": {
+      "question": "Is your passport still valid for at least 6 months?",
+      "hint": "Most visas and eVisas require this minimum remaining validity.",
+      "yes": "Yes, more than 6 months",
+      "no": "No, less than 6 months"
+    },
+    "document": {
+      "question": "Which document should be recognised abroad?",
+      "BIRTH_CERTIFICATE": "Birth certificate",
+      "DIPLOMA": "Diploma",
+      "CRIMINAL_RECORD": "Criminal record extract"
+    },
+    "translation": {
+      "question": "Which document should be translated (FR → PT)?",
+      "hint": "Sworn French to Portuguese translation for use in Guinea-Bissau."
+    },
+    "trip": {
+      "question": "Will your stay in Guinea-Bissau last between 1 and 90 days?",
+      "hint": "This demo insurance covers stays of up to 90 days.",
+      "yes": "Yes, between 1 and 90 days",
+      "no": "No / more than 90 days"
+    },
+    "hague": {
+      "question": "Does the destination country recognise the international stamp?",
+      "hint": "For Portugal the answer is usually yes. This is not true for every country.",
+      "yes": "Yes",
+      "no": "No / I am not sure"
+    },
+    "confirm": {
+      "title": "Summary",
+      "summary": "Nationality {{nationality}} · {{price}}",
+      "priceLater": "fee shown next",
+      "identity": "Identity already known"
+    },
+    "register": {
+      "title": "Create your account",
+      "hint": "Your eligible application will be attached to this account as soon as you sign in.",
+      "email": "Email address",
+      "password": "Password",
+      "passwordConfirm": "Confirm password",
+      "passwordHint": "At least 12 characters, including a letter and a number.",
+      "passwordMismatch": "Both passwords must match.",
+      "submit": "Create account and sign in",
+      "haveAccount": "I already have an account — sign in",
+      "missingTicket": "Go back to the eligibility assistant to create an account."
+    },
+    "ineligible": {
+      "nationality": "This formality is not available for this nationality.",
+      "passport": "Without 6 months of validity, this visa or eVisa cannot be requested here.",
+      "hague": "Without recognition of the international stamp, this formality does not apply.",
+      "trip": "This insurance only covers stays of 1 to 90 days.",
+      "generic": "Based on your answers, this formality is not possible. Change a previous answer."
+    }
+  },
+  "new": {
+    "title": "New application",
+    "procedure": "Procedure",
+    "choose": "Choose a procedure",
+    "price": "Fee",
+    "displayName": "Name",
+    "email": "Email",
+    "nationality": "Nationality (passport)",
+    "passportValidity": "Passport validity (months)",
+    "submit": "Create case"
+  }
+}

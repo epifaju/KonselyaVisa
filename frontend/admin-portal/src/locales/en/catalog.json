@@ -1,0 +1,42 @@
+{
+  "catalog": {
+    "title": "Procedure catalog",
+    "subtitle": "Edit names, document requirements and JSONLogic, then publish a version. Open cases keep the version frozen at creation.",
+    "empty": "No procedures.",
+    "code": "Code",
+    "name": "Name",
+    "corridor": "Corridor",
+    "category": "Category",
+    "version": "Published version",
+    "status": "Status",
+    "edit": "Edit",
+    "names": "Labels",
+    "nameFr": "Name (FR)",
+    "namePt": "Name (PT)",
+    "nameEn": "Name (EN)",
+    "descriptionFr": "Description (FR)",
+    "saveNames": "Save labels",
+    "versions": "Versions",
+    "draftTitle": "Draft v{{version}}",
+    "saveDraft": "Save draft",
+    "publish": "Publish this version",
+    "noDraft": "No draft. Create a version to change requirements and rules without touching frozen cases.",
+    "newVersion": "Create a draft version",
+    "requirements": "Required documents",
+    "reqCode": "Code",
+    "reqRequired": "Required",
+    "addRequirement": "Add a document",
+    "jsonLogic": "Eligibility rules (JSONLogic)",
+    "estimatedDays": "Estimated processing time (days)",
+    "estimatedDaysHint": "Frozen on each case at creation. Changing a published version requires a new draft.",
+    "daysShort_one": "{{count}} d",
+    "daysShort_other": "{{count}} d",
+    "jsonInvalid": "Invalid JSONLogic: fix the JSON object before saving or publishing.",
+    "freezeHint": "Publishing a version does not update cases already created. They keep the version frozen when the case was opened.",
+    "versionStatus": {
+      "DRAFT": "Draft",
+      "PUBLISHED": "Published",
+      "ARCHIVED": "Archived"
+    }
+  }
+}

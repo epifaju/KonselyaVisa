@@ -24,8 +24,28 @@ export type MeResponse = {
   username: string;
   roles: string[];
   organizationId: string | null;
+  organization?: {
+    organizationId: string;
+    nameI18n: Record<string, string>;
+    defaultLocale: string;
+    activeLanguages: string[];
+    brandColor: string | null;
+    domain: string | null;
+    logoUrl?: string | null;
+    faviconUrl?: string | null;
+  } | null;
 };
 
+export type OrganizationDetails = {
+  id: string;
+  code: string;
+  slug: string;
+  nameI18n: Record<string, string>;
+  status: string;
+  defaultLocale: string;
+  defaultCurrency: string;
+  settings: Record<string, unknown>;
+};
 
 export type Applicant = {
   id: string;
@@ -56,6 +76,7 @@ export type CaseItem = {
   nextActionMessageKey?: string;
   correctionMessageKey?: string | null;
   estimatedInstructionDays?: number | null;
+  duplicateDocumentHash?: boolean;
 };
 
 export type CaseDocument = {
@@ -69,7 +90,36 @@ export type CaseDocument = {
   status: string;
   duplicateHash: boolean;
   reviewMessageKey?: string | null;
+  extractedFields?: Record<string, string>;
+  documentValidations?: Record<string, string>;
+  aiConfidence?: number | null;
+  extractionSource?: string | null;
   createdAt: string;
+};
+
+export type DocumentHashMatch = {
+  caseId: string;
+  caseReference: string;
+  applicantDisplayName: string;
+  requirementCode: string;
+};
+
+export type DocumentHashAlert = {
+  documentId: string;
+  requirementCode: string;
+  matches: DocumentHashMatch[];
+};
+
+export type DocumentUploadRefusal = {
+  id: string;
+  caseId: string;
+  requirementCode: string | null;
+  reasonKey: string;
+  contentType: string | null;
+  sizeBytes: number | null;
+  originalFilename: string | null;
+  attemptedAt: string;
+  attemptedBy: string | null;
 };
 
 export type Payment = {
@@ -180,6 +230,16 @@ export async function apiPatch<T>(token: string, path: string, body?: unknown): 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body ?? {}),
   });
+}
+
+export async function apiUpload<T>(token: string, path: string, file: File, fieldName = "file"): Promise<T> {
+  const body = new FormData();
+  body.append(fieldName, file);
+  return apiJson<T>(token, path, { method: "POST", body });
+}
+
+export async function apiDelete<T>(token: string, path: string): Promise<T> {
+  return apiJson<T>(token, path, { method: "DELETE" });
 }
 
 async function apiJson<T>(token: string, path: string, init: RequestInit): Promise<T> {

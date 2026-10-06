@@ -18,7 +18,11 @@ Le collecteur OTel n’exporte plus en debug : traces → Tempo, métriques OTLP
 
 ## RGPD
 
-Le registre des traitements MVP est dans [`docs/REGISTRE_TRAITEMENTS.md`](docs/REGISTRE_TRAITEMENTS.md). Le citoyen consent au dépôt du dossier ; `GET /api/v1/me/data-export` et `POST /api/v1/me/data-deletion-request` (anonymisation différée).
+Le registre des traitements MVP est dans [`docs/REGISTRE_TRAITEMENTS.md`](docs/REGISTRE_TRAITEMENTS.md). Le citoyen consent au dépôt du dossier ; `GET /api/v1/me/data-export` et `POST /api/v1/me/data-deletion-request` (anonymisation différée). Purge automatique via `RetentionPurgeService` (`konselyavisa.privacy.purge-enabled`). DPA par organisation : `GET|POST /api/v1/organizations/me/dpa` (seed DEMO).
+
+## White-label
+
+Couleur, domaine, logo/favicon et e-mails HTML brandés (outbox → n8n) : voir [`docs/WHITE_LABEL.md`](docs/WHITE_LABEL.md). DNS/TLS multi-tenant : exemple nginx `infrastructure/nginx/white-label.conf.example`. Variable `KONSELYAVISA_PUBLIC_BASE_URL` pour les URLs logo absolues dans les mails.
 
 ## Start the stack
 
@@ -51,6 +55,8 @@ Realm `konselyavisa` demo users (see `.env.example`):
 - `company.admin.dev` / `CompanyAdminDev!23` (tous les dossiers entreprise de l’org)
 - `agent.dev` / `AgentDev!23`
 - `admin.dev` / `AdminDev!23`
+
+Catalogue démo (org DEMO) : visa tourisme, légalisation, apostille, **eVisa**, **assurance voyage**, **traduction assermentée** (FR→GW sauf apostille FR→PT). Hors DEMO, les flags `procedure.*` restent OFF.
 
 ## Citizen portal (local)
 
@@ -85,7 +91,32 @@ The Keycloak client `agent-portal` is defined in `infrastructure/keycloak/konsel
 - UI: http://localhost:15678 — `n8n@konselyavisa.local` / `N8nDev!23`
 - Inbox: http://localhost:8029 — mail to `notify@konselyavisa.local`
 
-Spring remains the only source of eligibility, tariffs, and case status. n8n only emails the outbox payload. The publisher signs requests with `X-Konselya-Signature` (`KONSELYAVISA_OUTBOX_WEBHOOK_SECRET`).
+Spring remains the only source of eligibility, tariffs, and case status. The publisher signs requests with `X-Konselya-Signature` (`KONSELYAVISA_OUTBOX_WEBHOOK_SECRET`).
+
+**Scénarios Mailpit** (switch sur `eventType`, pas de décision métier) :
+
+| Événement | E-mail |
+|---|---|
+| `CASE_CREATED` | Checklist documentaire (`payload.documentChecklist`) |
+| `PAYMENT_COMPLETED` | Facture / reçu (montant figé dans le payload) |
+| `CORRECTION_REQUESTED` | Relance pièces (`requirementCode` + motif agent) |
+| autres | Notify générique (JSON payload) |
+
+Smoke manuel (stack up) :
+
+```bash
+curl -s -X POST http://localhost:15678/webhook/konselyavisa-outbox \
+  -H "Content-Type: application/json" \
+  -d @infrastructure/n8n/samples/case-created-checklist.json
+curl -s -X POST http://localhost:15678/webhook/konselyavisa-outbox \
+  -H "Content-Type: application/json" \
+  -d @infrastructure/n8n/samples/payment-completed-invoice.json
+curl -s -X POST http://localhost:15678/webhook/konselyavisa-outbox \
+  -H "Content-Type: application/json" \
+  -d @infrastructure/n8n/samples/correction-requested-relance.json
+```
+
+Puis ouvrir Mailpit : trois sujets distincts (Checklist / Facture / Relance). Pour recharger le workflow après édition du JSON : `docker compose -f infrastructure/docker-compose.yml up -d --force-recreate n8n-init`.
 
 ## Stripe
 
@@ -108,3 +139,15 @@ Mobile money / cartes Afrique de l’Ouest. n8n ne décide jamais du statut de p
 4. Point the CinetPay notify URL to `http://localhost:18083/api/v1/payments/webhooks/CINETPAY` (HMAC + `payment/check` before completing).
 
 The citizen is sent to CinetPay `payment_url`. Spring records `PAYMENT_COMPLETED` once, even if CinetPay retries the IPN.
+
+## PayDunya
+
+Mobile money Afrique de l’Ouest (Payment and Redirection). n8n ne décide jamais du statut.
+
+1. Set `PAYDUNYA_MASTER_KEY`, `PAYDUNYA_PRIVATE_KEY`, `PAYDUNYA_TOKEN` (see `.env.example`).
+2. Set `organization_settings.settings.paymentProvider` to `"PAYDUNYA"`.
+3. Enable `feature_flags` key `payment.provider.PAYDUNYA` (global seed is off; demo org is on). Flag off → checkout falls back to MOCK.
+4. Point the PayDunya callback URL to `http://localhost:18083/api/v1/payments/webhooks/PAYDUNYA` (SHA-512 MasterKey + `checkout-invoice/confirm` before completing).
+5. Sandbox by default (`PAYDUNYA_API_BASE_URL=https://app.paydunya.com/sandbox-api`); live: `https://app.paydunya.com/api`.
+
+The citizen is redirected to the PayDunya invoice URL. Spring records `PAYMENT_COMPLETED` once, even if PayDunya retries the IPN. After return, **Confirm payment** calls `POST /api/v1/payments/{id}/sync` if the webhook is late.

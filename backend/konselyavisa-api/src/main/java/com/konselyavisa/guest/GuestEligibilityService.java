@@ -9,6 +9,7 @@ import com.konselyavisa.catalog.service.ProcedureAccessGuard;
 import com.konselyavisa.common.exception.BusinessException;
 import com.konselyavisa.dossier.ApplicantFactsGuard;
 import com.konselyavisa.eligibility.JsonLogicEligibilityEvaluator;
+import com.konselyavisa.organization.OrganizationDomainLookup;
 import com.konselyavisa.organization.persistence.OrganizationRepository;
 import com.konselyavisa.tenancy.TenantContext;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class GuestEligibilityService {
     private final GuestProperties guestProperties;
     private final GuestEligibilityTicketStore ticketStore;
     private final OrganizationRepository organizationRepository;
+    private final OrganizationDomainLookup organizationDomainLookup;
     private final ProcedureDefinitionRepository procedureDefinitionRepository;
     private final ProcedureVersionRepository procedureVersionRepository;
     private final ProcedureAccessGuard procedureAccessGuard;
@@ -30,6 +32,7 @@ public class GuestEligibilityService {
             GuestProperties guestProperties,
             GuestEligibilityTicketStore ticketStore,
             OrganizationRepository organizationRepository,
+            OrganizationDomainLookup organizationDomainLookup,
             ProcedureDefinitionRepository procedureDefinitionRepository,
             ProcedureVersionRepository procedureVersionRepository,
             ProcedureAccessGuard procedureAccessGuard,
@@ -37,6 +40,7 @@ public class GuestEligibilityService {
         this.guestProperties = guestProperties;
         this.ticketStore = ticketStore;
         this.organizationRepository = organizationRepository;
+        this.organizationDomainLookup = organizationDomainLookup;
         this.procedureDefinitionRepository = procedureDefinitionRepository;
         this.procedureVersionRepository = procedureVersionRepository;
         this.procedureAccessGuard = procedureAccessGuard;
@@ -44,9 +48,17 @@ public class GuestEligibilityService {
     }
 
     public UUID bindOrganization(UUID requestedOrganizationId) {
-        UUID organizationId = requestedOrganizationId == null
-                ? guestProperties.getDefaultOrganizationId()
-                : requestedOrganizationId;
+        return bindOrganization(requestedOrganizationId, null);
+    }
+
+    public UUID bindOrganization(UUID requestedOrganizationId, String domainHint) {
+        UUID organizationId = requestedOrganizationId;
+        if (organizationId == null && domainHint != null && !domainHint.isBlank()) {
+            organizationId = organizationDomainLookup.findOrganizationIdByDomain(domainHint).orElse(null);
+        }
+        if (organizationId == null) {
+            organizationId = guestProperties.getDefaultOrganizationId();
+        }
         TenantContext.setOrganizationId(organizationId);
         if (!organizationRepository.existsById(organizationId)) {
             throw BusinessException.notFound("error.organization.not_found");

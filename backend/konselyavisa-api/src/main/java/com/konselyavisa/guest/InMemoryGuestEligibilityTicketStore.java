@@ -17,6 +17,16 @@ public class InMemoryGuestEligibilityTicketStore implements GuestEligibilityTick
     }
 
     @Override
+    public Optional<GuestEligibilityTicket> find(UUID ticketId) {
+        Entry entry = tickets.get(ticketId);
+        if (entry == null || entry.expiresAt().isBefore(Instant.now())) {
+            tickets.remove(ticketId);
+            return Optional.empty();
+        }
+        return Optional.of(entry.ticket());
+    }
+
+    @Override
     public Optional<GuestEligibilityTicket> consume(UUID ticketId) {
         Entry entry = tickets.remove(ticketId);
         if (entry == null || entry.expiresAt().isBefore(Instant.now())) {

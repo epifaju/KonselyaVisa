@@ -19,6 +19,7 @@ import com.konselyavisa.guest.GuestEligibilityTicket;
 import com.konselyavisa.identity.CaseCreatorSnapshot;
 import com.konselyavisa.identity.CurrentUser;
 import com.konselyavisa.outbox.OutboxAppender;
+import com.konselyavisa.outbox.OutboxChecklistPayload;
 import com.konselyavisa.privacy.PrivacyConsentService;
 import com.konselyavisa.tenancy.TenantContext;
 import java.time.Year;
@@ -213,6 +214,9 @@ public class CaseService {
         payload.put("procedureDefinitionId", caseFile.getProcedureDefinition().getId().toString());
         payload.put("procedureVersionId", version.getId().toString());
         payload.put("procedureVersionNumber", version.getVersionNumber());
+        payload.put(
+                "documentChecklist",
+                OutboxChecklistPayload.fromRequirements(version.getDocumentRequirements()));
         return payload;
     }
 

@@ -1,0 +1,79 @@
+{
+  "cases": {
+    "title": "Mes dossiers",
+    "new": "Nouvelle démarche",
+    "open": "Ouvrir",
+    "correct": "Corriger",
+    "follow": "Suivre",
+    "continue": "Continuer",
+    "closed": "Dossiers clôturés",
+    "showAll": "Tout afficher",
+    "showLess": "Réduire",
+    "inProgressCount_one": "{{count}} démarche en cours",
+    "inProgressCount_other": "{{count}} démarches en cours",
+    "reference": "Réf. {{reference}}",
+    "estimatedDays_one": "délai estimé {{count}} jour",
+    "estimatedDays_other": "délai estimé {{count}} jours",
+    "section": {
+      "ACTION_REQUIRED": "Action requise",
+      "IN_INSTRUCTION": "En instruction",
+      "CLOSED": "Clôturés"
+    },
+    "empty": "Aucun dossier pour le moment.",
+    "emptyHint": "Utilisez « Nouvelle démarche » pour commencer.",
+    "nextStep": {
+      "CREATED": "Complétez votre dossier pour avancer",
+      "IN_PROGRESS": "En instruction",
+      "CORRECTION_REQUESTED": "Une pièce doit être reprise",
+      "COMPLETED": "Dossier clôturé",
+      "CANCELLED": "Dossier annulé",
+      "fallback": "Ouvrez le dossier pour voir la suite."
+    }
+  },
+  "company": {
+    "title": "Dossiers entreprise",
+    "subtitle": "Suivi des démarches déposées par l’équipe.",
+    "new": "Nouveau dossier",
+    "empty": "Aucun dossier dans ce périmètre.",
+    "all": "Tous",
+    "creator": "Créé par",
+    "role": "Rôle",
+    "applicant": "Demandeur",
+    "status": "Statut",
+    "procedure": "Procédure",
+    "open": "Ouvrir",
+    "roles": {
+      "COMPANY_USER": "Collaborateur",
+      "COMPANY_ADMIN": "Admin entreprise"
+    }
+  },
+  "case": {
+    "next_action": {
+      "UPLOAD_DOCUMENTS": "Déposez les pièces demandées",
+      "CORRECT_DOCUMENTS": "Une pièce doit être reprise",
+      "PAY": "Réglez les frais pour transmettre le dossier",
+      "WAIT_MANUAL_PAYMENT": "Paiement en attente de validation",
+      "BOOK_APPOINTMENT": "Réservez un rendez-vous",
+      "WAIT_PROCESSING": "Dossier en instruction",
+      "NONE": "Aucune action requise"
+    },
+    "list_action": {
+      "UPLOAD_DOCUMENTS": "Déposer",
+      "CORRECT_DOCUMENTS": "Corriger",
+      "PAY": "Payer",
+      "WAIT_MANUAL_PAYMENT": "Suivre",
+      "BOOK_APPOINTMENT": "Réserver",
+      "WAIT_PROCESSING": "Suivre",
+      "NONE": "Consulter"
+    },
+    "list_subtitle": {
+      "UPLOAD_DOCUMENTS": "Pièces à déposer",
+      "CORRECT_DOCUMENTS": "Une pièce doit être reprise",
+      "PAY": "Paiement à régler",
+      "WAIT_MANUAL_PAYMENT": "Paiement en attente de validation",
+      "BOOK_APPOINTMENT": "Rendez-vous à réserver pour le dépôt",
+      "WAIT_PROCESSING": "Déposé le {{date}}",
+      "NONE": "Dossier clôturé"
+    }
+  }
+}

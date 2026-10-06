@@ -1,0 +1,12 @@
+{
+  "slots": {
+    "title": "Appointment slots",
+    "startsAt": "Start",
+    "endsAt": "End",
+    "capacity": "Capacity",
+    "location": "Location",
+    "create": "Create slot",
+    "cancel": "Cancel",
+    "remaining": "{{remaining}} / {{capacity}} seats"
+  }
+}

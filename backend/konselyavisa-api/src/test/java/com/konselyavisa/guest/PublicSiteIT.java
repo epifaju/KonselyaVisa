@@ -89,6 +89,9 @@ class PublicSiteIT {
         assertThat(payload.addressI18n()).isNotEmpty();
         assertThat(payload.formalities()).extracting(PublicFormalityResponse::category).isNotEmpty();
         assertThat(payload.formalities())
+                .extracting(PublicFormalityResponse::category)
+                .contains("VISA", "EVISA", "INSURANCE", "TRANSLATION", "LEGALIZATION", "APOSTILLE");
+        assertThat(payload.formalities())
                 .allMatch((formality) -> formality.nameI18n() != null && !formality.nameI18n().isEmpty());
 
         TenantContext.setOrganizationId(DemoOrganization.ID);

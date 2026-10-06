@@ -115,6 +115,11 @@ class CaseCreationIT {
                 .containsEntry("procedureVersionId", v1.id().toString());
         assertThat(((Number) events.getFirst().getPayload().get("procedureVersionNumber")).intValue())
                 .isEqualTo(1);
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> checklist =
+                (List<Map<String, Object>>) events.getFirst().getPayload().get("documentChecklist");
+        assertThat(checklist).isNotEmpty();
+        assertThat(checklist.getFirst()).containsEntry("code", "PASSPORT");
 
         ProcedureVersionResponse draftV2 = procedureService.createVersion(
                 procedure.id(), new CreateProcedureVersionRequest(null, Map.of("==", List.of(true, true)), List.of(), null));

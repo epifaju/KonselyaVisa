@@ -21,6 +21,11 @@ export function JourneyPayment({
 }: Props) {
   const { t } = useTranslation();
   const amount = formatAmount(order);
+  const pendingExternal =
+    order?.payment?.status === "PENDING" &&
+    (order.providerCode === "STRIPE" ||
+      order.providerCode === "CINETPAY" ||
+      order.providerCode === "PAYDUNYA");
 
   if (!order) {
     return (
@@ -49,9 +54,9 @@ export function JourneyPayment({
           {t("journey.payAndSubmit")}
         </Button>
       ) : null}
-      {order.payment?.status === "PENDING" && order.providerCode === "STRIPE" ? (
+      {pendingExternal ? (
         <div className="flex flex-col gap-2">
-          {order.payment.checkoutUrl?.startsWith("http") ? (
+          {order.payment?.checkoutUrl?.startsWith("http") ? (
             <Button type="button" className="w-full" asChild>
               <a href={order.payment.checkoutUrl}>{t("journey.payAndSubmit")}</a>
             </Button>
@@ -59,10 +64,10 @@ export function JourneyPayment({
           <Button
             type="button"
             variant="outline"
-            disabled={payPending || !order.payment.id}
+            disabled={payPending || !order.payment?.id}
             onClick={() => onStripeConfirm(order.payment!.id)}
           >
-            {t("journey.stripeConfirm")}
+            {t("journey.confirmPayment")}
           </Button>
         </div>
       ) : null}

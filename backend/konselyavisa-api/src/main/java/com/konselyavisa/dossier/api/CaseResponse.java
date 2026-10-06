@@ -36,7 +36,8 @@ public record CaseResponse(
         String correctionMessageKey,
         CaseListUrgencyGroup listUrgencyGroup,
         String listActionMessageKey,
-        String listSubtitleMessageKey) {
+        String listSubtitleMessageKey,
+        boolean duplicateDocumentHash) {
 
     public CaseResponse withProgress(CaseNextActionDecision decision) {
         CaseNextAction action = decision.nextAction();
@@ -66,6 +67,38 @@ public record CaseResponse(
                 decision.correctionMessageKey(),
                 CaseListUrgency.groupOf(status, action),
                 CaseListUrgency.actionMessageKey(action),
-                CaseListUrgency.subtitleMessageKey(action));
+                CaseListUrgency.subtitleMessageKey(action),
+                duplicateDocumentHash);
+    }
+
+    public CaseResponse withDuplicateDocumentHash(boolean flagged) {
+        return new CaseResponse(
+                id,
+                reference,
+                status,
+                organizationId,
+                applicant,
+                procedureDefinitionId,
+                procedureCode,
+                procedureNameI18n,
+                originCountry,
+                destinationCountry,
+                procedureVersionId,
+                procedureVersionNumber,
+                estimatedInstructionDays,
+                applicantFacts,
+                eligibilityPassed,
+                createdAt,
+                updatedAt,
+                createdBy,
+                createdByRole,
+                createdByLabel,
+                nextAction,
+                nextActionMessageKey,
+                correctionMessageKey,
+                listUrgencyGroup,
+                listActionMessageKey,
+                listSubtitleMessageKey,
+                flagged);
     }
 }

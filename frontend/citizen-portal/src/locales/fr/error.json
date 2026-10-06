@@ -1,0 +1,62 @@
+{
+  "error": {
+    "eligibility": {
+      "not_met": "D’après les règles de cette procédure, votre situation n’est pas éligible."
+    },
+    "order": {
+      "already_exists": "Une commande est déjà ouverte pour ce dossier."
+    },
+    "payment": {
+      "stripe_not_configured": "Stripe n’est pas configuré pour cette organisation.",
+      "stripe_unavailable": "Stripe est temporairement indisponible. Réessayez.",
+      "cinetpay_not_configured": "CinetPay n’est pas configuré pour cette organisation.",
+      "cinetpay_unavailable": "CinetPay est temporairement indisponible. Réessayez.",
+      "cinetpay_amount_invalid": "Le montant n’est pas compatible avec CinetPay.",
+      "paydunya_not_configured": "PayDunya n’est pas configuré pour cette organisation.",
+      "paydunya_unavailable": "PayDunya est temporairement indisponible. Réessayez.",
+      "paydunya_amount_invalid": "Le montant n’est pas compatible avec PayDunya.",
+      "webhook_invalid": "Notification de paiement invalide.",
+      "webhook_signature": "Signature de paiement invalide."
+    },
+    "appointment": {
+      "already_booked": "Un rendez-vous est déjà réservé.",
+      "slot_full": "Ce créneau est complet.",
+      "hold_unavailable": "Ce créneau vient d’être réservé par quelqu’un d’autre. Choisissez un autre horaire."
+    },
+    "document": {
+      "content_type_not_allowed": "Type de fichier non autorisé (PDF, JPEG, PNG, WebP).",
+      "too_large": "Fichier trop volumineux (10 Mo max).",
+      "correction_requested": "Une pièce doit être reprise. Ouvrez le dossier pour la renvoyer."
+    },
+    "organization": {
+      "missing": "Votre compte n’est pas rattaché à une organisation. Déconnectez-vous puis reconnectez-vous."
+    },
+    "catalog": {
+      "procedure_not_found": "Cette formalité n’est plus disponible."
+    },
+    "case": {
+      "not_modifiable": "Ce dossier ne peut plus être modifié.",
+      "procedure_not_published": "Cette formalité n’est pas encore ouverte aux dépôts."
+    },
+    "account": {
+      "password_weak": "Choisissez un mot de passe d’au moins 12 caractères, avec une lettre et un chiffre.",
+      "email_exists": "Un compte existe déjà pour cet e-mail. Connectez-vous.",
+      "unavailable": "La création de compte est temporairement indisponible. Réessayez."
+    },
+    "guest": {
+      "ticket_not_found": "Votre éligibilité a expiré. Recommencez l’assistant."
+    },
+    "privacy": {
+      "consent_required": "Cochez la case de consentement pour créer le dossier.",
+      "notice_stale": "Le texte de consentement a changé. Rechargez la page."
+    },
+    "session_expired": "Session expirée. Reconnectez-vous.",
+    "access": {
+      "denied": "Vous n’avez pas accès à cette ressource."
+    },
+    "rate_limited": "Trop de requêtes. Réessayez dans une minute.",
+    "http": "L’API a renvoyé une erreur. Réessayez.",
+    "not_found": "Ressource introuvable.",
+    "internal": "Erreur interne du serveur."
+  }
+}

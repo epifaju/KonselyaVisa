@@ -1,0 +1,34 @@
+{
+  "queue": {
+    "title": "File des dossiers",
+    "filter": "Statut",
+    "all": "Tous",
+    "reference": "Référence",
+    "applicant": "Demandeur",
+    "procedure": "Procédure",
+    "status": "Statut",
+    "open": "Ouvrir",
+    "empty": "Aucun dossier pour ce filtre.",
+    "age": "Ancienneté",
+    "ageHint": "Tri du plus ancien. Orange à 50 % du délai d’instruction, rouge au-delà (sinon 48 h / 5 j).",
+    "ageHours_one": "{{count}} h",
+    "ageHours_other": "{{count}} h",
+    "ageDays_one": "{{count}} j",
+    "ageDays_other": "{{count}} j",
+    "slaDays_one": "{{count}} j",
+    "slaDays_other": "{{count}} j",
+    "next": "Suite",
+    "nextAction": {
+      "UPLOAD_DOCUMENTS": "Pièces",
+      "CORRECT_DOCUMENTS": "Correction",
+      "PAY": "Paiement",
+      "WAIT_MANUAL_PAYMENT": "Paiement manuel",
+      "BOOK_APPOINTMENT": "RDV",
+      "WAIT_PROCESSING": "Instruction",
+      "NONE": "—"
+    },
+    "duplicate": "Pièce déjà vue",
+    "duplicateBanner_one": "{{count}} dossier a une pièce déjà vue (même empreinte, autre demandeur).",
+    "duplicateBanner_other": "{{count}} dossiers ont une pièce déjà vue (même empreinte, autre demandeur)."
+  }
+}

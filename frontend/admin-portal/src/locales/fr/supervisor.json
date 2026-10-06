@@ -1,0 +1,10 @@
+{
+  "supervisor": {
+    "overdueAlert_one": "{{count}} dossier dépasse 5 jours d’attente.",
+    "overdueAlert_other": "{{count}} dossiers dépassent 5 jours d’attente.",
+    "openOverdue": "Ouvrir les dossiers hors délai",
+    "open": "Dossiers ouverts",
+    "watch": "À surveiller (48 h+)",
+    "breach": "Hors délai (5 j+)"
+  }
+}

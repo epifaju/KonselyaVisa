@@ -1,6 +1,8 @@
 package com.konselyavisa.redis;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,12 +63,17 @@ public class RedisInfrastructureConfig {
                 ObjectMapper objectMapper,
                 KonselyaRedisProperties properties) {
             Duration ttl = properties.getCatalogTtl() == null ? Duration.ofMinutes(2) : properties.getCatalogTtl();
+            ObjectMapper cacheMapper = objectMapper.copy();
+            cacheMapper.activateDefaultTyping(
+                    LaissezFaireSubTypeValidator.instance,
+                    ObjectMapper.DefaultTyping.NON_FINAL,
+                    JsonTypeInfo.As.PROPERTY);
             RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
                     .entryTtl(ttl)
                     .serializeKeysWith(
                             RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                     .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                            new GenericJackson2JsonRedisSerializer(objectMapper)));
+                            new GenericJackson2JsonRedisSerializer(cacheMapper)));
             return RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(configuration).build();
         }
 

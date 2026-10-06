@@ -17,6 +17,8 @@ spring:
     locations: classpath:db/migration
     user: ${SPRING_FLYWAY_USER:konselyavisa}
     password: ${SPRING_FLYWAY_PASSWORD:${SPRING_DATASOURCE_PASSWORD:konselyavisa}}
+    placeholders:
+      extractedFieldsKey: ${KONSELYAVISA_EXTRACTED_FIELDS_KEY:konselya-dev-extracted-fields-aes256}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -100,8 +102,24 @@ konselyavisa:
   guest:
     ticket-ttl: 30m
     default-organization-id: 11111111-1111-1111-1111-111111111111
+  public:
+    base-url: ${KONSELYAVISA_PUBLIC_BASE_URL:http://localhost:18083}
   privacy:
     anonymize-after: 1825d
+    purge-enabled: true
+    purge-poll-ms: 60000
+    purge-batch-size: 20
+  crypto:
+    extracted-fields-key: ${KONSELYAVISA_EXTRACTED_FIELDS_KEY:konselya-dev-extracted-fields-aes256}
+  keycloak:
+    admin:
+      enabled: ${KONSELYAVISA_KEYCLOAK_ADMIN_ENABLED:false}
+      base-url: ${KONSELYAVISA_KEYCLOAK_ADMIN_BASE_URL:http://localhost:8081}
+      realm: ${KEYCLOAK_REALM:konselyavisa}
+      token-realm: master
+      client-id: admin-cli
+      username: ${KEYCLOAK_ADMIN:admin}
+      password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
   stripe:
     secret-key: ${STRIPE_SECRET_KEY:}
     webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
@@ -115,3 +133,12 @@ konselyavisa:
     notify-url: ${CINETPAY_NOTIFY_URL:http://localhost:18083/api/v1/payments/webhooks/CINETPAY}
     return-url: ${CINETPAY_RETURN_URL:http://localhost:5175/?cinetpay=return}
     channels: ${CINETPAY_CHANNELS:ALL}
+  paydunya:
+    master-key: ${PAYDUNYA_MASTER_KEY:}
+    private-key: ${PAYDUNYA_PRIVATE_KEY:}
+    token: ${PAYDUNYA_TOKEN:}
+    api-base-url: ${PAYDUNYA_API_BASE_URL:https://app.paydunya.com/sandbox-api}
+    callback-url: ${PAYDUNYA_CALLBACK_URL:http://localhost:18083/api/v1/payments/webhooks/PAYDUNYA}
+    return-url: ${PAYDUNYA_RETURN_URL:http://localhost:5175/?paydunya=return}
+    cancel-url: ${PAYDUNYA_CANCEL_URL:http://localhost:5175/?paydunya=cancel}
+    store-name: ${PAYDUNYA_STORE_NAME:KonselyaVisa}

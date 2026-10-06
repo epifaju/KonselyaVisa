@@ -6,6 +6,7 @@ public final class PaymentProviderCodes {
     public static final String MANUAL = "MANUAL";
     public static final String STRIPE = "STRIPE";
     public static final String CINETPAY = "CINETPAY";
+    public static final String PAYDUNYA = "PAYDUNYA";
 
     private PaymentProviderCodes() {}
 }

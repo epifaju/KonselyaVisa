@@ -1,6 +1,8 @@
 package com.konselyavisa.identity.api;
 
 import com.konselyavisa.common.api.ApiResponse;
+import com.konselyavisa.organization.api.OrganizationBrandingResponse;
+import com.konselyavisa.organization.service.OrganizationBrandingService;
 import com.konselyavisa.tenancy.TenantContext;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/me")
 public class MeController {
 
+    private final OrganizationBrandingService organizationBrandingService;
+
+    public MeController(OrganizationBrandingService organizationBrandingService) {
+        this.organizationBrandingService = organizationBrandingService;
+    }
+
     @GetMapping
     public ApiResponse<CurrentUserResponse> me(JwtAuthenticationToken authentication) {
         String username = authentication.getToken().getClaimAsString("preferred_username");
@@ -24,8 +32,14 @@ public class MeController {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
         UUID organizationId = TenantContext.getOrganizationId();
-        return ApiResponse.ok(new CurrentUserResponse(username, roles, organizationId));
+        OrganizationBrandingResponse organization =
+                organizationId == null ? null : organizationBrandingService.current();
+        return ApiResponse.ok(new CurrentUserResponse(username, roles, organizationId, organization));
     }
 
-    public record CurrentUserResponse(String username, List<String> roles, UUID organizationId) {}
+    public record CurrentUserResponse(
+            String username,
+            List<String> roles,
+            UUID organizationId,
+            OrganizationBrandingResponse organization) {}
 }

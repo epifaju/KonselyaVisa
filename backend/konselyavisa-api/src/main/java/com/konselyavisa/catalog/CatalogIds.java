@@ -13,6 +13,12 @@ public final class CatalogIds {
     public static final UUID LEGALIZATION_FR_GW_V1 = UUID.fromString("b2222222-2222-2222-2222-222222222222");
     public static final UUID APOSTILLE_FR_PT = UUID.fromString("b3333333-3333-3333-3333-333333333331");
     public static final UUID APOSTILLE_FR_PT_V1 = UUID.fromString("b3333333-3333-3333-3333-333333333332");
+    public static final UUID EVISA_TOURISM_FR_GW = UUID.fromString("b4444444-4444-4444-4444-444444444441");
+    public static final UUID EVISA_TOURISM_FR_GW_V1 = UUID.fromString("b4444444-4444-4444-4444-444444444442");
+    public static final UUID TRAVEL_INSURANCE_FR_GW = UUID.fromString("b5555555-5555-5555-5555-555555555551");
+    public static final UUID TRAVEL_INSURANCE_FR_GW_V1 = UUID.fromString("b5555555-5555-5555-5555-555555555552");
+    public static final UUID SWORN_TRANSLATION_FR_GW = UUID.fromString("b6666666-6666-6666-6666-666666666661");
+    public static final UUID SWORN_TRANSLATION_FR_GW_V1 = UUID.fromString("b6666666-6666-6666-6666-666666666662");
 
     private CatalogIds() {}
 }

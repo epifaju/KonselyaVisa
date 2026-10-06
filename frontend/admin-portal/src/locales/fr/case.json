@@ -1,0 +1,87 @@
+{
+  "case": {
+    "applicant": "Demandeur",
+    "facts": "Faits d’éligibilité",
+    "procedure": "Procédure",
+    "documents": "Pièces",
+    "payments": "Paiements",
+    "appointments": "Rendez-vous",
+    "download": "Télécharger",
+    "accept": "Accepter",
+    "correct": "Demander une correction",
+    "sendCorrection": "Envoyer la demande de correction",
+    "reject": "Rejeter",
+    "confirmPayment": "Valider le paiement manuel",
+    "reasonLabel": "Motif (liste)",
+    "reasonNote": "Précision facultative (visible interne)",
+    "reasonNotePlaceholder": "Complément libre, si besoin",
+    "reasonPlaceholder": "Motif (correction / rejet)",
+    "defaultReason": "Pièce à corriger",
+    "duplicate": "Pièce déjà vue",
+    "hashAlert": {
+      "title_one": "Même fichier que {{count}} autre dossier (demandeur différent).",
+      "title_other": "Même fichier que {{count}} autres dossiers (demandeurs différents).",
+      "hint": "Empreinte SHA-256 identique. Vérifiez qu’il ne s’agit pas d’une réutilisation de pièce — ce n’est pas une lecture OCR.",
+      "match": "{{requirement}} identique au dossier {{reference}} ({{applicant}})",
+      "open": "Ouvrir le dossier"
+    },
+    "uploadRefusal": {
+      "title_one": "{{count}} dépôt refusé sur ce dossier.",
+      "title_other": "{{count}} dépôts refusés sur ce dossier.",
+      "hint": "Tentatives bloquées avant enregistrement (type, taille, exigence, dossier non modifiable). L’empreinte n’est pas affichée.",
+      "detail": "{{requirement}} · {{filename}} · {{when}}",
+      "reasons": {
+        "requirement_unknown": "Exigence documentaire inconnue",
+        "content_type_not_allowed": "Type de fichier non autorisé",
+        "file_required": "Fichier manquant ou vide",
+        "too_large": "Fichier trop volumineux",
+        "unreadable": "Fichier illisible",
+        "not_modifiable": "Dossier non modifiable",
+        "upload_refused": "Dépôt refusé"
+      }
+    },
+    "noDocuments": "Aucune pièce déposée.",
+    "noOrders": "Aucune commande.",
+    "noAppointments": "Aucun rendez-vous.",
+    "extraction": {
+      "action": "Saisir les champs extraits",
+      "title": "Lecture manuelle (stub OCR)",
+      "hint": "L’agent recopie les champs visibles. Aucune analyse automatique n’est lancée.",
+      "save": "Enregistrer la saisie",
+      "saved": "Saisie {{source}} enregistrée",
+      "fields": {
+        "given_name": "Prénom",
+        "family_name": "Nom",
+        "document_number": "N° de document",
+        "nationality": "Nationalité"
+      }
+    }
+  },
+  "history": {
+    "title": "Historique",
+    "empty": "Aucun événement.",
+    "actor": {
+      "CITIZEN": "Citoyen",
+      "AGENT": "Agent",
+      "SYSTEM": "Système"
+    },
+    "event": {
+      "CASE_CREATED": "Le dossier a été créé.",
+      "DOCUMENT_UPLOADED": "Une pièce a été déposée.",
+      "PAYMENT_COMPLETED": "Le paiement a été confirmé.",
+      "APPOINTMENT_BOOKED": "Un rendez-vous a été réservé.",
+      "APPOINTMENT_CANCELLED": "Un rendez-vous a été annulé.",
+      "CORRECTION_REQUESTED": "Une correction a été demandée.",
+      "CASE_COMPLETED": "Le dossier a été clôturé."
+    }
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Pièce illisible ou floue",
+      "incomplete": "Pièce incomplète",
+      "expired": "Document périmé",
+      "photo_spec": "Photo non conforme",
+      "mismatch": "Identité non concordante"
+    }
+  }
+}

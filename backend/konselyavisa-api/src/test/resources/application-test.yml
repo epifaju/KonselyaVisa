@@ -21,6 +21,9 @@ management:
 konselyavisa:
   redis:
     enabled: false
+  keycloak:
+    admin:
+      enabled: false
   storage:
     endpoint: http://127.0.0.1:1
     bucket: konselyavisa-docs
@@ -29,3 +32,5 @@ konselyavisa:
     auto-create-bucket: false
   outbox:
     enabled: false
+  privacy:
+    purge-enabled: false

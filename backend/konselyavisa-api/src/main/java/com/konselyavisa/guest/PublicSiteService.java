@@ -4,6 +4,8 @@ import com.konselyavisa.catalog.domain.ProcedureDefinition;
 import com.konselyavisa.catalog.persistence.ProcedureDefinitionRepository;
 import com.konselyavisa.catalog.service.ProcedureAccessGuard;
 import com.konselyavisa.common.exception.BusinessException;
+import com.konselyavisa.organization.OrganizationBrandingAssets;
+import com.konselyavisa.organization.OrganizationBrandingSettings;
 import com.konselyavisa.organization.api.OrganizationResponse;
 import com.konselyavisa.organization.domain.OrganizationStatus;
 import com.konselyavisa.organization.service.OrganizationService;
@@ -36,7 +38,11 @@ public class PublicSiteService {
     }
 
     public PublicSiteResponse load(UUID organizationId) {
-        guestEligibilityService.bindOrganization(organizationId);
+        return load(organizationId, null);
+    }
+
+    public PublicSiteResponse load(UUID organizationId, String domainHint) {
+        guestEligibilityService.bindOrganization(organizationId, domainHint);
         OrganizationResponse organization = organizationService.getCurrent();
         if (organization.status() != OrganizationStatus.ACTIVE) {
             throw BusinessException.notFound("error.organization.not_found");
@@ -64,6 +70,15 @@ public class PublicSiteService {
                 PublicSiteSettings.i18n(settings, "openingHoursI18n"),
                 PublicSiteSettings.text(settings, "contactEmail"),
                 PublicSiteSettings.text(settings, "contactPhone"),
+                OrganizationBrandingSettings.brandColor(settings),
+                OrganizationBrandingSettings.domain(settings),
+                OrganizationBrandingAssets.hasAsset(settings, OrganizationBrandingAssets.LOGO)
+                        ? OrganizationBrandingAssets.publicPath(organization.id(), OrganizationBrandingAssets.LOGO)
+                        : null,
+                OrganizationBrandingAssets.hasAsset(settings, OrganizationBrandingAssets.FAVICON)
+                        ? OrganizationBrandingAssets.publicPath(
+                                organization.id(), OrganizationBrandingAssets.FAVICON)
+                        : null,
                 List.copyOf(formalities));
     }
 }

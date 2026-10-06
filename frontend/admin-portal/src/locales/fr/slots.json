@@ -1,0 +1,12 @@
+{
+  "slots": {
+    "title": "Créneaux",
+    "startsAt": "Début",
+    "endsAt": "Fin",
+    "capacity": "Capacité",
+    "location": "Lieu (FR)",
+    "create": "Créer le créneau",
+    "cancel": "Annuler",
+    "remaining": "{{remaining}} / {{capacity}} places"
+  }
+}

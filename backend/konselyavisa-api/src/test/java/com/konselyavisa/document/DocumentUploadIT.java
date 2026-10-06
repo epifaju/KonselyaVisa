@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.konselyavisa.catalog.CatalogIds;
 import com.konselyavisa.common.exception.BusinessException;
+import com.konselyavisa.document.api.DocumentHashAlertResponse;
+import com.konselyavisa.document.api.DocumentHashMatchResponse;
 import com.konselyavisa.document.api.DocumentResponse;
 import com.konselyavisa.document.domain.DocumentAccessAction;
 import com.konselyavisa.document.persistence.CaseDocumentRepository;
@@ -84,6 +86,9 @@ class DocumentUploadIT {
     private CaseService caseService;
 
     @Autowired
+    private DocumentHashAlertService documentHashAlertService;
+
+    @Autowired
     private DocumentService documentService;
 
     @Autowired
@@ -151,6 +156,17 @@ class DocumentUploadIT {
                 "PASSPORT",
                 new MockMultipartFile("file", "copy.jpg", "image/jpeg", payload));
         assertThat(duplicate.duplicateHash()).isTrue();
+        assertThat(caseService.getById(secondCase.id()).duplicateDocumentHash()).isTrue();
+        assertThat(caseService.getById(firstCase.id()).duplicateDocumentHash()).isTrue();
+
+        List<DocumentHashAlertResponse> firstAlerts = documentHashAlertService.listForCase(firstCase.id());
+        assertThat(firstAlerts).hasSize(1);
+        assertThat(firstAlerts.getFirst().requirementCode()).isEqualTo("PASSPORT");
+        assertThat(firstAlerts.getFirst().matches())
+                .extracting(DocumentHashMatchResponse::caseId)
+                .containsExactly(secondCase.id());
+        assertThat(firstAlerts.getFirst().matches().getFirst().applicantDisplayName()).isEqualTo("Binta");
+        assertThat(firstAlerts.getFirst().matches().getFirst().caseReference()).isEqualTo(secondCase.reference());
     }
 
     @Test

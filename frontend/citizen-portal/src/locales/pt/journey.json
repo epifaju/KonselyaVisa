@@ -1,0 +1,56 @@
+{
+  "journey": {
+    "documents": "Documentos",
+    "payment": "Pagamento",
+    "appointment": "Marcação",
+    "openedOn": "Aberto em {{date}}",
+    "estimatedInstruction_one": "Prazo de instrução estimado: {{count}} dia",
+    "estimatedInstruction_other": "Prazo de instrução estimado: {{count}} dias",
+    "breadcrumb": "Navegação",
+    "bookDepositTitle": "Reserve a marcação de depósito",
+    "instructionTitle": "Processo em instrução",
+    "depositedOn": "Enviado em {{date}}",
+    "viewFile": "Ver o ficheiro",
+    "confirmThisAppointment": "Confirmar esta marcação",
+    "placesAvailable_one": "{{count}} lugar disponível",
+    "placesAvailable_other": "{{count}} lugares disponíveis",
+    "done": {
+      "documents": "Documentos — {{count}} enviados",
+      "payment": "Pagamento — {{amount}} pago",
+      "appointment": "Marcação — {{when}}"
+    },
+    "badge": {
+      "UPLOAD_DOCUMENTS": "Documentos a enviar",
+      "CORRECT_DOCUMENTS": "Documento a reenviar",
+      "PAY": "Pagamento a regularizar",
+      "WAIT_MANUAL_PAYMENT": "Pagamento pendente",
+      "BOOK_APPOINTMENT": "Marcação a reservar",
+      "WAIT_PROCESSING": "Em instrução",
+      "NONE": "Encerrado"
+    },
+    "timeline": {
+      "documents": "Documentos",
+      "payment": "Pagamento",
+      "appointment": "Marcação",
+      "done": "Instrução"
+    },
+    "missing": "Não enviado",
+    "chooseFile": "Escolher um ficheiro",
+    "replaceFile": "Enviar de novo este documento",
+    "duplicate": "documento já visto",
+    "checkout": "Ver o montante",
+    "payAndSubmit": "Pagar e transmitir o processo",
+    "paymentHint": "O processo só é transmitido após confirmação do pagamento.",
+    "mockPay": "Simular pagamento (MOCK)",
+    "stripePay": "Pagar com Stripe",
+    "stripeConfirm": "Confirmar pagamento Stripe",
+    "confirmPayment": "Confirmar pagamento",
+    "manualPay": "Pagamento a aguardar validação do agente.",
+    "book": "Reservar",
+    "confirmSlot": "Confirmar a marcação em {{when}}",
+    "cancelAppointment": "Cancelar marcação",
+    "noSlots": "Nenhum horário aberto.",
+    "backToCases": "Voltar aos meus processos",
+    "noActionNeeded": "Nenhuma ação da sua parte é necessária neste momento — será avisado por email quando o estado evoluir."
+  }
+}

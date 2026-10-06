@@ -1,8 +1,9 @@
-import { useEffect, useId, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, Languages, Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { apiGet, loc, type ApiResponse } from "@/api/client";
+import { getPublicOrganizationId, publicOrgSearchParams, rememberPublicOrganizationId } from "@/api/publicOrganization";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { formalityIcon, reassuranceIcon, TrustShield } from "@/screens/public/publicIcons";
 
 export type PublicSite = {
@@ -21,6 +23,10 @@ export type PublicSite = {
   openingHoursI18n: Record<string, string>;
   contactEmail?: string | null;
   contactPhone?: string | null;
+  brandColor?: string | null;
+  domain?: string | null;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
   formalities: { category: string; nameI18n: Record<string, string> }[];
 };
 
@@ -37,16 +43,22 @@ function formalityGridClass(count: number): string {
   return "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4";
 }
 
-export const PUBLIC_ORG = import.meta.env.VITE_ORGANIZATION_ID ?? "11111111-1111-1111-1111-111111111111";
+/** @deprecated Prefer getPublicOrganizationId() — kept for existing imports. */
+export const PUBLIC_ORG = getPublicOrganizationId();
 
 const NAV_FOCUS =
   "rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 export function usePublicSite() {
+  const params = publicOrgSearchParams();
+  const qs = params ? `?${params}` : "";
   return useQuery({
-    queryKey: ["public-site", PUBLIC_ORG],
-    queryFn: async () =>
-      (await apiGet<ApiResponse<PublicSite>>("", `/api/v1/public/site?organizationId=${PUBLIC_ORG}`)).data!,
+    queryKey: ["public-site", params || "default"],
+    queryFn: async () => {
+      const data = (await apiGet<ApiResponse<PublicSite>>("", `/api/v1/public/site${qs}`)).data!;
+      rememberPublicOrganizationId(data.organizationId);
+      return data;
+    },
   });
 }
 
@@ -65,6 +77,15 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
   const { t, i18n } = useTranslation();
   const menuId = useId();
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRegionRef = useRef<HTMLDivElement>(null);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  useFocusTrap({
+    active: menuOpen,
+    containerRef: menuRegionRef,
+    returnFocusRef: menuButtonRef,
+    onEscape: closeMenu,
+  });
   const siteQuery = usePublicSite();
   const site = siteQuery.data;
   const orgName = loc(site?.nameI18n, i18n.language, t("login.organizationName"));
@@ -73,19 +94,6 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
   const address = loc(site?.addressI18n, i18n.language, "");
   const hours = loc(site?.openingHoursI18n, i18n.language, "");
   const languageNames = languages.map((code) => t(`language.${code}`, { defaultValue: code.toUpperCase() }));
-
-  useEffect(() => {
-    if (!menuOpen) {
-      return;
-    }
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMenuOpen(false);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [menuOpen]);
 
   const languageSwitcher = (
     <DropdownMenu>
@@ -135,10 +143,18 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
 
   return (
     <div className="login-theme min-h-screen bg-background text-foreground">
-      <header className="border-b border-border">
+      <header ref={menuRegionRef} className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="h-10 w-10 shrink-0 rounded-lg bg-primary" aria-hidden />
+            {site?.logoUrl ? (
+              <img
+                src={`${import.meta.env.VITE_API_BASE_URL ?? ""}${site.logoUrl}`}
+                alt=""
+                className="h-10 w-10 shrink-0 rounded-lg object-contain"
+              />
+            ) : (
+              <div className="h-10 w-10 shrink-0 rounded-lg bg-primary" aria-hidden />
+            )}
             <div className="min-w-0">
               <p className="truncate text-body text-heading-3 font-medium text-foreground">{orgName}</p>
               <p className="text-caption text-muted-foreground">{t("login.title")}</p>
@@ -154,20 +170,27 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
             </Button>
           </div>
           <Button
+            ref={menuButtonRef}
             type="button"
             variant="outline"
             size="sm"
             className="lg:hidden"
             aria-expanded={menuOpen}
             aria-controls={menuId}
-            aria-label={menuOpen ? t("home.nav.closeMenu", { defaultValue: "Fermer le menu" }) : t("home.nav.openMenu", { defaultValue: "Ouvrir le menu" })}
+            aria-label={menuOpen ? t("home.nav.closeMenu") : t("home.nav.openMenu")}
             onClick={() => setMenuOpen((open) => !open)}
           >
             {menuOpen ? <X className="h-4 w-4" aria-hidden /> : <Menu className="h-4 w-4" aria-hidden />}
           </Button>
         </div>
         {menuOpen ? (
-          <div id={menuId} className="border-t border-border px-4 py-4 lg:hidden md:px-6">
+          <div
+            id={menuId}
+            className="border-t border-border px-4 py-4 lg:hidden md:px-6"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("home.nav.label")}
+          >
             <nav className="flex flex-col gap-3 text-body-sm" aria-label={t("home.nav.label")}>
               {navLinks}
               <div className="flex flex-wrap items-center gap-2 pt-2">

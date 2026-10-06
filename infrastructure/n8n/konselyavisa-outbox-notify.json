@@ -12,14 +12,159 @@
       "name": "Outbox Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [260, 300],
+      "position": [
+        200,
+        420
+      ],
       "webhookId": "konselyavisa-outbox"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body && $json.body.eventType ? $json.body.eventType : $json.eventType }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "CASE_CREATED"
+            },
+            {
+              "value2": "PAYMENT_COMPLETED"
+            },
+            {
+              "value2": "CORRECTION_REQUESTED"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      },
+      "id": "switch-event",
+      "name": "Route by eventType",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [
+        440,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst body = raw.body || raw;\nconst payload = body.payload || {};\nconst branding = payload.branding || {};\nfunction orgName() {\n  const n = branding.nameI18n || {};\n  return n.fr || n.en || n.pt || 'KonselyaVisa';\n}\nfunction esc(s) {\n  return String(s == null ? '' : s)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;');\n}\nfunction brandMail(title, bodyHtml, bodyTextLines) {\n  const color = branding.brandColor || '#0B5D3B';\n  const name = orgName();\n  const logo = branding.logoUrl\n    ? '<img src=\"' + esc(branding.logoUrl) + '\" alt=\"' + esc(name) + '\" style=\"max-height:48px;max-width:180px;\" />'\n    : '<strong style=\"color:' + color + ';font-size:18px;\">' + esc(name) + '</strong>';\n  const html = '<!DOCTYPE html><html><body style=\"font-family:Arial,sans-serif;color:#1a1a1a;margin:0;padding:0;\">' +\n    '<div style=\"border-top:4px solid ' + color + ';padding:24px;max-width:560px;\">' +\n    '<div style=\"margin-bottom:16px;\">' + logo + '</div>' +\n    '<h1 style=\"font-size:18px;color:' + color + ';margin:0 0 12px;\">' + esc(title) + '</h1>' +\n    bodyHtml +\n    '<p style=\"margin-top:24px;font-size:12px;color:#666;\">n8n orchestre autour de l\\'état Spring Boot — aucune décision métier ici.</p>' +\n    '</div></body></html>';\n  const text = [name, '', ...bodyTextLines, '', \"n8n n'applique aucune règle métier.\"].join('\\n');\n  return { subject: '[' + name + '] ' + title, html, text };\n}\n\nconst checklist = Array.isArray(payload.documentChecklist) ? payload.documentChecklist : [];\nconst lines = checklist.map((item) => {\n  const labels = item.labelI18n || {};\n  const label = labels.fr || labels.en || labels.pt || item.code;\n  const flag = item.required === false ? 'optionnel' : 'requis';\n  return '- [' + flag + '] ' + item.code + ': ' + label;\n});\nconst reference = payload.reference || body.aggregateId || '';\nconst title = 'Checklist documents ' + reference;\nconst bodyHtml = '<p>Dossier créé — checklist documentaire figée à la création (état Spring Boot).</p>' +\n  '<p><strong>Référence:</strong> ' + esc(reference) + '<br/>' +\n  '<strong>Organisation:</strong> ' + esc(body.organizationId || '') + '</p>' +\n  '<ul>' + (checklist.length\n    ? checklist.map((item) => {\n        const labels = item.labelI18n || {};\n        const label = labels.fr || labels.en || labels.pt || item.code;\n        const flag = item.required === false ? 'optionnel' : 'requis';\n        return '<li>[' + esc(flag) + '] <code>' + esc(item.code) + '</code>: ' + esc(label) + '</li>';\n      }).join('')\n    : '<li>(aucune pièce listée)</li>') + '</ul>' +\n  '<p>Consultez le portail pour déposer les pièces.</p>';\nconst mail = brandMail(title, bodyHtml, [\n  'Dossier créé — checklist documentaire figée à la création (état Spring Boot).',\n  '',\n  'Référence: ' + reference,\n  'Organisation: ' + (body.organizationId || ''),\n  'Événement: CASE_CREATED',\n  '',\n  ...(lines.length ? lines : ['- (aucune pièce listée)']),\n  '',\n  'Consultez le portail pour déposer les pièces.'\n]);\nreturn [{ json: mail }];\n"
+      },
+      "id": "format-checklist",
+      "name": "Format checklist",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        120
+      ]
     },
     {
       "parameters": {
         "fromEmail": "noreply@konselyavisa.local",
         "toEmail": "notify@konselyavisa.local",
-        "subject": "=[KonselyaVisa] {{ $json.body.eventType || $json.eventType }} {{ ($json.body.payload || $json.payload || {}).reference || $json.body.aggregateId || $json.aggregateId }}",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "both",
+        "text": "={{ $json.text }}",
+        "options": {},
+        "html": "={{ $json.html }}"
+      },
+      "id": "email-checklist",
+      "name": "Mail checklist",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        960,
+        120
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "PLACEHOLDER_SMTP_ID",
+          "name": "Mailpit SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst body = raw.body || raw;\nconst payload = body.payload || {};\nconst branding = payload.branding || {};\nfunction orgName() {\n  const n = branding.nameI18n || {};\n  return n.fr || n.en || n.pt || 'KonselyaVisa';\n}\nfunction esc(s) {\n  return String(s == null ? '' : s)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;');\n}\nfunction brandMail(title, bodyHtml, bodyTextLines) {\n  const color = branding.brandColor || '#0B5D3B';\n  const name = orgName();\n  const logo = branding.logoUrl\n    ? '<img src=\"' + esc(branding.logoUrl) + '\" alt=\"' + esc(name) + '\" style=\"max-height:48px;max-width:180px;\" />'\n    : '<strong style=\"color:' + color + ';font-size:18px;\">' + esc(name) + '</strong>';\n  const html = '<!DOCTYPE html><html><body style=\"font-family:Arial,sans-serif;color:#1a1a1a;margin:0;padding:0;\">' +\n    '<div style=\"border-top:4px solid ' + color + ';padding:24px;max-width:560px;\">' +\n    '<div style=\"margin-bottom:16px;\">' + logo + '</div>' +\n    '<h1 style=\"font-size:18px;color:' + color + ';margin:0 0 12px;\">' + esc(title) + '</h1>' +\n    bodyHtml +\n    '<p style=\"margin-top:24px;font-size:12px;color:#666;\">n8n orchestre autour de l\\'état Spring Boot — aucune décision métier ici.</p>' +\n    '</div></body></html>';\n  const text = [name, '', ...bodyTextLines, '', \"n8n n'applique aucune règle métier.\"].join('\\n');\n  return { subject: '[' + name + '] ' + title, html, text };\n}\n\nconst amountMinor = Number(payload.amountMinor || 0);\nconst currency = payload.currency || '';\nconst major = (amountMinor / 100).toFixed(2);\nconst reference = payload.reference || payload.caseReference || body.aggregateId || '';\nconst title = 'Facture / reçu ' + reference;\nconst bodyHtml = '<p>Paiement confirmé par Spring Boot — reçu d\\'orchestration (pas de recalcul de tarif).</p>' +\n  '<p><strong>Commande:</strong> ' + esc(reference) + '<br/>' +\n  '<strong>Dossier:</strong> ' + esc(payload.caseReference || payload.caseId || body.aggregateId || '') + '<br/>' +\n  '<strong>Montant:</strong> ' + esc(major) + ' ' + esc(currency) + '<br/>' +\n  '<strong>Prestataire:</strong> ' + esc(payload.providerCode || '') + '<br/>' +\n  '<strong>Réf. prestataire:</strong> ' + esc(payload.providerReference || '') + '</p>';\nconst mail = brandMail(title, bodyHtml, [\n  'Paiement confirmé par Spring Boot — reçu d\\'orchestration (pas de recalcul de tarif).',\n  '',\n  'Commande: ' + reference,\n  'Dossier: ' + (payload.caseReference || payload.caseId || body.aggregateId || ''),\n  'Montant: ' + major + ' ' + currency,\n  'Prestataire: ' + (payload.providerCode || ''),\n  'Réf. prestataire: ' + (payload.providerReference || ''),\n  'PaymentId: ' + (payload.paymentId || '')\n]);\nreturn [{ json: mail }];\n"
+      },
+      "id": "format-invoice",
+      "name": "Format invoice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@konselyavisa.local",
+        "toEmail": "notify@konselyavisa.local",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "both",
+        "text": "={{ $json.text }}",
+        "options": {},
+        "html": "={{ $json.html }}"
+      },
+      "id": "email-invoice",
+      "name": "Mail facture",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        960,
+        320
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "PLACEHOLDER_SMTP_ID",
+          "name": "Mailpit SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst body = raw.body || raw;\nconst payload = body.payload || {};\nconst branding = payload.branding || {};\nfunction orgName() {\n  const n = branding.nameI18n || {};\n  return n.fr || n.en || n.pt || 'KonselyaVisa';\n}\nfunction esc(s) {\n  return String(s == null ? '' : s)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;');\n}\nfunction brandMail(title, bodyHtml, bodyTextLines) {\n  const color = branding.brandColor || '#0B5D3B';\n  const name = orgName();\n  const logo = branding.logoUrl\n    ? '<img src=\"' + esc(branding.logoUrl) + '\" alt=\"' + esc(name) + '\" style=\"max-height:48px;max-width:180px;\" />'\n    : '<strong style=\"color:' + color + ';font-size:18px;\">' + esc(name) + '</strong>';\n  const html = '<!DOCTYPE html><html><body style=\"font-family:Arial,sans-serif;color:#1a1a1a;margin:0;padding:0;\">' +\n    '<div style=\"border-top:4px solid ' + color + ';padding:24px;max-width:560px;\">' +\n    '<div style=\"margin-bottom:16px;\">' + logo + '</div>' +\n    '<h1 style=\"font-size:18px;color:' + color + ';margin:0 0 12px;\">' + esc(title) + '</h1>' +\n    bodyHtml +\n    '<p style=\"margin-top:24px;font-size:12px;color:#666;\">n8n orchestre autour de l\\'état Spring Boot — aucune décision métier ici.</p>' +\n    '</div></body></html>';\n  const text = [name, '', ...bodyTextLines, '', \"n8n n'applique aucune règle métier.\"].join('\\n');\n  return { subject: '[' + name + '] ' + title, html, text };\n}\n\nconst reference = payload.reference || body.aggregateId || '';\nconst decision = payload.decision || 'CORRECTION_REQUESTED';\nconst title = 'Relance documents ' + reference;\nconst bodyHtml = '<p>Relance citoyenne — une pièce nécessite une action (décision déjà prise dans Spring Boot).</p>' +\n  '<p><strong>Référence dossier:</strong> ' + esc(reference) + '<br/>' +\n  '<strong>Décision:</strong> ' + esc(decision) + '<br/>' +\n  '<strong>Pièce:</strong> ' + esc(payload.requirementCode || '') + '<br/>' +\n  '<strong>Motif agent:</strong> ' + esc(payload.reason || '') + '</p>' +\n  '<p>Reconnectez-vous au portail pour déposer une version corrigée.</p>';\nconst mail = brandMail(title, bodyHtml, [\n  'Relance citoyenne — une pièce nécessite une action (décision déjà prise dans Spring Boot).',\n  '',\n  'Référence dossier: ' + reference,\n  'Décision: ' + decision,\n  'Pièce: ' + (payload.requirementCode || ''),\n  'Motif agent: ' + (payload.reason || ''),\n  'message_key: ' + (payload.messageKey || ''),\n  '',\n  'Reconnectez-vous au portail pour déposer une version corrigée.'\n]);\nreturn [{ json: mail }];\n"
+      },
+      "id": "format-relance",
+      "name": "Format relance",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@konselyavisa.local",
+        "toEmail": "notify@konselyavisa.local",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "both",
+        "text": "={{ $json.text }}",
+        "options": {},
+        "html": "={{ $json.html }}"
+      },
+      "id": "email-relance",
+      "name": "Mail relance",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        960,
+        520
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "PLACEHOLDER_SMTP_ID",
+          "name": "Mailpit SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@konselyavisa.local",
+        "toEmail": "notify@konselyavisa.local",
+        "subject": "=[KonselyaVisa] {{ $json.body.eventType || $json.eventType }} {{ ($json.body.payload || $json.payload || {}).reference || ($json.body.payload || $json.payload || {}).caseReference || $json.body.aggregateId || $json.aggregateId }}",
         "emailFormat": "text",
         "text": "=n8n orchestre autour de l'état Spring Boot. Aucune décision métier ici.\n\nType: {{ $json.body.eventType || $json.eventType }}\nDossier: {{ $json.body.aggregateId || $json.aggregateId }}\nOrganisation: {{ $json.body.organizationId || $json.organizationId }}\n\n{{ JSON.stringify($json.body.payload || $json.payload || $json.body || $json, null, 2) }}\n",
         "options": {}
@@ -28,7 +173,10 @@
       "name": "Notify Mailpit",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [560, 300],
+      "position": [
+        700,
+        720
+      ],
       "credentials": {
         "smtp": {
           "id": "PLACEHOLDER_SMTP_ID",
@@ -42,7 +190,72 @@
       "main": [
         [
           {
+            "node": "Route by eventType",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by eventType": {
+      "main": [
+        [
+          {
+            "node": "Format checklist",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format invoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format relance",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Notify Mailpit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format checklist": {
+      "main": [
+        [
+          {
+            "node": "Mail checklist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format invoice": {
+      "main": [
+        [
+          {
+            "node": "Mail facture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format relance": {
+      "main": [
+        [
+          {
+            "node": "Mail relance",
             "type": "main",
             "index": 0
           }

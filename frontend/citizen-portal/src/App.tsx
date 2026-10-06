@@ -3,23 +3,29 @@ import { AlertCircle } from "lucide-react";
 import { User } from "oidc-client-ts";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { apiGet, type ApiResponse, type Me } from "@/api/client";
+import { apiGet, loc, type ApiResponse, type Me } from "@/api/client";
+import { usePublicOrg } from "@/api/usePublicOrg";
 import { userManager } from "@/auth/userManager";
 import { CitizenHeader } from "@/components/CitizenHeader";
+import { useOrganizationBrandTheme } from "@/hooks/useOrganizationBrandTheme";
+import { useOrganizationBrandFavicon } from "@/hooks/useOrganizationBrandFavicon";
 import { EligibilityAssistant } from "@/screens/EligibilityAssistant";
+import { GuestAccountRegister } from "@/screens/GuestAccountRegister";
 import { GuestTicketAttach } from "@/screens/GuestTicketAttach";
 import { LoginScreen } from "@/screens/LoginScreen";
 import { PublicHome } from "@/screens/public/PublicHome";
 import { PublicLegalPage } from "@/screens/public/PublicLegalPage";
 import { PublicTrackCase } from "@/screens/public/PublicTrackCase";
+import { isConsularStaff, rolesFromSession } from "@/identity/isConsularStaff";
 import { CaseJourney } from "@/screens/CaseJourney";
 import { CaseList } from "@/screens/CaseList";
 import { CompanyCaseList, isCompanyUser } from "@/screens/CompanyCaseList";
 import { NewCase } from "@/screens/NewCase";
 import { PrivacyAccount } from "@/screens/PrivacyAccount";
+import { StaffPortalGate } from "@/screens/StaffPortalGate";
 
 type View = "list" | "new" | "detail" | "privacy";
-type PublicView = "home" | "login" | "wizard" | "track" | "legal" | "privacy" | "contact";
+type PublicView = "home" | "login" | "wizard" | "register" | "track" | "legal" | "privacy" | "contact";
 
 export default function App() {
   const { t, i18n } = useTranslation();
@@ -93,6 +99,9 @@ export default function App() {
     queryFn: async () => (await apiGet<ApiResponse<Me>>(token, "/api/v1/me")).data!,
     enabled: Boolean(token),
   });
+  const orgQuery = usePublicOrg();
+  useOrganizationBrandTheme(meQuery.data?.organization?.brandColor ?? orgQuery.data?.brandColor);
+  useOrganizationBrandFavicon(meQuery.data?.organization?.faviconUrl ?? orgQuery.data?.faviconUrl);
 
   if (!ready) {
     return (
@@ -103,6 +112,17 @@ export default function App() {
   }
 
   if (!user) {
+    if (publicView === "register") {
+      return (
+        <GuestAccountRegister
+          onBack={() => {
+            setGuest(false);
+            setWizardCategory(undefined);
+            setPublicView("home");
+          }}
+        />
+      );
+    }
     if (guest || publicView === "wizard") {
       return (
         <div className="login-theme min-h-screen bg-background">
@@ -118,7 +138,10 @@ export default function App() {
                 setGuest(false);
                 setPublicView("home");
               }}
-              onNeedSignIn={() => void userManager.signinRedirect({ extraQueryParams: { ui_locales: i18n.language } })}
+              onNeedSignIn={() => {
+                setGuest(false);
+                setPublicView("register");
+              }}
             />
           </main>
         </div>
@@ -155,6 +178,18 @@ export default function App() {
     );
   }
 
+  const staffRoles = rolesFromSession(meQuery.data?.roles, user.profile);
+  if (token && meQuery.isPending && !isConsularStaff(staffRoles)) {
+    return (
+      <main className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground">{t("login.callback")}</p>
+      </main>
+    );
+  }
+  if (isConsularStaff(staffRoles)) {
+    return <StaffPortalGate />;
+  }
+
   const displayName =
     (typeof user.profile.name === "string" && user.profile.name) ||
     (typeof user.profile.preferred_username === "string" && user.profile.preferred_username) ||
@@ -165,6 +200,13 @@ export default function App() {
     <main className={view === "list" && isCompanyUser(meQuery.data?.roles) ? "mx-auto max-w-6xl px-6 py-8" : "mx-auto max-w-3xl px-6 py-8"}>
       <CitizenHeader
         displayName={displayName}
+        organizationName={loc(meQuery.data?.organization?.nameI18n, i18n.language, t("login.organizationName"))}
+        logoUrl={meQuery.data?.organization?.logoUrl ?? orgQuery.data?.logoUrl}
+        languages={meQuery.data?.organization?.activeLanguages ?? ["fr", "pt", "en"]}
+        onCases={() => {
+          setCaseId(null);
+          setView("list");
+        }}
         onPrivacy={() => setView("privacy")}
         onLogout={() => void userManager.signoutRedirect()}
       />

@@ -1,0 +1,91 @@
+{
+  "wizard": {
+    "title": "Qual a formalidade?",
+    "progress": "Pergunta {{current}} de {{total}}",
+    "continue": "Continuar",
+    "previous": "Anterior",
+    "quit": "Sair",
+    "quitConfirm": "Sair do assistente? As respostas já dadas serão perdidas.",
+    "stay": "Ficar",
+    "leave": "Sair",
+    "submit": "Criar o processo",
+    "signInToCreate": "Entrar para abrir o processo",
+    "createAccount": "Criar uma conta para abrir o processo",
+    "destination": {
+      "question": "Para que país se destina esta formalidade?"
+    },
+    "procedure": {
+      "question": "De que precisa?"
+    },
+    "nationality": {
+      "question": "Qual é a nacionalidade do passaporte?",
+      "FR": "França",
+      "PT": "Portugal",
+      "GW": "Guiné-Bissau"
+    },
+    "passport": {
+      "question": "O passaporte ainda é válido por pelo menos 6 meses?",
+      "hint": "A maioria dos vistos e eVisa exige este prazo mínimo.",
+      "yes": "Sim, mais de 6 meses",
+      "no": "Não, menos de 6 meses"
+    },
+    "document": {
+      "question": "Que documento deve ser reconhecido no estrangeiro?",
+      "BIRTH_CERTIFICATE": "Certidão de nascimento",
+      "DIPLOMA": "Diploma",
+      "CRIMINAL_RECORD": "Registo criminal"
+    },
+    "translation": {
+      "question": "Que documento deve ser traduzido (FR → PT)?",
+      "hint": "Tradução juramentada francês para português para uso na Guiné-Bissau."
+    },
+    "trip": {
+      "question": "A sua estadia na Guiné-Bissau dura entre 1 e 90 dias?",
+      "hint": "Este seguro de demonstração cobre estadias até 90 dias.",
+      "yes": "Sim, entre 1 e 90 dias",
+      "no": "Não / mais de 90 dias"
+    },
+    "hague": {
+      "question": "O país de destino reconhece o selo internacional?",
+      "hint": "Para Portugal a resposta é em geral sim. Isto não vale para todos os países.",
+      "yes": "Sim",
+      "no": "Não / não tenho a certeza"
+    },
+    "confirm": {
+      "title": "Resumo",
+      "summary": "Nacionalidade {{nationality}} · {{price}}",
+      "priceLater": "taxa indicada a seguir",
+      "identity": "Identidade já conhecida"
+    },
+    "register": {
+      "title": "Crie a sua conta",
+      "hint": "O pedido já elegível será associado a esta conta assim que iniciar sessão.",
+      "email": "Endereço de e-mail",
+      "password": "Palavra-passe",
+      "passwordConfirm": "Confirmar a palavra-passe",
+      "passwordHint": "Pelo menos 12 caracteres, com uma letra e um número.",
+      "passwordMismatch": "As duas palavras-passe devem ser iguais.",
+      "submit": "Criar conta e iniciar sessão",
+      "haveAccount": "Já tenho conta — iniciar sessão",
+      "missingTicket": "Volte ao assistente de elegibilidade para criar uma conta."
+    },
+    "ineligible": {
+      "nationality": "Esta formalidade não está disponível para esta nacionalidade.",
+      "passport": "Sem 6 meses de validade, este visto ou eVisa não pode ser pedido aqui.",
+      "hague": "Sem reconhecimento do selo internacional, esta formalidade não se aplica.",
+      "trip": "Este seguro só cobre estadias de 1 a 90 dias.",
+      "generic": "Com as suas respostas, esta formalidade não é possível. Altere uma resposta anterior."
+    }
+  },
+  "new": {
+    "title": "Novo pedido",
+    "procedure": "Procedimento",
+    "choose": "Escolher um procedimento",
+    "price": "Taxa",
+    "displayName": "Nome",
+    "email": "E-mail",
+    "nationality": "Nacionalidade (passaporte)",
+    "passportValidity": "Validade do passaporte (meses)",
+    "submit": "Criar processo"
+  }
+}

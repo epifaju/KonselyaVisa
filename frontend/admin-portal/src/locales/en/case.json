@@ -1,0 +1,87 @@
+{
+  "case": {
+    "applicant": "Applicant",
+    "facts": "Eligibility facts",
+    "procedure": "Procedure",
+    "documents": "Documents",
+    "payments": "Payments",
+    "appointments": "Appointments",
+    "download": "Download",
+    "accept": "Accept",
+    "correct": "Request correction",
+    "sendCorrection": "Send correction request",
+    "reject": "Reject",
+    "confirmPayment": "Confirm manual payment",
+    "reasonLabel": "Reason (list)",
+    "reasonNote": "Optional internal note",
+    "reasonNotePlaceholder": "Free-text complement if needed",
+    "reasonPlaceholder": "Reason (correction / rejection)",
+    "defaultReason": "Document needs correction",
+    "duplicate": "Document already seen",
+    "hashAlert": {
+      "title_one": "Same file as {{count}} other case (different applicant).",
+      "title_other": "Same file as {{count}} other cases (different applicants).",
+      "hint": "Identical SHA-256 fingerprint. Check this is not a reused identity document — this is not OCR.",
+      "match": "{{requirement}} matches case {{reference}} ({{applicant}})",
+      "open": "Open case"
+    },
+    "uploadRefusal": {
+      "title_one": "{{count}} refused upload on this case.",
+      "title_other": "{{count}} refused uploads on this case.",
+      "hint": "Attempts blocked before storage (type, size, requirement, or locked case). Fingerprint is not shown.",
+      "detail": "{{requirement}} · {{filename}} · {{when}}",
+      "reasons": {
+        "requirement_unknown": "Unknown document requirement",
+        "content_type_not_allowed": "File type not allowed",
+        "file_required": "Missing or empty file",
+        "too_large": "File too large",
+        "unreadable": "Unreadable file",
+        "not_modifiable": "Case not modifiable",
+        "upload_refused": "Upload refused"
+      }
+    },
+    "noDocuments": "No documents uploaded.",
+    "noOrders": "No orders.",
+    "noAppointments": "No appointments.",
+    "extraction": {
+      "action": "Enter extracted fields",
+      "title": "Manual reading (OCR stub)",
+      "hint": "The agent copies visible fields. No automatic analysis is run.",
+      "save": "Save entry",
+      "saved": "{{source}} entry saved",
+      "fields": {
+        "given_name": "Given name",
+        "family_name": "Family name",
+        "document_number": "Document number",
+        "nationality": "Nationality"
+      }
+    }
+  },
+  "history": {
+    "title": "History",
+    "empty": "No events.",
+    "actor": {
+      "CITIZEN": "Citizen",
+      "AGENT": "Agent",
+      "SYSTEM": "System"
+    },
+    "event": {
+      "CASE_CREATED": "The case was created.",
+      "DOCUMENT_UPLOADED": "A document was uploaded.",
+      "PAYMENT_COMPLETED": "Payment was confirmed.",
+      "APPOINTMENT_BOOKED": "An appointment was booked.",
+      "APPOINTMENT_CANCELLED": "An appointment was cancelled.",
+      "CORRECTION_REQUESTED": "A correction was requested.",
+      "CASE_COMPLETED": "The case was closed."
+    }
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Document is unreadable or blurry",
+      "incomplete": "Document is incomplete",
+      "expired": "Document has expired",
+      "photo_spec": "Photo does not meet requirements",
+      "mismatch": "Identity does not match"
+    }
+  }
+}

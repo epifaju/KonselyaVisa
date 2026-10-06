@@ -1,0 +1,87 @@
+{
+  "case": {
+    "applicant": "Requerente",
+    "facts": "Factos de elegibilidade",
+    "procedure": "Procedimento",
+    "documents": "Documentos",
+    "payments": "Pagamentos",
+    "appointments": "Marcações",
+    "download": "Descarregar",
+    "accept": "Aceitar",
+    "correct": "Pedir correção",
+    "sendCorrection": "Enviar o pedido de correção",
+    "reject": "Rejeitar",
+    "confirmPayment": "Validar pagamento manual",
+    "reasonLabel": "Motivo (lista)",
+    "reasonNote": "Nota interna facultativa",
+    "reasonNotePlaceholder": "Complemento livre, se necessário",
+    "reasonPlaceholder": "Motivo (correção / rejeição)",
+    "defaultReason": "Documento a corrigir",
+    "duplicate": "Peça já vista",
+    "hashAlert": {
+      "title_one": "O mesmo ficheiro que {{count}} outro processo (requerente diferente).",
+      "title_other": "O mesmo ficheiro que {{count}} outros processos (requerentes diferentes).",
+      "hint": "Empreinte SHA-256 idêntica. Verifique se não é reutilização de peça — não é OCR.",
+      "match": "{{requirement}} idêntico ao processo {{reference}} ({{applicant}})",
+      "open": "Abrir o processo"
+    },
+    "uploadRefusal": {
+      "title_one": "{{count}} depósito recusado neste processo.",
+      "title_other": "{{count}} depósitos recusados neste processo.",
+      "hint": "Tentativas bloqueadas antes do registo (tipo, tamanho, exigência ou processo bloqueado). A impressão digital não é mostrada.",
+      "detail": "{{requirement}} · {{filename}} · {{when}}",
+      "reasons": {
+        "requirement_unknown": "Exigência documental desconhecida",
+        "content_type_not_allowed": "Tipo de ficheiro não autorizado",
+        "file_required": "Ficheiro em falta ou vazio",
+        "too_large": "Ficheiro demasiado grande",
+        "unreadable": "Ficheiro ilegível",
+        "not_modifiable": "Processo não modificável",
+        "upload_refused": "Depósito recusado"
+      }
+    },
+    "noDocuments": "Nenhum documento.",
+    "noOrders": "Nenhuma encomenda.",
+    "noAppointments": "Nenhuma marcação.",
+    "extraction": {
+      "action": "Introduzir campos extraídos",
+      "title": "Leitura manual (stub OCR)",
+      "hint": "O agente copia os campos visíveis. Nenhuma análise automática é lançada.",
+      "save": "Guardar introdução",
+      "saved": "Introdução {{source}} guardada",
+      "fields": {
+        "given_name": "Nome próprio",
+        "family_name": "Apelido",
+        "document_number": "N.º do documento",
+        "nationality": "Nacionalidade"
+      }
+    }
+  },
+  "history": {
+    "title": "Histórico",
+    "empty": "Nenhum evento.",
+    "actor": {
+      "CITIZEN": "Cidadão",
+      "AGENT": "Agente",
+      "SYSTEM": "Sistema"
+    },
+    "event": {
+      "CASE_CREATED": "O processo foi criado.",
+      "DOCUMENT_UPLOADED": "Um documento foi enviado.",
+      "PAYMENT_COMPLETED": "O pagamento foi confirmado.",
+      "APPOINTMENT_BOOKED": "Foi reservada uma marcação.",
+      "APPOINTMENT_CANCELLED": "Uma marcação foi cancelada.",
+      "CORRECTION_REQUESTED": "Foi pedida uma correção.",
+      "CASE_COMPLETED": "O processo foi encerrado."
+    }
+  },
+  "document": {
+    "correction": {
+      "unreadable": "Documento ilegível ou desfocada",
+      "incomplete": "Documento incompleto",
+      "expired": "Documento caducado",
+      "photo_spec": "Fotografia não conforme",
+      "mismatch": "Identidade não coincidente"
+    }
+  }
+}

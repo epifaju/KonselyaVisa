@@ -38,4 +38,15 @@ public interface CaseDocumentRepository extends JpaRepository<CaseDocument, UUID
             @Param("organizationId") UUID organizationId,
             @Param("sha256") String sha256,
             @Param("applicantId") UUID applicantId);
+
+    @Query(
+            """
+            SELECT d FROM CaseDocument d
+            JOIN FETCH d.caseFile cf
+            JOIN FETCH cf.applicant
+            WHERE d.organizationId = :organizationId
+              AND d.sha256 IN :hashes
+            """)
+    List<CaseDocument> findByOrganizationIdAndSha256In(
+            @Param("organizationId") UUID organizationId, @Param("hashes") Collection<String> hashes);
 }

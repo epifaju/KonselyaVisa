@@ -39,4 +39,24 @@ public class PrivacyConsentService {
         consent.setAcceptedAt(Instant.now());
         return privacyConsentRepository.saveAndFlush(consent);
     }
+
+    @Transactional
+    public PrivacyConsent recordAccountCreation(String keycloakSubject, PrivacyConsentAcceptance acceptance) {
+        if (acceptance == null || !acceptance.accepted()) {
+            throw BusinessException.badRequest("error.privacy.consent_required");
+        }
+        if (keycloakSubject == null || keycloakSubject.isBlank()) {
+            throw BusinessException.badRequest("error.validation");
+        }
+        PrivacyNoticeCatalog.requireCurrentVersion(acceptance.noticeVersion());
+        String locale = acceptance.locale() == null || acceptance.locale().isBlank() ? "fr" : acceptance.locale();
+        PrivacyConsent consent = new PrivacyConsent();
+        consent.setKeycloakSubject(keycloakSubject);
+        consent.setPurpose(PrivacyConsentPurpose.ACCOUNT_CREATION);
+        consent.setNoticeVersion(PrivacyNoticeCatalog.CURRENT_VERSION);
+        consent.setLocale(locale.length() > 2 ? locale.substring(0, 2) : locale);
+        consent.setTextAccepted(PrivacyNoticeCatalog.text(locale));
+        consent.setAcceptedAt(Instant.now());
+        return privacyConsentRepository.saveAndFlush(consent);
+    }
 }

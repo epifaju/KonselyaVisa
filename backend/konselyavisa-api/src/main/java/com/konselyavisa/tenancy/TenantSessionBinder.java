@@ -1,5 +1,6 @@
 package com.konselyavisa.tenancy;
 
+import com.konselyavisa.document.crypto.ExtractedFieldsKeyHolder;
 import jakarta.persistence.EntityManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,6 +39,11 @@ public final class TenantSessionBinder {
                 connection.prepareStatement("SELECT set_config('app.current_org', ?, true)")) {
             orgStatement.setString(1, organizationId == null ? "" : organizationId.toString());
             orgStatement.execute();
+        }
+        try (PreparedStatement cryptoStatement =
+                connection.prepareStatement("SELECT set_config('app.extracted_fields_key', ?, true)")) {
+            cryptoStatement.setString(1, ExtractedFieldsKeyHolder.get());
+            cryptoStatement.execute();
         }
     }
 

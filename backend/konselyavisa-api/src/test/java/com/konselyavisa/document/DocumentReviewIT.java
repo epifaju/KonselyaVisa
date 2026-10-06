@@ -126,6 +126,7 @@ class DocumentReviewIT {
         assertThat(events).hasSize(1);
         assertThat(events.getFirst().getPayload())
                 .containsEntry("documentId", uploaded.id().toString())
+                .containsEntry("reference", created.reference())
                 .containsEntry("reason", "page 2 illisible")
                 .containsEntry("messageKey", "error.document.correction_requested")
                 .containsEntry("decision", "CORRECTION_REQUESTED");

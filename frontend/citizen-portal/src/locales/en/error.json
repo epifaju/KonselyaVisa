@@ -1,0 +1,62 @@
+{
+  "error": {
+    "eligibility": {
+      "not_met": "Based on this procedure’s rules, your situation is not eligible."
+    },
+    "order": {
+      "already_exists": "An order is already open for this case."
+    },
+    "payment": {
+      "stripe_not_configured": "Stripe is not configured for this organization.",
+      "stripe_unavailable": "Stripe is temporarily unavailable. Please retry.",
+      "cinetpay_not_configured": "CinetPay is not configured for this organization.",
+      "cinetpay_unavailable": "CinetPay is temporarily unavailable. Please retry.",
+      "cinetpay_amount_invalid": "This amount cannot be sent to CinetPay.",
+      "paydunya_not_configured": "PayDunya is not configured for this organization.",
+      "paydunya_unavailable": "PayDunya is temporarily unavailable. Please retry.",
+      "paydunya_amount_invalid": "This amount cannot be sent to PayDunya.",
+      "webhook_invalid": "Invalid payment notification.",
+      "webhook_signature": "Invalid payment signature."
+    },
+    "appointment": {
+      "already_booked": "An appointment is already booked.",
+      "slot_full": "This slot is full.",
+      "hold_unavailable": "This slot was just reserved by someone else. Please pick another time."
+    },
+    "document": {
+      "content_type_not_allowed": "File type not allowed (PDF, JPEG, PNG, WebP).",
+      "too_large": "File too large (10 MB max).",
+      "correction_requested": "A document needs to be resubmitted. Open the case to upload it again."
+    },
+    "organization": {
+      "missing": "Your account is not linked to an organization. Sign out and sign in again."
+    },
+    "catalog": {
+      "procedure_not_found": "This formality is no longer available."
+    },
+    "case": {
+      "not_modifiable": "This case can no longer be modified.",
+      "procedure_not_published": "This formality is not open for applications yet."
+    },
+    "account": {
+      "password_weak": "Choose a password of at least 12 characters, with a letter and a number.",
+      "email_exists": "An account already exists for this email. Please sign in.",
+      "unavailable": "Account creation is temporarily unavailable. Please retry."
+    },
+    "guest": {
+      "ticket_not_found": "Your eligibility has expired. Start the assistant again."
+    },
+    "privacy": {
+      "consent_required": "Please accept the privacy notice to create the case.",
+      "notice_stale": "The privacy notice has changed. Reload the page."
+    },
+    "session_expired": "Session expired. Please sign in again.",
+    "access": {
+      "denied": "You do not have access to this resource."
+    },
+    "rate_limited": "Too many requests. Try again in a minute.",
+    "http": "The API returned an error. Please retry.",
+    "not_found": "Resource not found.",
+    "internal": "Internal server error."
+  }
+}

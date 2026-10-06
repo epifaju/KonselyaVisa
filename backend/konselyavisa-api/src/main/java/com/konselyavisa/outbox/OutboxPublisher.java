@@ -1,11 +1,14 @@
 package com.konselyavisa.outbox;
 
+import com.konselyavisa.organization.service.OutboxBrandingEnricher;
 import com.konselyavisa.outbox.domain.OutboxEvent;
 import com.konselyavisa.outbox.domain.OutboxStatus;
 import com.konselyavisa.outbox.persistence.OutboxEventClaimer;
 import com.konselyavisa.tenancy.TenantContext;
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,16 +24,19 @@ public class OutboxPublisher {
     private final OutboxProperties properties;
     private final OutboxEventClaimer claimer;
     private final OutboxWebhookClient webhookClient;
+    private final OutboxBrandingEnricher brandingEnricher;
     private final TransactionTemplate transactionTemplate;
 
     public OutboxPublisher(
             OutboxProperties properties,
             OutboxEventClaimer claimer,
             OutboxWebhookClient webhookClient,
+            OutboxBrandingEnricher brandingEnricher,
             PlatformTransactionManager transactionManager) {
         this.properties = properties;
         this.claimer = claimer;
         this.webhookClient = webhookClient;
+        this.brandingEnricher = brandingEnricher;
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
@@ -62,6 +68,12 @@ public class OutboxPublisher {
 
     private boolean dispatch(OutboxEvent event) {
         try {
+            Map<String, Object> payload =
+                    new LinkedHashMap<>(event.getPayload() == null ? Map.of() : event.getPayload());
+            Map<String, Object> branding = brandingEnricher.brandingFor(event.getOrganizationId());
+            if (!branding.isEmpty()) {
+                payload.put("branding", branding);
+            }
             webhookClient.send(new OutboxWebhookMessage(
                     event.getId(),
                     event.getOrganizationId(),
@@ -69,7 +81,7 @@ public class OutboxPublisher {
                     event.getAggregateType(),
                     event.getAggregateId(),
                     event.getCreatedAt(),
-                    event.getPayload()));
+                    payload));
             event.setStatus(OutboxStatus.SENT);
             event.setSentAt(Instant.now());
             event.setLastError(null);

@@ -1,0 +1,31 @@
+{
+  "orgSettings": {
+    "title": "Organization settings",
+    "hint": "Brand color, public domain and payment provider (stored in organization_settings).",
+    "brandColor": "Brand color",
+    "brandColorHint": "Hex (#RGB or #RRGGBB). Leave empty for the default theme.",
+    "brandColorInvalid": "Invalid color — use #RGB or #RRGGBB hex.",
+    "logo": "Logo",
+    "logoHint": "PNG / JPEG / WebP, 512 KB max. Shown in portal headers.",
+    "favicon": "Favicon",
+    "faviconHint": "ICO / PNG / WebP, 128 KB max. Browser tab icon.",
+    "uploadAsset": "Choose file",
+    "clearAsset": "Remove",
+    "assetError": "Failed to upload or remove the asset.",
+    "domain": "Custom domain",
+    "domainHint": "Public host (e.g. visa.acme.com), no https://. Empty = no domain resolution. See docs/WHITE_LABEL.md for DNS/TLS.",
+    "domainInvalid": "Invalid domain — host only, no path.",
+    "paymentProvider": "Payment provider",
+    "paymentProviderHint": "The payment.provider.* feature flag must also be enabled for Stripe / CinetPay / PayDunya.",
+    "providers": {
+      "MOCK": "Mock (demo)",
+      "MANUAL": "Manual (counter)",
+      "STRIPE": "Stripe",
+      "CINETPAY": "CinetPay",
+      "PAYDUNYA": "PayDunya"
+    },
+    "save": "Save",
+    "saved": "Settings saved.",
+    "saveError": "Could not save. Check the values and your permissions."
+  }
+}

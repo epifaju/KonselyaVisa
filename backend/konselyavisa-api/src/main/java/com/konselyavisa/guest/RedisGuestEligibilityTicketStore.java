@@ -29,13 +29,23 @@ public class RedisGuestEligibilityTicketStore implements GuestEligibilityTicketS
     }
 
     @Override
+    public Optional<GuestEligibilityTicket> find(UUID ticketId) {
+        return read(KEY_PREFIX + ticketId, false);
+    }
+
+    @Override
     public Optional<GuestEligibilityTicket> consume(UUID ticketId) {
-        String key = KEY_PREFIX + ticketId;
+        return read(KEY_PREFIX + ticketId, true);
+    }
+
+    private Optional<GuestEligibilityTicket> read(String key, boolean consume) {
         String json = redis.opsForValue().get(key);
         if (json == null || json.isBlank()) {
             return Optional.empty();
         }
-        redis.delete(key);
+        if (consume) {
+            redis.delete(key);
+        }
         try {
             return Optional.of(objectMapper.readValue(json, GuestEligibilityTicket.class));
         } catch (JsonProcessingException ex) {

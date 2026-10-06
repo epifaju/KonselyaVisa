@@ -21,6 +21,7 @@ import {
 import { timelineStates } from "@/components/CaseTimeline";
 import { JourneyStepper } from "@/components/JourneyStepper";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { shortCaseReference } from "@/lib/caseReference";
 import { procedureTitle } from "@/screens/cases/CitizenCaseCard";
 import { JourneyAppointment, appointmentLocation, slotHeadline } from "@/screens/journey/JourneyAppointment";
@@ -94,7 +95,11 @@ export function CaseJourney({ token, caseId, onBack }: Props) {
     mutationFn: async () => {
       const response = await apiPost<ApiResponse<Order>>(token, `/api/v1/cases/${caseId}/orders`);
       const url = response.data?.payment?.checkoutUrl;
-      if (response.data?.providerCode === "STRIPE" && url?.startsWith("http")) {
+      const provider = response.data?.providerCode;
+      if (
+        url?.startsWith("http") &&
+        (provider === "STRIPE" || provider === "CINETPAY" || provider === "PAYDUNYA")
+      ) {
         window.location.assign(url);
       }
       return response;
@@ -271,6 +276,9 @@ export function CaseJourney({ token, caseId, onBack }: Props) {
               ? t("journey.estimatedInstruction", { count: item.estimatedInstructionDays })
               : t("case.next_action.WAIT_PROCESSING")}
           </p>
+          {nextAction === "WAIT_PROCESSING" || nextAction === "NONE" ? (
+            <p className="text-body-sm text-muted-foreground">{t("journey.noActionNeeded")}</p>
+          ) : null}
         </JourneyCurrentSection>
       ) : null}
 
@@ -289,6 +297,12 @@ export function CaseJourney({ token, caseId, onBack }: Props) {
           ))}
         </Accordion>
       ) : null}
+
+      <div>
+        <Button type="button" variant="outline" onClick={onBack}>
+          {t("journey.backToCases")}
+        </Button>
+      </div>
     </section>
   );
 }

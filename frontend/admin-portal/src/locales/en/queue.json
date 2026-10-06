@@ -1,0 +1,34 @@
+{
+  "queue": {
+    "title": "Case queue",
+    "filter": "Status",
+    "all": "All",
+    "reference": "Reference",
+    "applicant": "Applicant",
+    "procedure": "Procedure",
+    "status": "Status",
+    "open": "Open",
+    "empty": "No cases for this filter.",
+    "age": "Age",
+    "ageHint": "Oldest first. Amber at 50% of the instruction SLA, red when exceeded (else 48 h / 5 days).",
+    "ageHours_one": "{{count}} h",
+    "ageHours_other": "{{count}} h",
+    "ageDays_one": "{{count}} d",
+    "ageDays_other": "{{count}} d",
+    "slaDays_one": "{{count}} d",
+    "slaDays_other": "{{count}} d",
+    "next": "Next",
+    "nextAction": {
+      "UPLOAD_DOCUMENTS": "Docs",
+      "CORRECT_DOCUMENTS": "Correction",
+      "PAY": "Payment",
+      "WAIT_MANUAL_PAYMENT": "Manual pay",
+      "BOOK_APPOINTMENT": "Appointment",
+      "WAIT_PROCESSING": "Review",
+      "NONE": "—"
+    },
+    "duplicate": "Document already seen",
+    "duplicateBanner_one": "{{count}} case has a document already seen (same fingerprint, other applicant).",
+    "duplicateBanner_other": "{{count}} cases have a document already seen (same fingerprint, other applicant)."
+  }
+}

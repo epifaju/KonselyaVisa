@@ -1,0 +1,50 @@
+# Example: terminate TLS for a customer white-label host and forward Host to the API.
+# Copy / adapt into your prod reverse-proxy — not loaded by docker-compose by default.
+#
+# Prerequisites:
+# 1. DNS CNAME (or A) for visa.acme.com → this proxy
+# 2. organization_settings.domain = visa.acme.com for the org
+# 3. Certificate (certbot / ACME) for visa.acme.com
+#
+# Upstream names match infrastructure/docker-compose.yml service names when used on the same network.
+
+upstream konselya_api {
+  server backend:8080;
+}
+
+# HTTP → HTTPS
+server {
+  listen 80;
+  server_name visa.acme.com;
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  server_name visa.acme.com;
+
+  ssl_certificate     /etc/letsencrypt/live/visa.acme.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/visa.acme.com/privkey.pem;
+
+  client_max_body_size 12m;
+
+  location /api/ {
+    proxy_pass http://konselya_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header Authorization $http_authorization;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_read_timeout 60s;
+  }
+
+  # Citizen / admin static frontends — point to your CDN or SPA containers.
+  location / {
+    # proxy_pass http://citizen-portal:80;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    return 200 "Configure SPA upstream for white-label host\n";
+    add_header Content-Type text/plain;
+  }
+}

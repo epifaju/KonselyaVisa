@@ -27,5 +27,9 @@ spring:
 konselyavisa:
   redis:
     enabled: true
+  keycloak:
+    admin:
+      enabled: true
+      base-url: ${KONSELYAVISA_KEYCLOAK_ADMIN_BASE_URL:http://keycloak:8080}
   storage:
     endpoint: ${KONSELYAVISA_STORAGE_ENDPOINT:http://minio:9000}

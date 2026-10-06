@@ -1,0 +1,79 @@
+{
+  "cases": {
+    "title": "Os meus processos",
+    "new": "Nova formalidade",
+    "open": "Abrir",
+    "correct": "Corrigir",
+    "follow": "Acompanhar",
+    "continue": "Continuar",
+    "closed": "Processos encerrados",
+    "showAll": "Mostrar tudo",
+    "showLess": "Reduzir",
+    "inProgressCount_one": "{{count}} formalidade em curso",
+    "inProgressCount_other": "{{count}} formalidades em curso",
+    "reference": "Ref. {{reference}}",
+    "estimatedDays_one": "prazo estimado {{count}} dia",
+    "estimatedDays_other": "prazo estimado {{count}} dias",
+    "section": {
+      "ACTION_REQUIRED": "Ação necessária",
+      "IN_INSTRUCTION": "Em instrução",
+      "CLOSED": "Encerrados"
+    },
+    "empty": "Ainda não há processos.",
+    "emptyHint": "Utilize « Nova formalidade » para começar.",
+    "nextStep": {
+      "CREATED": "Complete o pedido para avançar",
+      "IN_PROGRESS": "Em instrução",
+      "CORRECTION_REQUESTED": "Um documento deve ser reenviado",
+      "COMPLETED": "Processo encerrado",
+      "CANCELLED": "Processo anulado",
+      "fallback": "Abra o processo para ver o que se segue."
+    }
+  },
+  "company": {
+    "title": "Processos da empresa",
+    "subtitle": "Acompanhe as formalidades submetidas pela equipa.",
+    "new": "Novo processo",
+    "empty": "Nenhum processo neste âmbito.",
+    "all": "Todos",
+    "creator": "Criado por",
+    "role": "Função",
+    "applicant": "Requerente",
+    "status": "Estado",
+    "procedure": "Procedimento",
+    "open": "Abrir",
+    "roles": {
+      "COMPANY_USER": "Colaborador",
+      "COMPANY_ADMIN": "Admin da empresa"
+    }
+  },
+  "case": {
+    "next_action": {
+      "UPLOAD_DOCUMENTS": "Envie os documentos pedidos",
+      "CORRECT_DOCUMENTS": "Um documento deve ser reenviado",
+      "PAY": "Pague as taxas para transmitir o processo",
+      "WAIT_MANUAL_PAYMENT": "Pagamento a aguardar validação",
+      "BOOK_APPOINTMENT": "Reserve uma marcação",
+      "WAIT_PROCESSING": "Processo em instrução",
+      "NONE": "Nenhuma ação necessária"
+    },
+    "list_action": {
+      "UPLOAD_DOCUMENTS": "Enviar",
+      "CORRECT_DOCUMENTS": "Corrigir",
+      "PAY": "Pagar",
+      "WAIT_MANUAL_PAYMENT": "Acompanhar",
+      "BOOK_APPOINTMENT": "Reservar",
+      "WAIT_PROCESSING": "Acompanhar",
+      "NONE": "Consultar"
+    },
+    "list_subtitle": {
+      "UPLOAD_DOCUMENTS": "Documentos a enviar",
+      "CORRECT_DOCUMENTS": "Um documento deve ser reenviado",
+      "PAY": "Pagamento a regularizar",
+      "WAIT_MANUAL_PAYMENT": "Pagamento a aguardar validação",
+      "BOOK_APPOINTMENT": "Marcação a reservar para o depósito",
+      "WAIT_PROCESSING": "Depositado em {{date}}",
+      "NONE": "Processo encerrado"
+    }
+  }
+}

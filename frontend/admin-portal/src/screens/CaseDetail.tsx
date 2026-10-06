@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   apiGet,
@@ -11,17 +11,23 @@ import {
   type Appointment,
   type CaseDocument,
   type CaseItem,
+  type DocumentHashAlert,
+  type DocumentUploadRefusal,
   type Order,
 } from "@/api/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CaseHistory } from "@/screens/CaseHistory";
 import { CorrectionPanel } from "@/screens/CorrectionPanel";
+import { DocumentExtractionPanel } from "@/screens/DocumentExtractionPanel";
+import { DocumentHashAlertPanel } from "@/screens/DocumentHashAlertPanel";
+import { DocumentUploadRefusalPanel } from "@/screens/DocumentUploadRefusalPanel";
 
 type Props = {
   token: string;
   caseId: string;
   onBack: () => void;
+  onOpenCase: (id: string) => void;
 };
 
 function documentBadge(status: string): "success" | "warning" | "destructive" | "outline" {
@@ -37,10 +43,16 @@ function documentBadge(status: string): "success" | "warning" | "destructive" | 
   return "outline";
 }
 
-export function CaseDetail({ token, caseId, onBack }: Props) {
+export function CaseDetail({ token, caseId, onBack, onOpenCase }: Props) {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const [correctionDocId, setCorrectionDocId] = useState<string | null>(null);
+  const [extractionDocId, setExtractionDocId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCorrectionDocId(null);
+    setExtractionDocId(null);
+  }, [caseId]);
 
   const caseQuery = useQuery({
     queryKey: ["case", caseId],
@@ -54,6 +66,17 @@ export function CaseDetail({ token, caseId, onBack }: Props) {
     queryKey: ["case-orders", caseId],
     queryFn: async () => (await apiGet<ApiResponse<Order[]>>(token, `/api/v1/cases/${caseId}/orders`)).data ?? [],
   });
+  const hashAlertsQuery = useQuery({
+    queryKey: ["case-hash-alerts", caseId],
+    queryFn: async () =>
+      (await apiGet<ApiResponse<DocumentHashAlert[]>>(token, `/api/v1/cases/${caseId}/hash-alerts`)).data ?? [],
+  });
+  const uploadRefusalsQuery = useQuery({
+    queryKey: ["case-upload-refusals", caseId],
+    queryFn: async () =>
+      (await apiGet<ApiResponse<DocumentUploadRefusal[]>>(token, `/api/v1/cases/${caseId}/upload-refusals`)).data ??
+      [],
+  });
   const appointmentsQuery = useQuery({
     queryKey: ["case-appointments", caseId],
     queryFn: async () =>
@@ -65,6 +88,8 @@ export function CaseDetail({ token, caseId, onBack }: Props) {
     void queryClient.invalidateQueries({ queryKey: ["case-docs", caseId] });
     void queryClient.invalidateQueries({ queryKey: ["case-orders", caseId] });
     void queryClient.invalidateQueries({ queryKey: ["case-history", caseId] });
+    void queryClient.invalidateQueries({ queryKey: ["case-hash-alerts", caseId] });
+    void queryClient.invalidateQueries({ queryKey: ["case-upload-refusals", caseId] });
     void queryClient.invalidateQueries({ queryKey: ["agent-cases"] });
   };
 
@@ -77,6 +102,17 @@ export function CaseDetail({ token, caseId, onBack }: Props) {
       apiPost(token, `/api/v1/cases/${caseId}/documents/${documentId}/request-correction`, { reason }),
     onSuccess: () => {
       setCorrectionDocId(null);
+      invalidate();
+    },
+  });
+  const extract = useMutation({
+    mutationFn: ({ documentId, extractedFields }: { documentId: string; extractedFields: Record<string, string> }) =>
+      apiPost(token, `/api/v1/cases/${caseId}/documents/${documentId}/extraction`, {
+        extractedFields,
+        documentValidations: { mrz_valid: "UNCHECKED" },
+      }),
+    onSuccess: () => {
+      setExtractionDocId(null);
       invalidate();
     },
   });
@@ -114,6 +150,8 @@ export function CaseDetail({ token, caseId, onBack }: Props) {
           {t("common.error")}
         </p>
       ) : null}
+      {item ? <DocumentHashAlertPanel alerts={hashAlertsQuery.data ?? []} onOpenCase={onOpenCase} /> : null}
+      {item ? <DocumentUploadRefusalPanel refusals={uploadRefusalsQuery.data ?? []} /> : null}
       {item ? (
         <div className="grid gap-4 md:grid-cols-2">
           <article className="rounded-lg border border-border bg-card p-4">
@@ -143,12 +181,14 @@ export function CaseDetail({ token, caseId, onBack }: Props) {
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <p className="font-medium text-foreground">{doc.requirementCode}</p>
-                  <p className="text-muted-foreground">
-                    {doc.originalFilename}
-                    {doc.duplicateHash ? ` · ${t("case.duplicate")}` : ""}
-                  </p>
+                  <p className="text-muted-foreground">{doc.originalFilename}</p>
                 </div>
-                <Badge variant={documentBadge(doc.status)}>{t(`status.document.${doc.status}`)}</Badge>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant={documentBadge(doc.status)}>{t(`status.document.${doc.status}`)}</Badge>
+                  {doc.duplicateHash || (hashAlertsQuery.data ?? []).some((alert) => alert.documentId === doc.id) ? (
+                    <Badge variant="warning">{t("case.duplicate")}</Badge>
+                  ) : null}
+                </div>
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Button
@@ -165,7 +205,23 @@ export function CaseDetail({ token, caseId, onBack }: Props) {
                 <Button type="button" size="sm" variant="destructive" onClick={() => setCorrectionDocId(doc.id)}>
                   {t("case.correct")}
                 </Button>
+                <Button type="button" size="sm" variant="outline" onClick={() => setExtractionDocId(doc.id)}>
+                  {t("case.extraction.action")}
+                </Button>
               </div>
+              {doc.extractionSource ? (
+                <p className="mt-2 text-caption text-muted-foreground">
+                  {t("case.extraction.saved", { source: doc.extractionSource })}
+                </p>
+              ) : null}
+              {extractionDocId === doc.id ? (
+                <DocumentExtractionPanel
+                  initial={doc.extractedFields}
+                  busy={extract.isPending}
+                  onCancel={() => setExtractionDocId(null)}
+                  onSubmit={(extractedFields) => extract.mutate({ documentId: doc.id, extractedFields })}
+                />
+              ) : null}
               {correctionDocId === doc.id ? (
                 <CorrectionPanel
                   requirementCode={doc.requirementCode}

@@ -1,0 +1,79 @@
+{
+  "cases": {
+    "title": "My cases",
+    "new": "New application",
+    "open": "Open",
+    "correct": "Correct",
+    "follow": "Track",
+    "continue": "Continue",
+    "closed": "Closed cases",
+    "showAll": "Show all",
+    "showLess": "Show less",
+    "inProgressCount_one": "{{count}} application in progress",
+    "inProgressCount_other": "{{count}} applications in progress",
+    "reference": "Ref. {{reference}}",
+    "estimatedDays_one": "estimated {{count}} day",
+    "estimatedDays_other": "estimated {{count}} days",
+    "section": {
+      "ACTION_REQUIRED": "Action required",
+      "IN_INSTRUCTION": "Under review",
+      "CLOSED": "Closed"
+    },
+    "empty": "No cases yet.",
+    "emptyHint": "Use “New application” to get started.",
+    "nextStep": {
+      "CREATED": "Complete your application to move forward",
+      "IN_PROGRESS": "Under review",
+      "CORRECTION_REQUESTED": "A document needs to be resubmitted",
+      "COMPLETED": "Case closed",
+      "CANCELLED": "Case cancelled",
+      "fallback": "Open the case to see what comes next."
+    }
+  },
+  "company": {
+    "title": "Company cases",
+    "subtitle": "Track applications filed by your team.",
+    "new": "New case",
+    "empty": "No cases in this scope.",
+    "all": "All",
+    "creator": "Created by",
+    "role": "Role",
+    "applicant": "Applicant",
+    "status": "Status",
+    "procedure": "Procedure",
+    "open": "Open",
+    "roles": {
+      "COMPANY_USER": "Collaborator",
+      "COMPANY_ADMIN": "Company admin"
+    }
+  },
+  "case": {
+    "next_action": {
+      "UPLOAD_DOCUMENTS": "Upload the required documents",
+      "CORRECT_DOCUMENTS": "A document needs to be resubmitted",
+      "PAY": "Pay the fees to submit your case",
+      "WAIT_MANUAL_PAYMENT": "Payment awaiting staff confirmation",
+      "BOOK_APPOINTMENT": "Book an appointment",
+      "WAIT_PROCESSING": "Your case is under review",
+      "NONE": "No action required"
+    },
+    "list_action": {
+      "UPLOAD_DOCUMENTS": "Upload",
+      "CORRECT_DOCUMENTS": "Correct",
+      "PAY": "Pay",
+      "WAIT_MANUAL_PAYMENT": "Track",
+      "BOOK_APPOINTMENT": "Book",
+      "WAIT_PROCESSING": "Track",
+      "NONE": "View"
+    },
+    "list_subtitle": {
+      "UPLOAD_DOCUMENTS": "Documents to upload",
+      "CORRECT_DOCUMENTS": "A document must be resubmitted",
+      "PAY": "Payment due",
+      "WAIT_MANUAL_PAYMENT": "Payment awaiting confirmation",
+      "BOOK_APPOINTMENT": "Appointment to book for submission",
+      "WAIT_PROCESSING": "Submitted on {{date}}",
+      "NONE": "Case closed"
+    }
+  }
+}

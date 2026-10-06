@@ -10,8 +10,13 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -50,4 +55,18 @@ public class CaseDocument extends TenantAwareEntity {
 
     @Column(name = "review_message_key", length = 120)
     private String reviewMessageKey;
+
+    @Column(name = "extracted_fields_cipher", columnDefinition = "bytea")
+    private byte[] extractedFieldsCipher;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "document_validations", nullable = false, columnDefinition = "jsonb")
+    private Map<String, String> documentValidations = new HashMap<>();
+
+    @Column(name = "ai_confidence", precision = 5, scale = 4)
+    private BigDecimal aiConfidence;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "extraction_source", length = 20)
+    private ExtractionSource extractionSource;
 }

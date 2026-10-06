@@ -40,4 +40,8 @@ public class BusinessException extends RuntimeException {
     public static BusinessException tooManyRequests(String messageKey) {
         return new BusinessException(messageKey, HttpStatus.TOO_MANY_REQUESTS);
     }
+
+    public static BusinessException serviceUnavailable(String messageKey) {
+        return new BusinessException(messageKey, HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }

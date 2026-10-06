@@ -1,0 +1,56 @@
+{
+  "journey": {
+    "documents": "Pièces à déposer",
+    "payment": "Paiement",
+    "appointment": "Rendez-vous",
+    "openedOn": "Ouvert le {{date}}",
+    "estimatedInstruction_one": "Délai d’instruction estimé : {{count}} jour",
+    "estimatedInstruction_other": "Délai d’instruction estimé : {{count}} jours",
+    "breadcrumb": "Fil d’Ariane",
+    "bookDepositTitle": "Réserver votre rendez-vous de dépôt",
+    "instructionTitle": "Dossier en instruction",
+    "depositedOn": "Déposé le {{date}}",
+    "viewFile": "Voir le fichier",
+    "confirmThisAppointment": "Confirmer ce rendez-vous",
+    "placesAvailable_one": "{{count}} place disponible",
+    "placesAvailable_other": "{{count}} places disponibles",
+    "done": {
+      "documents": "Pièces — {{count}} documents déposés",
+      "payment": "Paiement — {{amount}} payé",
+      "appointment": "Rendez-vous — {{when}}"
+    },
+    "badge": {
+      "UPLOAD_DOCUMENTS": "Pièces à déposer",
+      "CORRECT_DOCUMENTS": "Pièce à reprendre",
+      "PAY": "Paiement à régler",
+      "WAIT_MANUAL_PAYMENT": "Paiement en attente",
+      "BOOK_APPOINTMENT": "Rendez-vous à réserver",
+      "WAIT_PROCESSING": "En instruction",
+      "NONE": "Clôturé"
+    },
+    "timeline": {
+      "documents": "Pièces",
+      "payment": "Paiement",
+      "appointment": "Rendez-vous",
+      "done": "Instruction"
+    },
+    "missing": "Non déposé",
+    "chooseFile": "Choisir un fichier",
+    "replaceFile": "Renvoyer cette pièce",
+    "duplicate": "document déjà vu",
+    "checkout": "Voir le montant",
+    "payAndSubmit": "Payer et transmettre le dossier",
+    "paymentHint": "Le dossier n’est transmis qu’après confirmation du paiement.",
+    "mockPay": "Simuler le paiement (MOCK)",
+    "stripePay": "Payer avec Stripe",
+    "stripeConfirm": "Confirmer le paiement Stripe",
+    "confirmPayment": "Confirmer le paiement",
+    "manualPay": "Paiement en attente de validation par un agent.",
+    "book": "Réserver",
+    "confirmSlot": "Confirmer le rendez-vous le {{when}}",
+    "cancelAppointment": "Annuler le rendez-vous",
+    "noSlots": "Aucun créneau ouvert.",
+    "backToCases": "Retour à mes dossiers",
+    "noActionNeeded": "Aucune action de votre part n’est nécessaire actuellement — vous serez averti par email dès que le statut évolue."
+  }
+}

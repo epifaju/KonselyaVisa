@@ -1,0 +1,56 @@
+{
+  "journey": {
+    "documents": "Documents",
+    "payment": "Payment",
+    "appointment": "Appointment",
+    "openedOn": "Opened on {{date}}",
+    "estimatedInstruction_one": "Estimated processing time: {{count}} day",
+    "estimatedInstruction_other": "Estimated processing time: {{count}} days",
+    "breadcrumb": "Breadcrumb",
+    "bookDepositTitle": "Book your submission appointment",
+    "instructionTitle": "Case under review",
+    "depositedOn": "Submitted on {{date}}",
+    "viewFile": "View file",
+    "confirmThisAppointment": "Confirm this appointment",
+    "placesAvailable_one": "{{count}} place available",
+    "placesAvailable_other": "{{count}} places available",
+    "done": {
+      "documents": "Documents — {{count}} uploaded",
+      "payment": "Payment — {{amount}} paid",
+      "appointment": "Appointment — {{when}}"
+    },
+    "badge": {
+      "UPLOAD_DOCUMENTS": "Documents to upload",
+      "CORRECT_DOCUMENTS": "Document to resubmit",
+      "PAY": "Payment due",
+      "WAIT_MANUAL_PAYMENT": "Payment pending",
+      "BOOK_APPOINTMENT": "Appointment to book",
+      "WAIT_PROCESSING": "Under review",
+      "NONE": "Closed"
+    },
+    "timeline": {
+      "documents": "Documents",
+      "payment": "Payment",
+      "appointment": "Appointment",
+      "done": "Review"
+    },
+    "missing": "Not uploaded",
+    "chooseFile": "Choose a file",
+    "replaceFile": "Send this document again",
+    "duplicate": "document already seen",
+    "checkout": "See the amount",
+    "payAndSubmit": "Pay and submit the case",
+    "paymentHint": "The case is only submitted after payment is confirmed.",
+    "mockPay": "Simulate payment (MOCK)",
+    "stripePay": "Pay with Stripe",
+    "stripeConfirm": "Confirm Stripe payment",
+    "confirmPayment": "Confirm payment",
+    "manualPay": "Payment waiting for agent confirmation.",
+    "book": "Book",
+    "confirmSlot": "Confirm the appointment on {{when}}",
+    "cancelAppointment": "Cancel appointment",
+    "noSlots": "No open slots.",
+    "backToCases": "Back to my cases",
+    "noActionNeeded": "No action is required from you right now — you will be notified by email when the status changes."
+  }
+}

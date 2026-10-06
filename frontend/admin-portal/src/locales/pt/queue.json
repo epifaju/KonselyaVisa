@@ -1,0 +1,34 @@
+{
+  "queue": {
+    "title": "Fila de processos",
+    "filter": "Estado",
+    "all": "Todos",
+    "reference": "Referência",
+    "applicant": "Requerente",
+    "procedure": "Procedimento",
+    "status": "Estado",
+    "open": "Abrir",
+    "empty": "Nenhum processo para este filtro.",
+    "age": "Antiguidade",
+    "ageHint": "Do mais antigo. Laranja a 50 % do prazo de instrução, vermelho depois (senão 48 h / 5 d).",
+    "ageHours_one": "{{count}} h",
+    "ageHours_other": "{{count}} h",
+    "ageDays_one": "{{count}} d",
+    "ageDays_other": "{{count}} d",
+    "slaDays_one": "{{count}} d",
+    "slaDays_other": "{{count}} d",
+    "next": "Seguinte",
+    "nextAction": {
+      "UPLOAD_DOCUMENTS": "Peças",
+      "CORRECT_DOCUMENTS": "Correção",
+      "PAY": "Pagamento",
+      "WAIT_MANUAL_PAYMENT": "Pagamento manual",
+      "BOOK_APPOINTMENT": "Marcação",
+      "WAIT_PROCESSING": "Instrução",
+      "NONE": "—"
+    },
+    "duplicate": "Peça já vista",
+    "duplicateBanner_one": "{{count}} processo tem uma peça já vista (mesma impressão, outro requerente).",
+    "duplicateBanner_other": "{{count}} processos têm uma peça já vista (mesma impressão, outro requerente)."
+  }
+}

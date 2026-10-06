@@ -1,6 +1,7 @@
 import { Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { OrganizationBrand } from "@/components/OrganizationBrand";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,31 +10,45 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const LANGUAGES = ["fr", "pt", "en"] as const;
-
 type Props = {
   displayName: string;
+  organizationName: string;
+  logoUrl?: string | null;
+  languages: string[];
+  onCases: () => void;
   onPrivacy: () => void;
   onLogout: () => void;
 };
 
-export function CitizenHeader({ displayName, onPrivacy, onLogout }: Props) {
+export function CitizenHeader({
+  displayName,
+  organizationName,
+  logoUrl,
+  languages,
+  onCases,
+  onPrivacy,
+  onLogout,
+}: Props) {
   const { t, i18n } = useTranslation();
-  const language = (LANGUAGES.find((code) => i18n.language.startsWith(code)) ?? "fr") as (typeof LANGUAGES)[number];
+  const codes = languages.length ? languages : ["fr", "pt", "en"];
+  const language = codes.find((code) => i18n.language.startsWith(code)) ?? codes[0];
 
   return (
     <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
-      <OrganizationBrand layout="header" />
+      <OrganizationBrand layout="header" organizationName={organizationName} logoUrl={logoUrl} />
       <div className="flex items-center gap-3">
+        <Button type="button" variant="outline" size="sm" onClick={onCases}>
+          {t("cases.title")}
+        </Button>
         <Select value={language} onValueChange={(value) => void i18n.changeLanguage(value)}>
           <SelectTrigger aria-label={t("language.label")} className="w-[5.5rem]">
             <Globe className="h-4 w-4 text-muted-foreground" aria-hidden />
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {LANGUAGES.map((code) => (
+            {codes.map((code) => (
               <SelectItem key={code} value={code}>
-                {t(`language.short.${code}`)}
+                {t(`language.short.${code}`, { defaultValue: code.toUpperCase() })}
               </SelectItem>
             ))}
           </SelectContent>

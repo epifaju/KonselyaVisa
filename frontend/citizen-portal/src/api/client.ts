@@ -22,6 +22,16 @@ export type Me = {
   username: string;
   roles: string[];
   organizationId: string | null;
+  organization?: {
+    organizationId: string;
+    nameI18n: Record<string, string>;
+    defaultLocale: string;
+    activeLanguages: string[];
+    brandColor: string | null;
+    domain: string | null;
+    logoUrl?: string | null;
+    faviconUrl?: string | null;
+  } | null;
 };
 
 export type Procedure = {
@@ -86,6 +96,10 @@ export type CaseDocument = {
   status: string;
   duplicateHash: boolean;
   reviewMessageKey?: string | null;
+  extractedFields?: Record<string, string>;
+  documentValidations?: Record<string, string>;
+  aiConfidence?: number | null;
+  extractionSource?: string | null;
   createdAt?: string;
 };
 

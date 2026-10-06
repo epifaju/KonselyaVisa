@@ -13,4 +13,8 @@ public record PublicSiteResponse(
         Map<String, String> openingHoursI18n,
         String contactEmail,
         String contactPhone,
+        String brandColor,
+        String domain,
+        String logoUrl,
+        String faviconUrl,
         List<PublicFormalityResponse> formalities) {}

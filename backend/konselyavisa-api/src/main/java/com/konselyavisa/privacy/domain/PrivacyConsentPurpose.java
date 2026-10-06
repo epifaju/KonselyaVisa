@@ -1,5 +1,6 @@
 package com.konselyavisa.privacy.domain;
 
 public enum PrivacyConsentPurpose {
-    CASE_DEPOSIT
+    CASE_DEPOSIT,
+    ACCOUNT_CREATION
 }

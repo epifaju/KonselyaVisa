@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
  * Idempotent n8n bootstrap: owner, Mailpit SMTP credential, outbox webhook workflow.
+ * Workflow routes CASE_CREATED → checklist, PAYMENT_COMPLETED → invoice,
+ * CORRECTION_REQUESTED → relance; other events → generic notify.
  * n8n only notifies; Spring Boot remains the source of business truth.
  */
 const fs = require("fs");

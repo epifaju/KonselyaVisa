@@ -43,4 +43,10 @@ class PaymentProviderAccessGuardTest {
         when(featureFlagService.isPaymentProviderEnabled(PaymentProviderCodes.CINETPAY)).thenReturn(true);
         assertThat(guard.resolveEnabledCode("cinetpay")).isEqualTo(PaymentProviderCodes.CINETPAY);
     }
+
+    @Test
+    void enabledPayDunyaIsKept() {
+        when(featureFlagService.isPaymentProviderEnabled(PaymentProviderCodes.PAYDUNYA)).thenReturn(true);
+        assertThat(guard.resolveEnabledCode("paydunya")).isEqualTo(PaymentProviderCodes.PAYDUNYA);
+    }
 }

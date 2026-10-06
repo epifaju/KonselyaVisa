@@ -1,4 +1,4 @@
-import { FileText, GraduationCap, Plane, Scale, ScrollText, X } from "lucide-react";
+import { FileText, Globe, GraduationCap, Languages, Plane, Scale, ScrollText, Shield, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { WizardOption } from "@/components/WizardOption";
@@ -113,11 +113,20 @@ export function procedureLeading(category: string): ReactNode {
   if (category === "VISA") {
     return <Plane className={className} aria-hidden />;
   }
+  if (category === "EVISA") {
+    return <Globe className={className} aria-hidden />;
+  }
   if (category === "APOSTILLE") {
     return <ScrollText className={className} aria-hidden />;
   }
   if (category === "LEGALIZATION") {
     return <Scale className={className} aria-hidden />;
+  }
+  if (category === "TRANSLATION") {
+    return <Languages className={className} aria-hidden />;
+  }
+  if (category === "INSURANCE") {
+    return <Shield className={className} aria-hidden />;
   }
   return <FileText className={className} aria-hidden />;
 }

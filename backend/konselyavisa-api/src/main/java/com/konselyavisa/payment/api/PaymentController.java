@@ -26,7 +26,9 @@ public class PaymentController {
     @PostMapping("/webhooks/{providerCode}")
     public ResponseEntity<ApiResponse<Void>> webhook(
             @PathVariable String providerCode, @RequestBody Map<String, Object> payload) {
-        if ("STRIPE".equalsIgnoreCase(providerCode) || "CINETPAY".equalsIgnoreCase(providerCode)) {
+        if ("STRIPE".equalsIgnoreCase(providerCode)
+                || "CINETPAY".equalsIgnoreCase(providerCode)
+                || "PAYDUNYA".equalsIgnoreCase(providerCode)) {
             throw BusinessException.badRequest("error.payment.webhook_invalid");
         }
         paymentService.handleWebhook(providerCode, payload);

@@ -10,9 +10,14 @@ import com.konselyavisa.payment.domain.CaseOrder;
 import com.konselyavisa.payment.persistence.CaseOrderRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,6 +52,8 @@ public class CaseResponseAssembler {
         Map<UUID, List<CaseOrder>> orders = groupOrders(caseOrderRepository.findByCaseFile_IdIn(ids));
         Map<UUID, List<CaseAppointment>> appointments =
                 groupAppointments(caseAppointmentRepository.findByCaseFile_IdIn(ids));
+        Set<UUID> duplicateCaseIds = caseIdsSharingHashAcrossApplicants(
+                documents.values().stream().flatMap(List::stream).toList());
         List<CaseResponse> responses = new ArrayList<>(caseFiles.size());
         for (CaseFile caseFile : caseFiles) {
             CaseResponse mapped = caseMapper.toResponse(caseFile);
@@ -55,9 +62,35 @@ public class CaseResponseAssembler {
                     documents.getOrDefault(caseFile.getId(), List.of()),
                     orders.getOrDefault(caseFile.getId(), List.of()),
                     appointments.getOrDefault(caseFile.getId(), List.of()));
-            responses.add(mapped.withProgress(decision));
+            responses.add(mapped.withProgress(decision)
+                    .withDuplicateDocumentHash(duplicateCaseIds.contains(caseFile.getId())));
         }
         return responses;
+    }
+
+    private Set<UUID> caseIdsSharingHashAcrossApplicants(List<CaseDocument> documents) {
+        if (documents.isEmpty()) {
+            return Set.of();
+        }
+        UUID organizationId = documents.getFirst().getOrganizationId();
+        List<String> hashes = documents.stream().map(CaseDocument::getSha256).distinct().toList();
+        Map<String, Set<UUID>> applicantsByHash = new LinkedHashMap<>();
+        for (CaseDocument item : caseDocumentRepository.findByOrganizationIdAndSha256In(organizationId, hashes)) {
+            applicantsByHash
+                    .computeIfAbsent(item.getSha256(), ignored -> new LinkedHashSet<>())
+                    .add(item.getCaseFile().getApplicant().getId());
+        }
+        Set<String> colliding = applicantsByHash.entrySet().stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+        Set<UUID> caseIds = new HashSet<>();
+        for (CaseDocument document : documents) {
+            if (colliding.contains(document.getSha256())) {
+                caseIds.add(document.getCaseFile().getId());
+            }
+        }
+        return caseIds;
     }
 
     private static Map<UUID, List<CaseDocument>> groupDocuments(List<CaseDocument> documents) {

@@ -1,0 +1,31 @@
+{
+  "orgSettings": {
+    "title": "Paramètres de l’organisation",
+    "hint": "Couleur de marque, domaine public et prestataire de paiement (stockés dans organization_settings).",
+    "brandColor": "Couleur de marque",
+    "brandColorHint": "Hex (#RGB ou #RRGGBB). Laisser vide pour le thème par défaut.",
+    "brandColorInvalid": "Couleur invalide — utilisez un hex #RGB ou #RRGGBB.",
+    "logo": "Logo",
+    "logoHint": "PNG / JPEG / WebP, 512 Ko max. Affiché dans les en-têtes portail.",
+    "favicon": "Favicon",
+    "faviconHint": "ICO / PNG / WebP, 128 Ko max. Icône d’onglet navigateur.",
+    "uploadAsset": "Choisir un fichier",
+    "clearAsset": "Retirer",
+    "assetError": "Échec du téléversement ou de la suppression de l’asset.",
+    "domain": "Domaine custom",
+    "domainHint": "Hôte public (ex. visa.acme.com), sans https://. Vide = pas de résolution par domaine. Voir docs/WHITE_LABEL.md pour DNS/TLS.",
+    "domainInvalid": "Domaine invalide — hôte uniquement, sans chemin.",
+    "paymentProvider": "Prestataire de paiement",
+    "paymentProviderHint": "Le flag feature payment.provider.* doit aussi être activé pour Stripe / CinetPay / PayDunya.",
+    "providers": {
+      "MOCK": "Mock (démo)",
+      "MANUAL": "Manuel (guichet)",
+      "STRIPE": "Stripe",
+      "CINETPAY": "CinetPay",
+      "PAYDUNYA": "PayDunya"
+    },
+    "save": "Enregistrer",
+    "saved": "Paramètres enregistrés.",
+    "saveError": "Enregistrement impossible. Vérifiez les valeurs et vos droits."
+  }
+}

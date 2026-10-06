@@ -10,9 +10,12 @@ public final class OutboxEventTypes {
     public static final String CORRECTION_REQUESTED = "CORRECTION_REQUESTED";
     public static final String CASE_COMPLETED = "CASE_COMPLETED";
     public static final String DATA_DELETION_REQUESTED = "DATA_DELETION_REQUESTED";
+    public static final String DATA_DELETION_COMPLETED = "DATA_DELETION_COMPLETED";
+    public static final String ACCOUNT_REGISTERED = "ACCOUNT_REGISTERED";
 
     public static final String AGGREGATE_CASE = "CASE";
     public static final String AGGREGATE_PRIVACY = "PRIVACY";
+    public static final String AGGREGATE_IDENTITY = "IDENTITY";
 
     private OutboxEventTypes() {}
 }

@@ -126,4 +126,11 @@ Ne jamais réutiliser le rouge ou le vert à d'autres fins (décoratif, catégor
 
 ---
 
+## 6. Internationalisation et contenu multilingue
+
+- **Pas d'accord genré ou de préposition fixe autour d'un nom variable.** Toute phrase d'interface combinant un nom d'organisation (ou toute autre donnée variable) avec une préposition doit être structurée pour éviter l'accord genré dans les trois langues actives (français, portugais, anglais) — ex. `"Site officiel — {{organization}} — ..."` plutôt que `"Site officiel du {{organization}}"`, qui casse dès que le nom ne s'accorde pas avec "du"/"de la"/"des".
+- **Tout contenu JSONB multilingue affiché a un repli i18n codé en dur en dernier recours**, jamais un JSONB consommé sans filet. Pattern de référence : `loc(item.nameI18n, langue_courante, t("clé.i18n.de.secours"))` — le JSONB prime, la traduction codée en dur ne sert que si le catalogue n'a pas encore été renseigné pour cette langue, pour éviter une page cassée plutôt qu'un simple affichage dégradé.
+
+---
+
 *Document à conserver dans `docs/UX_GUIDELINES.md`, à mettre à jour à chaque nouvel écran ou pattern validé.*

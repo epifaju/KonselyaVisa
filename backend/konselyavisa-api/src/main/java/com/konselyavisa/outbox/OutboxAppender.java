@@ -60,4 +60,12 @@ public class OutboxAppender {
     public OutboxEvent appendDataDeletionRequested(UUID requestId, Map<String, Object> payload) {
         return append(OutboxEventTypes.AGGREGATE_PRIVACY, requestId, OutboxEventTypes.DATA_DELETION_REQUESTED, payload);
     }
+
+    public OutboxEvent appendDataDeletionCompleted(UUID requestId, Map<String, Object> payload) {
+        return append(OutboxEventTypes.AGGREGATE_PRIVACY, requestId, OutboxEventTypes.DATA_DELETION_COMPLETED, payload);
+    }
+
+    public OutboxEvent appendAccountRegistered(UUID identityId, Map<String, Object> payload) {
+        return append(OutboxEventTypes.AGGREGATE_IDENTITY, identityId, OutboxEventTypes.ACCOUNT_REGISTERED, payload);
+    }
 }

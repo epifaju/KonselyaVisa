@@ -1,0 +1,10 @@
+{
+  "supervisor": {
+    "overdueAlert_one": "{{count}} case has been waiting more than 5 days.",
+    "overdueAlert_other": "{{count}} cases have been waiting more than 5 days.",
+    "openOverdue": "Open overdue cases",
+    "open": "Open cases",
+    "watch": "Watch (48h+)",
+    "breach": "Overdue (5d+)"
+  }
+}

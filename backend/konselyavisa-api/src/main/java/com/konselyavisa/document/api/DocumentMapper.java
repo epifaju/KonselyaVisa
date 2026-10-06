@@ -8,5 +8,6 @@ import org.mapstruct.Mapping;
 public interface DocumentMapper {
 
     @Mapping(target = "caseId", source = "caseFile.id")
+    @Mapping(target = "extractedFields", ignore = true)
     DocumentResponse toResponse(CaseDocument document);
 }

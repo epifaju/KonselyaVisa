@@ -1,0 +1,62 @@
+{
+  "error": {
+    "eligibility": {
+      "not_met": "Segundo as regras deste procedimento, a sua situação não é elegível."
+    },
+    "order": {
+      "already_exists": "Já existe uma encomenda aberta para este processo."
+    },
+    "payment": {
+      "stripe_not_configured": "O Stripe não está configurado para esta organização.",
+      "stripe_unavailable": "O Stripe está temporariamente indisponível. Tente novamente.",
+      "cinetpay_not_configured": "O CinetPay não está configurado para esta organização.",
+      "cinetpay_unavailable": "O CinetPay está temporariamente indisponível. Tente novamente.",
+      "cinetpay_amount_invalid": "O montante não é compatível com o CinetPay.",
+      "paydunya_not_configured": "O PayDunya não está configurado para esta organização.",
+      "paydunya_unavailable": "O PayDunya está temporariamente indisponível. Tente novamente.",
+      "paydunya_amount_invalid": "O montante não é compatível com o PayDunya.",
+      "webhook_invalid": "Notificação de pagamento inválida.",
+      "webhook_signature": "Assinatura de pagamento inválida."
+    },
+    "appointment": {
+      "already_booked": "Já existe uma marcação.",
+      "slot_full": "Este horário está completo.",
+      "hold_unavailable": "Este horário acabou de ser reservado. Escolha outro."
+    },
+    "document": {
+      "content_type_not_allowed": "Tipo de ficheiro não permitido (PDF, JPEG, PNG, WebP).",
+      "too_large": "Ficheiro demasiado grande (máx. 10 MB).",
+      "correction_requested": "Um documento deve ser reenviado. Abra o processo para o voltar a enviar."
+    },
+    "organization": {
+      "missing": "A sua conta não está associada a uma organização. Termine a sessão e volte a entrar."
+    },
+    "catalog": {
+      "procedure_not_found": "Esta formalidade já não está disponível."
+    },
+    "case": {
+      "not_modifiable": "Este processo já não pode ser alterado.",
+      "procedure_not_published": "Esta formalidade ainda não está aberta a pedidos."
+    },
+    "account": {
+      "password_weak": "Escolha uma palavra-passe com pelo menos 12 caracteres, uma letra e um número.",
+      "email_exists": "Já existe uma conta para este e-mail. Inicie sessão.",
+      "unavailable": "A criação de conta está temporariamente indisponível. Tente novamente."
+    },
+    "guest": {
+      "ticket_not_found": "A elegibilidade expirou. Recomece o assistente."
+    },
+    "privacy": {
+      "consent_required": "Aceite o aviso de privacidade para criar o processo.",
+      "notice_stale": "O texto de consentimento mudou. Recarregue a página."
+    },
+    "session_expired": "Sessão expirada. Inicie sessão novamente.",
+    "access": {
+      "denied": "Não tem acesso a este recurso."
+    },
+    "rate_limited": "Demasiados pedidos. Tente novamente dentro de um minuto.",
+    "http": "A API devolveu um erro. Tente novamente.",
+    "not_found": "Recurso não encontrado.",
+    "internal": "Erro interno do servidor."
+  }
+}

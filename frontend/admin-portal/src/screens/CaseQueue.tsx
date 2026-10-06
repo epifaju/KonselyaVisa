@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, AlertTriangle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { apiGet, loc, type ApiResponse, type CaseItem, type PageResponse, type SupervisorSummary } from "@/api/client";
 import { Badge } from "@/components/ui/badge";
@@ -77,6 +77,7 @@ export function CaseQueue({
 
   const all = query.data?.content ?? [];
   const rows = overdueOnly ? all.filter((item) => toneOf(item) === "overdue") : all;
+  const duplicateCount = rows.filter((item) => item.duplicateDocumentHash).length;
   const summary = summaryQuery.data;
 
   return (
@@ -96,6 +97,16 @@ export function CaseQueue({
             onOverdueOnlyChange(true);
           }}
         />
+      ) : null}
+
+      {duplicateCount > 0 ? (
+        <p
+          className="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 px-3 py-2 text-caption text-warning"
+          role="status"
+        >
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <span>{t("queue.duplicateBanner", { count: duplicateCount })}</span>
+        </p>
       ) : null}
 
       <div className="flex flex-wrap gap-1" role="tablist" aria-label={t("queue.filter")}>
@@ -132,6 +143,7 @@ export function CaseQueue({
               <th className="px-2 py-1.5 font-medium">{t("queue.procedure")}</th>
               <th className="px-2 py-1.5 font-medium">{t("queue.next")}</th>
               <th className="px-2 py-1.5 font-medium">{t("queue.status")}</th>
+              <th className="px-2 py-1.5 font-medium">{t("queue.duplicate")}</th>
               <th className="px-2 py-1.5 font-medium">{t("queue.age")}</th>
               <th className="px-2 py-1.5" />
             </tr>
@@ -174,6 +186,16 @@ export function CaseQueue({
                   </td>
                   <td className="px-2 py-1">
                     <Badge variant={statusBadge(item.status)}>{t(`status.case.${item.status}`)}</Badge>
+                  </td>
+                  <td className="px-2 py-1">
+                    {item.duplicateDocumentHash ? (
+                      <Badge variant="warning">
+                        <AlertTriangle className="h-3 w-3" aria-hidden />
+                        {t("queue.duplicate")}
+                      </Badge>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
                   </td>
                   <td className="whitespace-nowrap px-2 py-1">
                     <span

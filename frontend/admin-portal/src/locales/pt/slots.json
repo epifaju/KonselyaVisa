@@ -1,0 +1,12 @@
+{
+  "slots": {
+    "title": "Horários",
+    "startsAt": "Início",
+    "endsAt": "Fim",
+    "capacity": "Capacidade",
+    "location": "Local",
+    "create": "Criar horário",
+    "cancel": "Cancelar",
+    "remaining": "{{remaining}} / {{capacity}} lugares"
+  }
+}

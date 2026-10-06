@@ -175,7 +175,10 @@
       "credentials": [
         { "type": "password", "value": "AdminDev!23", "temporary": false }
       ],
-      "realmRoles": ["PLATFORM_ADMIN"]
+      "realmRoles": ["PLATFORM_ADMIN"],
+      "attributes": {
+        "organization_id": ["11111111-1111-1111-1111-111111111111"]
+      }
     },
     {
       "username": "company.dev",
