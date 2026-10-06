@@ -160,7 +160,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
               <p className="text-caption text-muted-foreground">{t("login.title")}</p>
             </div>
           </div>
-          <nav className="hidden items-center gap-x-6 text-body-sm lg:flex" aria-label={t("home.nav.label")}>
+          <nav className="hidden items-center gap-x-6 text-body lg:flex" aria-label={t("home.nav.label")}>
             {navLinks}
           </nav>
           <div className="hidden items-center gap-2 lg:flex">
@@ -191,7 +191,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
             aria-modal="true"
             aria-label={t("home.nav.label")}
           >
-            <nav className="flex flex-col gap-3 text-body-sm" aria-label={t("home.nav.label")}>
+            <nav className="flex flex-col gap-3 text-body" aria-label={t("home.nav.label")}>
               {navLinks}
               <div className="flex flex-wrap items-center gap-2 pt-2">
                 {languageSwitcher}
@@ -212,31 +212,31 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
       </header>
 
       <div className="bg-muted text-foreground">
-        <p className="mx-auto flex max-w-6xl items-start gap-2 px-4 py-2 text-caption md:items-center md:px-6">
+        <p className="mx-auto flex max-w-6xl items-start gap-2 px-4 py-2.5 text-body-sm md:items-center md:px-6">
           <TrustShield className="mt-0.5 h-4 w-4 shrink-0 text-primary md:mt-0" />
           <span>{t("home.trust", { organization: orgName })}</span>
         </p>
       </div>
 
       <main>
-        <section className="mx-auto max-w-3xl px-4 py-10 text-center md:px-6 md:py-12">
-          <h1 className="text-heading-1 font-medium text-foreground">{t("home.hero.title")}</h1>
-          <p className="mx-auto mt-4 max-w-xl text-body text-muted-foreground">{t("home.hero.subtitle")}</p>
-          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-            <Button type="button" className="h-12 w-full rounded-md px-6 text-body sm:w-auto" onClick={() => onStart()}>
+        <section className="mx-auto max-w-3xl px-4 py-12 text-center md:px-6 md:py-16">
+          <h1 className="text-display text-foreground">{t("home.hero.title")}</h1>
+          <p className="mx-auto mt-5 max-w-2xl text-body-lg text-muted-foreground">{t("home.hero.subtitle")}</p>
+          <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+            <Button type="button" className="h-12 w-full rounded-md px-6 text-body-lg sm:w-auto" onClick={() => onStart()}>
               {t("home.hero.start")}
             </Button>
-            <Button type="button" variant="outline" className="h-12 w-full rounded-md px-6 text-body sm:w-auto" onClick={onTrack}>
+            <Button type="button" variant="outline" className="h-12 w-full rounded-md px-6 text-body-lg sm:w-auto" onClick={onTrack}>
               {t("home.hero.track")}
             </Button>
           </div>
         </section>
 
         <section id="services" className="mx-auto max-w-6xl scroll-mt-8 px-4 pb-16 md:px-6">
-          <h2 className="mb-6 text-center text-body-sm text-muted-foreground">{t("home.formalities.title")}</h2>
-          {siteQuery.isLoading ? <p className="text-center text-body-sm text-muted-foreground">{t("common.loading")}</p> : null}
+          <h2 className="mb-7 text-center text-heading-2 font-medium text-foreground">{t("home.formalities.title")}</h2>
+          {siteQuery.isLoading ? <p className="text-center text-body text-muted-foreground">{t("common.loading")}</p> : null}
           {siteQuery.isError ? (
-            <p className="flex items-center justify-center gap-2 text-body-sm text-destructive" role="alert">
+            <p className="flex items-center justify-center gap-2 text-body text-destructive" role="alert">
               <AlertCircle className="h-4 w-4 shrink-0" aria-hidden />
               <span>{t("common.error")}</span>
             </p>
@@ -246,7 +246,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
               <button
                 key={item.category}
                 type="button"
-                className="flex min-h-[7.5rem] flex-col items-center justify-center gap-3 rounded-lg border border-border bg-card px-4 py-6 text-center text-body text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex min-h-[8rem] flex-col items-center justify-center gap-3 rounded-lg border border-border bg-card px-4 py-6 text-center text-body-lg text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={() => onStart(item.category)}
               >
                 {formalityIcon(item.category)}
@@ -264,15 +264,15 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
 
         <section id="how" className="bg-muted">
           <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
-            <h2 className="mb-10 text-center text-heading-2 font-medium">{t("home.how.title")}</h2>
+            <h2 className="mb-10 text-center text-heading-1 font-medium">{t("home.how.title")}</h2>
             <ol className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
               {(["eligibility", "documents", "pay", "follow"] as const).map((step, index) => (
                 <li key={step} className="text-center">
-                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-primary text-body font-medium text-primary-foreground">
+                  <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-primary text-body-lg font-medium text-primary-foreground">
                     {index + 1}
                   </span>
-                  <p className="mt-4 font-medium text-body text-foreground">{t(`home.how.${step}.title`)}</p>
-                  <p className="mt-1 text-body-sm text-muted-foreground">{t(`home.how.${step}.text`)}</p>
+                  <p className="mt-4 font-medium text-body-lg text-foreground">{t(`home.how.${step}.title`)}</p>
+                  <p className="mt-1.5 text-body text-muted-foreground">{t(`home.how.${step}.text`)}</p>
                 </li>
               ))}
             </ol>
@@ -280,7 +280,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
         </section>
 
         <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-          <ul className="flex flex-col items-center justify-center gap-6 text-body-sm text-muted-foreground md:flex-row md:gap-10">
+          <ul className="flex flex-col items-center justify-center gap-6 text-body text-muted-foreground md:flex-row md:gap-10">
             <li className="flex items-center gap-2">
               {reassuranceIcon("lock")}
               <span>{t("home.reassurance.secure")}</span>

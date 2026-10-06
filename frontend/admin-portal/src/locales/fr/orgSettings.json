@@ -3,7 +3,7 @@
     "title": "Paramètres de l’organisation",
     "hint": "Couleur de marque, domaine public et prestataire de paiement (stockés dans organization_settings).",
     "brandColor": "Couleur de marque",
-    "brandColorHint": "Hex (#RGB ou #RRGGBB). Laisser vide pour le thème par défaut.",
+    "brandColorHint": "Hex (#RGB ou #RRGGBB). Vide = bleu public. Évitez le vert (réservé aux statuts success).",
     "brandColorInvalid": "Couleur invalide — utilisez un hex #RGB ou #RRGGBB.",
     "logo": "Logo",
     "logoHint": "PNG / JPEG / WebP, 512 Ko max. Affiché dans les en-têtes portail.",

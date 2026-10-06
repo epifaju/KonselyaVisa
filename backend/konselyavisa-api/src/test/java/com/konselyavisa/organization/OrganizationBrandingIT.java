@@ -72,7 +72,7 @@ class OrganizationBrandingIT {
         assertThat(payload.organizationId()).isEqualTo(DemoOrganization.ID);
         assertThat(payload.nameI18n().get("fr")).contains("Guinée-Bissau");
         assertThat(payload.activeLanguages()).contains("fr", "pt", "en");
-        assertThat(payload.brandColor()).isEqualTo("#0B5D3B");
+        assertThat(payload.brandColor()).isNull();
         assertThat(payload.domain()).isEqualTo("visa.demo.konselya.local");
 
         TenantContext.setOrganizationId(DemoOrganization.ID);
@@ -93,6 +93,6 @@ class OrganizationBrandingIT {
         assertThat(byDomain.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(byDomain.getBody()).isNotNull();
         assertThat(byDomain.getBody().data().organizationId()).isEqualTo(DemoOrganization.ID);
-        assertThat(byDomain.getBody().data().brandColor()).isEqualTo("#0B5D3B");
+        assertThat(byDomain.getBody().data().brandColor()).isNull();
     }
 }

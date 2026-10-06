@@ -3,7 +3,7 @@
     "title": "Organization settings",
     "hint": "Brand color, public domain and payment provider (stored in organization_settings).",
     "brandColor": "Brand color",
-    "brandColorHint": "Hex (#RGB or #RRGGBB). Leave empty for the default theme.",
+    "brandColorHint": "Hex (#RGB or #RRGGBB). Empty = public blue. Avoid green (reserved for success status).",
     "brandColorInvalid": "Invalid color — use #RGB or #RRGGBB hex.",
     "logo": "Logo",
     "logoHint": "PNG / JPEG / WebP, 512 KB max. Shown in portal headers.",

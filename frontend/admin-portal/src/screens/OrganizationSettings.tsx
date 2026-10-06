@@ -142,13 +142,13 @@ export function OrganizationSettings({ token }: Props) {
               type="color"
               aria-label={t("orgSettings.brandColor")}
               className="h-10 w-12 cursor-pointer rounded-sm border border-border bg-background"
-              value={HEX.test(brandColor) ? (brandColor.length === 4 ? expandShortHex(brandColor) : brandColor) : "#0B5D3B"}
+              value={HEX.test(brandColor) ? (brandColor.length === 4 ? expandShortHex(brandColor) : brandColor) : "#1780F2"}
               onChange={(event) => setBrandColor(event.target.value.toUpperCase())}
             />
             <input
               type="text"
               inputMode="text"
-              placeholder="#0B5D3B"
+              placeholder="#1780F2"
               className="w-full rounded-sm border border-border bg-background px-2 py-2 text-body-sm"
               value={brandColor}
               onChange={(event) => setBrandColor(event.target.value)}

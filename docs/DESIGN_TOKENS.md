@@ -66,7 +66,7 @@ Toute autre variante de couleur (par exemple pour un composant `Timeline` ou `St
 
 ## 4. Typographie
 
-Utiliser les classes `text-caption`, `text-body-sm`, `text-body`, `text-body-lg`, `text-heading-1/2/3` ajoutées dans `tailwind.tokens.ts`, plutôt que les tailles Tailwind par défaut (`text-xs`, `text-sm`...), pour rester alignées avec les tailles utilisées dans les maquettes de référence (`docs/UX_GUIDELINES.md`). Deux graisses seulement : `font-normal` (400) pour le texte courant, `font-medium` (500) pour les titres et labels — jamais `font-semibold` ou `font-bold`.
+Utiliser les classes `text-caption`, `text-body-sm`, `text-body`, `text-body-lg`, `text-heading-1/2/3`, `text-display` (accueil / surfaces marketing) ajoutées dans `tailwind.config.js`, plutôt que les tailles Tailwind par défaut (`text-xs`, `text-sm`...), pour rester alignées avec les tailles utilisées dans les maquettes de référence (`docs/UX_GUIDELINES.md`). Deux graisses seulement : `font-normal` (400) pour le texte courant, `font-medium` (500) pour les titres et labels — jamais `font-semibold` ou `font-bold`.
 
 ## 5. Rayon de bordure
 

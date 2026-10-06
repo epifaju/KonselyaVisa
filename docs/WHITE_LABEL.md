@@ -6,7 +6,7 @@ KonselyaVisa brandise chaque organisation via `organization_settings` (JSONB) et
 
 | Capacité | Où | Notes |
 | --- | --- | --- |
-| Couleur de marque | `settings.brandColor` (`#RGB` / `#RRGGBB`) | Thème CSS `--primary` sur les portails |
+| Couleur de marque | `settings.brandColor` (`#RGB` / `#RRGGBB`) | Override white-label de `--primary` ; vide = bleu public (`#1780F2` / `213 90% 52%`). Réserver le vert au statut `success`. |
 | Domaine custom (résolution) | `settings.domain` | Lookup Host / `?domain=` → org active |
 | Logo / favicon | MinIO `branding/{orgId}/logo\|favicon` + `*ContentType` | Upload admin ; GET public |
 | E-mails brandés | Outbox → `payload.branding` → n8n HTML | Logo en URL absolue |
@@ -29,7 +29,7 @@ Limites : logo 512 Ko, favicon 128 Ko ; types `image/png`, `image/jpeg`, `image/
 Les portails citoyen et admin :
 
 1. Résolvent l’org via JWT ou Host / `VITE` public org.
-2. Appliquent `brandColor` (`useOrganizationBrandTheme`).
+2. Appliquent `brandColor` seulement s’il est renseigné (`useOrganizationBrandTheme`) — sinon le thème public bleu reste en place.
 3. Remplacent le favicon (`useOrganizationBrandFavicon`) et affichent le logo dans les en-têtes / home publique.
 
 Les URLs logo/favicon renvoyées par l’API sont **relatives** (`/api/v1/public/org/branding/...`) ; le front préfixe `VITE_API_BASE_URL`.
@@ -42,7 +42,7 @@ Les URLs logo/favicon renvoyées par l’API sont **relatives** (`/api/v1/public
 "branding": {
   "organizationId": "...",
   "nameI18n": { "fr": "...", "en": "...", "pt": "..." },
-  "brandColor": "#0B5D3B",
+  "brandColor": "#1B4F8A",
   "domain": "visa.acme.com",
   "logoUrl": "https://api.example.com/api/v1/public/org/branding/logo?organizationId=..."
 }

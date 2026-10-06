@@ -3,7 +3,7 @@
     "title": "Definições da organização",
     "hint": "Cor da marca, domínio público e prestador de pagamento (em organization_settings).",
     "brandColor": "Cor da marca",
-    "brandColorHint": "Hex (#RGB ou #RRGGBB). Vazio = tema predefinido.",
+    "brandColorHint": "Hex (#RGB ou #RRGGBB). Vazio = azul público. Evite verde (reservado ao status success).",
     "brandColorInvalid": "Cor inválida — use hex #RGB ou #RRGGBB.",
     "logo": "Logótipo",
     "logoHint": "PNG / JPEG / WebP, máx. 512 KB. Mostrado nos cabeçalhos do portal.",

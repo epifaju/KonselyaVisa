@@ -63,6 +63,10 @@ export default {
         "heading-3": ["16px", { lineHeight: "1.4", fontWeight: "500" }],
         "heading-2": ["18px", { lineHeight: "1.35", fontWeight: "500" }],
         "heading-1": ["22px", { lineHeight: "1.3", fontWeight: "500" }],
+        display: [
+          "clamp(1.75rem, 1.2rem + 1.8vw, 2.125rem)",
+          { lineHeight: "1.25", fontWeight: "500" },
+        ],
       },
     },
   },
