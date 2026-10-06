@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import { formalityIcon, reassuranceIcon, TrustShield } from "@/screens/public/publicIcons";
+import { PublicHomeHero } from "@/screens/public/PublicHomeHero";
 
 export type PublicSite = {
   organizationId: string;
@@ -32,22 +33,22 @@ export type PublicSite = {
 
 function formalityGridClass(count: number): string {
   if (count <= 1) {
-    return "mx-auto grid max-w-sm grid-cols-1 gap-4";
+    return "mx-auto grid max-w-sm grid-cols-1 gap-5";
   }
   if (count === 2) {
-    return "mx-auto grid max-w-3xl grid-cols-1 gap-4 md:grid-cols-2";
+    return "mx-auto grid max-w-3xl grid-cols-1 gap-5 md:grid-cols-2";
   }
   if (count === 3) {
-    return "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3";
+    return "grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3";
   }
-  return "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4";
+  return "grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 }
 
 /** @deprecated Prefer getPublicOrganizationId() — kept for existing imports. */
 export const PUBLIC_ORG = getPublicOrganizationId();
 
 const NAV_FOCUS =
-  "rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  "rounded-sm text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 export function usePublicSite() {
   const params = publicOrgSearchParams();
@@ -143,7 +144,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
 
   return (
     <div className="login-theme min-h-screen bg-background text-foreground">
-      <header ref={menuRegionRef} className="border-b border-border">
+      <header ref={menuRegionRef} className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
           <div className="flex min-w-0 items-center gap-3">
             {site?.logoUrl ? (
@@ -156,11 +157,11 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
               <div className="h-10 w-10 shrink-0 rounded-lg bg-primary" aria-hidden />
             )}
             <div className="min-w-0">
-              <p className="truncate text-body text-heading-3 font-medium text-foreground">{orgName}</p>
+              <p className="truncate text-heading-3 font-medium text-foreground">{orgName}</p>
               <p className="text-caption text-muted-foreground">{t("login.title")}</p>
             </div>
           </div>
-          <nav className="hidden items-center gap-x-6 text-body lg:flex" aria-label={t("home.nav.label")}>
+          <nav className="hidden items-center gap-x-7 text-body font-medium lg:flex" aria-label={t("home.nav.label")}>
             {navLinks}
           </nav>
           <div className="hidden items-center gap-2 lg:flex">
@@ -191,7 +192,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
             aria-modal="true"
             aria-label={t("home.nav.label")}
           >
-            <nav className="flex flex-col gap-3 text-body" aria-label={t("home.nav.label")}>
+            <nav className="flex flex-col gap-3 text-body font-medium" aria-label={t("home.nav.label")}>
               {navLinks}
               <div className="flex flex-wrap items-center gap-2 pt-2">
                 {languageSwitcher}
@@ -211,7 +212,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
         ) : null}
       </header>
 
-      <div className="bg-muted text-foreground">
+      <div className="border-b border-border/60 bg-muted text-foreground">
         <p className="mx-auto flex max-w-6xl items-start gap-2 px-4 py-2.5 text-body-sm md:items-center md:px-6">
           <TrustShield className="mt-0.5 h-4 w-4 shrink-0 text-primary md:mt-0" />
           <span>{t("home.trust", { organization: orgName })}</span>
@@ -219,100 +220,110 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
       </div>
 
       <main>
-        <section className="mx-auto max-w-3xl px-4 py-12 text-center md:px-6 md:py-16">
-          <h1 className="text-display text-foreground">{t("home.hero.title")}</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-body-lg text-muted-foreground">{t("home.hero.subtitle")}</p>
-          <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-            <Button type="button" className="h-12 w-full rounded-md px-6 text-body-lg sm:w-auto" onClick={() => onStart()}>
-              {t("home.hero.start")}
-            </Button>
-            <Button type="button" variant="outline" className="h-12 w-full rounded-md px-6 text-body-lg sm:w-auto" onClick={onTrack}>
-              {t("home.hero.track")}
-            </Button>
-          </div>
-        </section>
+        <PublicHomeHero
+          organizationName={orgName}
+          logoUrl={site?.logoUrl}
+          title={t("home.hero.title")}
+          subtitle={t("home.hero.subtitle")}
+          ctaTitle={t("home.hero.ctaTitle")}
+          startLabel={t("home.hero.start")}
+          trackLabel={t("home.hero.track")}
+          onStart={() => onStart()}
+          onTrack={onTrack}
+        />
 
-        <section id="services" className="mx-auto max-w-6xl scroll-mt-8 px-4 pb-16 md:px-6">
-          <h2 className="mb-7 text-center text-heading-2 font-medium text-foreground">{t("home.formalities.title")}</h2>
-          {siteQuery.isLoading ? <p className="text-center text-body text-muted-foreground">{t("common.loading")}</p> : null}
-          {siteQuery.isError ? (
-            <p className="flex items-center justify-center gap-2 text-body text-destructive" role="alert">
-              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden />
-              <span>{t("common.error")}</span>
-            </p>
-          ) : null}
-          <div className={formalityGridClass(site?.formalities?.length ?? 0)}>
-            {(site?.formalities ?? []).map((item) => (
-              <button
-                key={item.category}
-                type="button"
-                className="flex min-h-[8rem] flex-col items-center justify-center gap-3 rounded-lg border border-border bg-card px-4 py-6 text-center text-body-lg text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => onStart(item.category)}
-              >
-                {formalityIcon(item.category)}
-                <span>
-                  {loc(
-                    item.nameI18n,
-                    i18n.language,
-                    t(`home.formality.${item.category}`, { defaultValue: item.category }),
-                  )}
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section id="how" className="bg-muted">
-          <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
-            <h2 className="mb-10 text-center text-heading-1 font-medium">{t("home.how.title")}</h2>
-            <ol className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <section id="how" className="bg-card">
+          <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+            <h2 className="mx-auto mb-14 max-w-3xl text-center text-heading-1 font-medium text-primary md:text-display">
+              {t("home.how.title")}
+            </h2>
+            <ol className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
               {(["eligibility", "documents", "pay", "follow"] as const).map((step, index) => (
-                <li key={step} className="text-center">
-                  <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-primary text-body-lg font-medium text-primary-foreground">
+                <li
+                  key={step}
+                  className="relative rounded-lg border border-border bg-background px-5 pb-7 pt-10 text-center shadow-sm"
+                >
+                  <span className="absolute left-1/2 top-0 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-body-lg font-medium text-primary-foreground">
                     {index + 1}
                   </span>
-                  <p className="mt-4 font-medium text-body-lg text-foreground">{t(`home.how.${step}.title`)}</p>
-                  <p className="mt-1.5 text-body text-muted-foreground">{t(`home.how.${step}.text`)}</p>
+                  <p className="font-medium text-heading-3 text-primary">{t(`home.how.${step}.title`)}</p>
+                  <p className="mt-2 text-body text-muted-foreground">{t(`home.how.${step}.text`)}</p>
                 </li>
               ))}
             </ol>
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-          <ul className="flex flex-col items-center justify-center gap-6 text-body text-muted-foreground md:flex-row md:gap-10">
-            <li className="flex items-center gap-2">
-              {reassuranceIcon("lock")}
-              <span>{t("home.reassurance.secure")}</span>
-            </li>
-            <li className="flex items-center gap-2">
-              {reassuranceIcon("shield")}
-              <span>{t("home.reassurance.gdpr")}</span>
-            </li>
-            <li className="flex items-center gap-2">
-              {reassuranceIcon("languages")}
-              <span>{t("home.reassurance.languages", { languages: languageNames.join(", ") })}</span>
-            </li>
-          </ul>
+        <section id="services" className="scroll-mt-8 bg-muted">
+          <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
+            <h2 className="mb-10 text-center text-heading-1 font-medium text-foreground">
+              {t("home.formalities.title")}
+            </h2>
+            {siteQuery.isLoading ? <p className="text-center text-body text-muted-foreground">{t("common.loading")}</p> : null}
+            {siteQuery.isError ? (
+              <p className="flex items-center justify-center gap-2 text-body text-destructive" role="alert">
+                <AlertCircle className="h-4 w-4 shrink-0" aria-hidden />
+                <span>{t("common.error")}</span>
+              </p>
+            ) : null}
+            <div className={formalityGridClass(site?.formalities?.length ?? 0)}>
+              {(site?.formalities ?? []).map((item) => (
+                <button
+                  key={item.category}
+                  type="button"
+                  className="flex min-h-[8.5rem] flex-col items-center justify-center gap-3 rounded-lg border border-border bg-card px-4 py-7 text-center text-body-lg text-foreground shadow-sm transition-colors hover:border-primary/40 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  onClick={() => onStart(item.category)}
+                >
+                  {formalityIcon(item.category, "h-7 w-7 text-primary")}
+                  <span className="font-medium">
+                    {loc(
+                      item.nameI18n,
+                      i18n.language,
+                      t(`home.formality.${item.category}`, { defaultValue: item.category }),
+                    )}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-card">
+          <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
+            <ul className="flex flex-col items-center justify-center gap-6 text-body text-muted-foreground md:flex-row md:gap-12">
+              <li className="flex items-center gap-2">
+                {reassuranceIcon("lock")}
+                <span>{t("home.reassurance.secure")}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                {reassuranceIcon("shield")}
+                <span>{t("home.reassurance.gdpr")}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                {reassuranceIcon("languages")}
+                <span>{t("home.reassurance.languages", { languages: languageNames.join(", ") })}</span>
+              </li>
+            </ul>
+          </div>
         </section>
       </main>
 
-      <footer id="contact" className="scroll-mt-8 border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 md:flex-row md:items-start md:justify-between md:px-6">
+      <footer id="contact" className="scroll-mt-8 border-t border-border bg-muted">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 md:flex-row md:items-start md:justify-between md:px-6">
           <div>
-            <p className="font-medium text-body text-foreground">{orgName}</p>
-            {address ? <p className="mt-1 text-body-sm text-muted-foreground">{address}</p> : null}
-            {hours ? <p className="text-body-sm text-muted-foreground">{hours}</p> : null}
+            <p className="font-medium text-heading-3 text-foreground">{orgName}</p>
+            {address ? <p className="mt-2 text-body text-muted-foreground">{address}</p> : null}
+            {hours ? <p className="text-body text-muted-foreground">{hours}</p> : null}
             {site?.contactEmail ? (
-              <p className="mt-1 text-body-sm text-muted-foreground">
+              <p className="mt-2 text-body text-muted-foreground">
                 <a className={`${NAV_FOCUS} underline`} href={`mailto:${site.contactEmail}`}>
                   {site.contactEmail}
                 </a>
               </p>
             ) : null}
-            {site?.contactPhone ? <p className="text-body-sm text-muted-foreground">{site.contactPhone}</p> : null}
+            {site?.contactPhone ? <p className="text-body text-muted-foreground">{site.contactPhone}</p> : null}
           </div>
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-body-sm" aria-label={t("home.footer.links")}>
+          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-body" aria-label={t("home.footer.links")}>
             <button className={NAV_FOCUS} type="button" onClick={() => onNav("legal")}>
               {t("home.footer.legal")}
             </button>
@@ -324,8 +335,8 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
             </a>
           </nav>
         </div>
-        <div className="mx-auto max-w-6xl px-4 pb-6 md:px-6">
-          <a className={`${NAV_FOCUS} text-caption text-muted-foreground`} href={agentPortalUrl}>
+        <div className="mx-auto max-w-6xl px-4 pb-8 md:px-6">
+          <a className="text-caption text-muted-foreground underline-offset-4 hover:underline" href={agentPortalUrl}>
             {t("login.agentLink")}
           </a>
         </div>

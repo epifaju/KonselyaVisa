@@ -50,6 +50,7 @@
     "hero": {
       "title": "As suas formalidades consulares, simplificadas",
       "subtitle": "Visto, legalização, apostila, tradução juramentada — verifique o que precisa e apresente o processo em linha.",
+      "ctaTitle": "Como deseja continuar?",
       "start": "Iniciar uma formalidade",
       "track": "Acompanhar um processo existente"
     },
@@ -66,7 +67,7 @@
       "APPOINTMENT": "Marcação"
     },
     "how": {
-      "title": "Como funciona",
+      "title": "Conclua as formalidades em linha sem se deslocar ao consulado",
       "eligibility": {
         "title": "Verifique a elegibilidade",
         "text": "Responda a algumas perguntas sobre a sua situação"

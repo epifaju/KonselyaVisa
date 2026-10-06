@@ -50,6 +50,7 @@
     "hero": {
       "title": "Vos démarches consulaires, simplifiées",
       "subtitle": "Visa, légalisation, apostille, traduction assermentée — vérifiez ce dont vous avez besoin et déposez votre dossier en ligne.",
+      "ctaTitle": "Comment souhaitez-vous continuer ?",
       "start": "Commencer une démarche",
       "track": "Suivre un dossier existant"
     },
@@ -66,7 +67,7 @@
       "APPOINTMENT": "Rendez-vous"
     },
     "how": {
-      "title": "Comment ça marche",
+      "title": "Comment obtenir vos formalités en ligne sans vous déplacer",
       "eligibility": {
         "title": "Vérifiez votre éligibilité",
         "text": "Répondez à quelques questions sur votre situation"

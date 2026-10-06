@@ -50,6 +50,7 @@
     "hero": {
       "title": "Consular procedures, made simpler",
       "subtitle": "Visa, legalisation, apostille, sworn translation — check what you need and file your case online.",
+      "ctaTitle": "How would you like to continue?",
       "start": "Start an application",
       "track": "Track an existing case"
     },
@@ -66,7 +67,7 @@
       "APPOINTMENT": "Appointment"
     },
     "how": {
-      "title": "How it works",
+      "title": "Complete your procedures online without visiting the consulate",
       "eligibility": {
         "title": "Check your eligibility",
         "text": "Answer a few questions about your situation"
