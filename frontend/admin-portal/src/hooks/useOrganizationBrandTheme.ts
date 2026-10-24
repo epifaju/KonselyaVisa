@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { hexToHslComponents, primaryForegroundForHex } from "@/lib/brandColor";
+import { hexToHslComponents, primaryForegroundForHex } from "@konselyavisa/design-tokens";
 
+/** Applies org `brandColor` to primary/ring only. `--nav` stays institutional (chrome UI). */
 export function useOrganizationBrandTheme(brandColor: string | null | undefined) {
   useEffect(() => {
     const root = document.documentElement;

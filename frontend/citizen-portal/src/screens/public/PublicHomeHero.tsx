@@ -1,3 +1,5 @@
+import { OrganizationLogoMark } from "@/components/OrganizationLogoMark";
+
 type Props = {
   organizationName: string;
   logoUrl?: string | null;
@@ -40,7 +42,7 @@ export function PublicHomeHero({
               className="h-14 w-14 rounded-lg bg-primary-foreground/95 object-contain p-1 shadow-sm"
             />
           ) : (
-            <div className="h-14 w-14 rounded-lg bg-primary-foreground/95 shadow-sm" aria-hidden />
+            <OrganizationLogoMark size="lg" variant="onBrand" />
           )}
           <p className="max-w-2xl text-heading-1 text-primary-foreground">{organizationName}</p>
         </div>

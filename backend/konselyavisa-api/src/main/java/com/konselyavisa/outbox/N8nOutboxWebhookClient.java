@@ -23,13 +23,22 @@ public class N8nOutboxWebhookClient implements OutboxWebhookClient {
     private final RestClient restClient;
 
     public N8nOutboxWebhookClient(OutboxProperties properties, ObjectMapper objectMapper) {
+        this(properties, objectMapper, defaultRestClient(properties));
+    }
+
+    /** Package-visible for unit tests with {@code MockRestServiceServer}. */
+    N8nOutboxWebhookClient(OutboxProperties properties, ObjectMapper objectMapper, RestClient restClient) {
         this.properties = properties;
         this.objectMapper = objectMapper;
+        this.restClient = restClient;
+    }
+
+    private static RestClient defaultRestClient(OutboxProperties properties) {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         Duration timeout = properties.getRequestTimeout();
         requestFactory.setConnectTimeout(timeout);
         requestFactory.setReadTimeout(timeout);
-        this.restClient = RestClient.builder().requestFactory(requestFactory).build();
+        return RestClient.builder().requestFactory(requestFactory).build();
     }
 
     @Override

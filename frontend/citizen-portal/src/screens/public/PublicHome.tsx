@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useFocusTrap } from "@/lib/useFocusTrap";
+import { OrganizationLogoMark } from "@/components/OrganizationLogoMark";
 import { formalityIcon, reassuranceIcon, TrustShield } from "@/screens/public/publicIcons";
 import { PublicHomeHero } from "@/screens/public/PublicHomeHero";
 
@@ -154,7 +155,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
                 className="h-10 w-10 shrink-0 rounded-lg object-contain"
               />
             ) : (
-              <div className="h-10 w-10 shrink-0 rounded-lg bg-primary" aria-hidden />
+              <OrganizationLogoMark size="sm" />
             )}
             <div className="min-w-0">
               <p className="truncate text-heading-3 font-medium text-foreground">{orgName}</p>
@@ -212,7 +213,7 @@ export function PublicHome({ onStart, onTrack, onSignIn, onNav }: Props) {
         ) : null}
       </header>
 
-      <div className="border-b border-border/60 bg-muted text-foreground">
+      <div className="border-b border-primary/10 bg-primary/5 text-foreground">
         <p className="mx-auto flex max-w-6xl items-start gap-2 px-4 py-2.5 text-body-sm md:items-center md:px-6">
           <TrustShield className="mt-0.5 h-4 w-4 shrink-0 text-primary md:mt-0" />
           <span>{t("home.trust", { organization: orgName })}</span>

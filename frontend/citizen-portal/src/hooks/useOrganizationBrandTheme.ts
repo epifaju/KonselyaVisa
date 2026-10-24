@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { brandSurfaceFromHex, hexToHslComponents, primaryForegroundForHex } from "@/lib/brandColor";
+import { brandSurfaceFromHex, hexToHslComponents, primaryForegroundForHex } from "@konselyavisa/design-tokens";
 
 /** Applies organization `brandColor` onto design-token CSS variables (`--org-primary`). */
 export function useOrganizationBrandTheme(brandColor: string | null | undefined) {

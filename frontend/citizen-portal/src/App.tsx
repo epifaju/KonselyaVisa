@@ -45,7 +45,7 @@ export default function App() {
         if (isCallback) {
           try {
             const signedIn = await userManager.signinRedirectCallback();
-            setUser(signedIn);
+            setUser(signedIn ?? (await userManager.getUser()));
           } catch {
             setUser(await userManager.getUser());
           }

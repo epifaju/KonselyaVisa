@@ -9,6 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        nav: "bg-nav text-nav-foreground hover:bg-nav/90 focus-visible:ring-nav",
         outline: "border border-border bg-background hover:bg-muted",
         ghost: "hover:bg-muted",
         success: "bg-success text-success-foreground hover:bg-success/90",

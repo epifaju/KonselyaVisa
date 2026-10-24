@@ -115,7 +115,7 @@ export function CaseQueue({
             key={value || "all"}
             type="button"
             size="sm"
-            variant={status === value && !overdueOnly ? "default" : "outline"}
+            variant={status === value && !overdueOnly ? "nav" : "outline"}
             onClick={() => {
               onOverdueOnlyChange(false);
               onStatusChange(value);

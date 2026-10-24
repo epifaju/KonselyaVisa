@@ -6,7 +6,7 @@ KonselyaVisa brandise chaque organisation via `organization_settings` (JSONB) et
 
 | Capacité | Où | Notes |
 | --- | --- | --- |
-| Couleur de marque | `settings.brandColor` (`#RGB` / `#RRGGBB`) | Override white-label de `--primary` ; vide = bleu public (`#1780F2` / `213 90% 52%`). Réserver le vert au statut `success`. |
+| Couleur de marque | `settings.brandColor` (`#RGB` / `#RRGGBB`) | Override white-label de `--primary` ; vide = bleu public (`#0B61CB` / `213 90% 42%`, AA). Réserver le vert au statut `success`. |
 | Domaine custom (résolution) | `settings.domain` | Lookup Host / `?domain=` → org active |
 | Logo / favicon | MinIO `branding/{orgId}/logo\|favicon` + `*ContentType` | Upload admin ; GET public |
 | E-mails brandés | Outbox → `payload.branding` → n8n HTML | Logo en URL absolue |

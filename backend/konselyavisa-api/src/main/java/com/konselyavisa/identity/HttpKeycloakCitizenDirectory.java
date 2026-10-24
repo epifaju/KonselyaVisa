@@ -35,8 +35,13 @@ public class HttpKeycloakCitizenDirectory implements KeycloakCitizenDirectory {
     private Instant tokenExpiresAt = Instant.EPOCH;
 
     public HttpKeycloakCitizenDirectory(KeycloakAdminProperties properties) {
+        this(properties, RestClient.builder().baseUrl(trimSlash(properties.getBaseUrl())).build());
+    }
+
+    /** Package-visible for unit tests with {@code MockRestServiceServer}. */
+    HttpKeycloakCitizenDirectory(KeycloakAdminProperties properties, RestClient restClient) {
         this.properties = properties;
-        this.restClient = RestClient.builder().baseUrl(trimSlash(properties.getBaseUrl())).build();
+        this.restClient = restClient;
     }
 
     @Override

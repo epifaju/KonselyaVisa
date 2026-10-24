@@ -1,3 +1,6 @@
+/** Public default brand hex (matches CSS `--primary` light fallback). */
+export const PUBLIC_PRIMARY_HEX = "#0B61CB";
+
 /** Convert `#RRGGBB` to CSS HSL components (`H S% L%`) for design tokens. */
 export function hexToHslComponents(hex: string): string | null {
   const match = /^#([0-9a-f]{6})$/i.exec(hex.trim());
@@ -33,22 +36,52 @@ export function hexToHslComponents(hex: string): string | null {
   return `${H} ${S}% ${L}%`;
 }
 
-export function primaryForegroundForHex(hex: string): string {
+function srgbChannel(slice: string): number {
+  const c = parseInt(slice, 16) / 255;
+  return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+}
+
+/** Relative luminance (WCAG) for `#RRGGBB`. */
+export function relativeLuminance(hex: string): number | null {
   const match = /^#([0-9a-f]{6})$/i.exec(hex.trim());
   if (!match) {
-    return "0 0% 100%";
+    return null;
   }
   const value = match[1];
-  const channel = (slice: string) => {
-    const c = parseInt(slice, 16) / 255;
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  };
-  const luminance =
-    0.2126 * channel(value.slice(0, 2)) +
-    0.7152 * channel(value.slice(2, 4)) +
-    0.0722 * channel(value.slice(4, 6));
-  // Prefer white on brand fills unless the brand is clearly light.
-  return luminance > 0.45 ? "152 30% 12%" : "0 0% 100%";
+  return (
+    0.2126 * srgbChannel(value.slice(0, 2)) +
+    0.7152 * srgbChannel(value.slice(2, 4)) +
+    0.0722 * srgbChannel(value.slice(4, 6))
+  );
+}
+
+/** WCAG contrast ratio between two `#RRGGBB` colors. */
+export function contrastRatio(hexA: string, hexB: string): number | null {
+  const a = relativeLuminance(hexA);
+  const b = relativeLuminance(hexB);
+  if (a == null || b == null) {
+    return null;
+  }
+  const lighter = Math.max(a, b);
+  const darker = Math.min(a, b);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+const FG_WHITE = "#FFFFFF";
+const FG_DARK = "#161B26";
+
+export function primaryForegroundForHex(hex: string): string {
+  const white = contrastRatio(hex, FG_WHITE);
+  const dark = contrastRatio(hex, FG_DARK);
+  if (white == null || dark == null) {
+    return "0 0% 100%";
+  }
+  return white >= dark ? "0 0% 100%" : "222 30% 12%";
+}
+
+/** Resolve CTA text hex used with a brand fill (for contrast smoke checks). */
+export function primaryForegroundHexForBrand(hex: string): string {
+  return primaryForegroundForHex(hex) === "0 0% 100%" ? FG_WHITE : FG_DARK;
 }
 
 /** Light page wash derived from brand hue (for `.login-theme` background / muted). */

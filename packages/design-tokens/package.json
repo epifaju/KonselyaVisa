@@ -1,0 +1,26 @@
+{
+  "name": "@konselyavisa/design-tokens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared CSS variables, Tailwind theme extend, and brandColor helpers for KonselyaVisa portals",
+  "exports": {
+    ".": {
+      "types": "./src/brandColor.ts",
+      "import": "./src/brandColor.ts",
+      "default": "./src/brandColor.ts"
+    },
+    "./tokens.css": "./src/tokens.css",
+    "./tailwind-preset": "./src/tailwind-preset.js",
+    "./palette": "./src/palette.js"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}

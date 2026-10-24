@@ -1,3 +1,4 @@
+import { OrganizationLogoMark } from "@/components/OrganizationLogoMark";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
@@ -24,7 +25,7 @@ export function OrganizationBrand({ layout, organizationName, logoUrl, className
           className={cn("shrink-0 rounded-lg object-contain", compact ? "h-10 w-10" : "mb-6 h-12 w-12")}
         />
       ) : (
-        <div className={cn("shrink-0 rounded-lg bg-primary", compact ? "h-10 w-10" : "mb-6 h-12 w-12")} aria-hidden />
+        <OrganizationLogoMark size={compact ? "sm" : "md"} className={compact ? undefined : "mb-6"} />
       )}
       <div className={cn(compact ? "min-w-0" : "text-center")}>
         {compact ? (

@@ -23,7 +23,7 @@ export function AgentHeader({ organizationName, logoUrl, languages, loggedIn, on
             key={lng}
             type="button"
             size="sm"
-            variant="ghost"
+            variant={i18n.language.startsWith(lng) ? "nav" : "ghost"}
             aria-pressed={i18n.language.startsWith(lng)}
             onClick={() => void i18n.changeLanguage(lng)}
           >

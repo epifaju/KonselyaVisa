@@ -22,7 +22,7 @@
         "en": "Demo Consulate",
         "pt": "Consulado Demo"
       },
-      "brandColor": "#1780F2",
+      "brandColor": "#0B61CB",
       "logoUrl": "http://localhost:18083/api/v1/public/org/branding/logo?organizationId=11111111-1111-1111-1111-111111111111"
     }
   }

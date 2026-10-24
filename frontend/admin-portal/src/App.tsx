@@ -44,7 +44,7 @@ export default function App() {
             const existing = await userManager.getUser();
             setUser(existing);
             // Callback can fail after a successful session (reload / double hit) — only surface if still anonymous.
-            setError(!existing || existing.expired);
+            setError(!existing || Boolean(existing.expired));
           }
           window.history.replaceState({}, document.title, "/");
         } else {
@@ -123,19 +123,19 @@ export default function App() {
       ) : (
         <>
           <nav className="mb-6 flex flex-wrap gap-2">
-            <Button type="button" variant={view === "queue" ? "default" : "outline"} onClick={() => { setView("queue"); setCaseId(null); setProcedureId(null); }}>
+            <Button type="button" variant={view === "queue" ? "nav" : "outline"} onClick={() => { setView("queue"); setCaseId(null); setProcedureId(null); }}>
               {t("nav.cases")}
             </Button>
-            <Button type="button" variant={view === "slots" ? "default" : "outline"} onClick={() => { setView("slots"); setCaseId(null); setProcedureId(null); }}>
+            <Button type="button" variant={view === "slots" ? "nav" : "outline"} onClick={() => { setView("slots"); setCaseId(null); setProcedureId(null); }}>
               {t("nav.slots")}
             </Button>
             {isCatalogAdmin ? (
-              <Button type="button" variant={view === "catalog" ? "default" : "outline"} onClick={() => { setView("catalog"); setCaseId(null); }}>
+              <Button type="button" variant={view === "catalog" ? "nav" : "outline"} onClick={() => { setView("catalog"); setCaseId(null); }}>
                 {t("nav.catalog")}
               </Button>
             ) : null}
             {isOrgAdmin ? (
-              <Button type="button" variant={view === "settings" ? "default" : "outline"} onClick={() => { setView("settings"); setCaseId(null); setProcedureId(null); }}>
+              <Button type="button" variant={view === "settings" ? "nav" : "outline"} onClick={() => { setView("settings"); setCaseId(null); setProcedureId(null); }}>
                 {t("nav.settings")}
               </Button>
             ) : null}
