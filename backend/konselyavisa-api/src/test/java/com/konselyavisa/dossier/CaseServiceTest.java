@@ -23,6 +23,7 @@ import com.konselyavisa.dossier.api.CreateCaseRequest;
 import com.konselyavisa.dossier.api.PrivacyConsentAcceptance;
 import com.konselyavisa.eligibility.JsonLogicEligibilityEvaluator;
 import com.konselyavisa.guest.GuestEligibilityService;
+import com.konselyavisa.guest.GuestEligibilityTicket;
 import com.konselyavisa.outbox.OutboxAppender;
 import com.konselyavisa.privacy.PrivacyConsentService;
 import com.konselyavisa.common.api.PageResponse;
@@ -368,6 +369,205 @@ class CaseServiceTest {
         when(caseResponseAssembler.toResponse(caseFile)).thenReturn(mapped);
 
         assertThat(caseService.getById(caseId)).isSameAs(mapped);
+    }
+
+    @Test
+    void createWithoutApplicantStillResolvesTheProcedure() {
+        TenantContext.setOrganizationId(orgId);
+        when(procedureDefinitionRepository.findById(procedureId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> caseService.create(new CreateCaseRequest(procedureId, null)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.catalog.procedure_not_found");
+    }
+
+    @Test
+    void createRejectsMismatchedEligibilityTicket() {
+        TenantContext.setOrganizationId(orgId);
+        UUID ticketId = UUID.randomUUID();
+        when(guestEligibilityService.consume(ticketId, orgId))
+                .thenReturn(new GuestEligibilityTicket(ticketId, orgId, UUID.randomUUID(), Map.of("age", 30)));
+
+        assertThatThrownBy(() -> caseService.create(new CreateCaseRequest(
+                        procedureId,
+                        new ApplicantRequest("ada@example.test", "Ada", Map.of("age", 30)),
+                        PrivacyConsentAcceptance.currentAccepted("fr"),
+                        ticketId)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.guest.ticket_mismatch");
+        verify(procedureDefinitionRepository, never()).findById(any());
+    }
+
+    @Test
+    void createRejectsInactiveOrUnpublishedProcedure() {
+        TenantContext.setOrganizationId(orgId);
+        ProcedureDefinition inactive = publishedDefinition();
+        inactive.setActive(false);
+        when(procedureDefinitionRepository.findById(procedureId)).thenReturn(Optional.of(inactive));
+
+        assertThatThrownBy(() -> caseService.create(request(Map.of("age", 30))))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.catalog.procedure_not_found");
+
+        ProcedureDefinition active = publishedDefinition();
+        when(procedureDefinitionRepository.findById(procedureId)).thenReturn(Optional.of(active));
+        when(procedureVersionRepository.findByProcedureDefinitionIdAndStatus(
+                        active.getId(), ProcedureVersionStatus.PUBLISHED))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> caseService.create(request(Map.of("age", 30))))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.case.procedure_not_published");
+        verify(caseFileRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void createUpdatesExistingCitizenApplicant() {
+        TenantContext.setOrganizationId(orgId);
+        stubEligibleCreate();
+        Applicant existing = new Applicant();
+        existing.setId(UUID.randomUUID());
+        existing.setKeycloakSubject("citizen-1");
+        when(applicantRepository.findByOrganizationIdAndKeycloakSubject(orgId, "citizen-1"))
+                .thenReturn(Optional.of(existing));
+
+        caseService.create(request(Map.of("age", 30)));
+
+        assertThat(existing.getEmail()).isEqualTo("citizen@example.com");
+        assertThat(existing.getDisplayName()).isEqualTo("Citizen Dev");
+        verify(applicantRepository, never()).save(any());
+    }
+
+    @Test
+    void createLeavesExistingApplicantIdentityUntouchedWhenRequestOmitsIt() {
+        TenantContext.setOrganizationId(orgId);
+        stubEligibleCreate();
+        Applicant existing = new Applicant();
+        existing.setId(UUID.randomUUID());
+        existing.setEmail("kept@example.test");
+        existing.setDisplayName("Kept");
+        when(applicantRepository.findByOrganizationIdAndKeycloakSubject(orgId, "citizen-1"))
+                .thenReturn(Optional.of(existing));
+
+        caseService.create(new CreateCaseRequest(
+                procedureId, new ApplicantRequest(null, null, Map.of("age", 30))));
+
+        assertThat(existing.getEmail()).isEqualTo("kept@example.test");
+        assertThat(existing.getDisplayName()).isEqualTo("Kept");
+    }
+
+    @Test
+    void createPersistsApplicantWithoutRequestForStaff() {
+        authenticateAs("agent-1", "agent.dev", "ROLE_AGENT");
+        TenantContext.setOrganizationId(orgId);
+        stubEligibleCreate();
+        when(applicantRepository.save(any(Applicant.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        caseService.create(new CreateCaseRequest(procedureId, null));
+
+        ArgumentCaptor<Applicant> applicant = ArgumentCaptor.forClass(Applicant.class);
+        verify(applicantRepository).save(applicant.capture());
+        assertThat(applicant.getValue().getKeycloakSubject()).isNull();
+        assertThat(applicant.getValue().getEmail()).isNull();
+    }
+
+    @Test
+    void createFailsWhenEveryReferenceCollides() {
+        TenantContext.setOrganizationId(orgId);
+        ProcedureDefinition definition = publishedDefinition();
+        ProcedureVersion version = publishedVersion(definition);
+        when(procedureDefinitionRepository.findById(procedureId)).thenReturn(Optional.of(definition));
+        when(procedureVersionRepository.findByProcedureDefinitionIdAndStatus(
+                        definition.getId(), ProcedureVersionStatus.PUBLISHED))
+                .thenReturn(Optional.of(version));
+        when(eligibilityEvaluator.evaluate(eq(version.getEligibilityRules()), any())).thenReturn(true);
+        when(applicantRepository.findByOrganizationIdAndKeycloakSubject(orgId, "citizen-1"))
+                .thenReturn(Optional.empty());
+        when(applicantRepository.save(any(Applicant.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(caseFileRepository.existsByOrganizationIdAndReference(eq(orgId), any())).thenReturn(true);
+
+        assertThatThrownBy(() -> caseService.create(request(Map.of("age", 30))))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.case.reference_collision");
+        verify(caseFileRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void listRejectsCitizenAndCollaboratorWithoutIdentity() {
+        authenticateAs(" ", " ", "ROLE_CITIZEN");
+        assertThatThrownBy(() -> caseService.list(PageRequest.of(0, 10)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.access.denied");
+
+        authenticateAs(" ", " ", "ROLE_COMPANY_USER");
+        assertThatThrownBy(() -> caseService.list(PageRequest.of(0, 10)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.access.denied");
+        verify(caseFileRepository, never()).findAllByApplicant_KeycloakSubject(any(), any());
+        verify(caseFileRepository, never()).findAllByCreatedBy(any(), any());
+    }
+
+    @Test
+    void requireAccessibleDeniesMissingIdentityOrApplicant() {
+        UUID caseId = UUID.randomUUID();
+        CaseFile caseFile = caseOwnedBy("citizen-1");
+        when(caseFileRepository.findDetailedById(caseId)).thenReturn(Optional.of(caseFile));
+
+        authenticateAs(" ", " ", "ROLE_CITIZEN");
+        assertThatThrownBy(() -> caseService.requireAccessible(caseId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.access.denied");
+
+        authenticateAsCitizen();
+        caseFile.setApplicant(null);
+        assertThatThrownBy(() -> caseService.requireAccessible(caseId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.access.denied");
+
+        authenticateAs(" ", " ", "ROLE_COMPANY_USER");
+        assertThatThrownBy(() -> caseService.requireAccessible(caseId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.access.denied");
+    }
+
+    @Test
+    void requireAccessibleAllowsCompanyOrgAdminForAdminCreatedCases() {
+        authenticateAs("admin-1", "org.admin", "ROLE_COMPANY_USER", "ROLE_BUSINESS_ADMIN");
+        UUID caseId = UUID.randomUUID();
+        CaseFile caseFile = caseOwnedBy("citizen-x");
+        caseFile.setCreatedByRole("COMPANY_ADMIN");
+        when(caseFileRepository.findDetailedById(caseId)).thenReturn(Optional.of(caseFile));
+
+        assertThat(caseService.requireAccessible(caseId)).isSameAs(caseFile);
+    }
+
+    private void stubEligibleCreate() {
+        ProcedureDefinition definition = publishedDefinition();
+        ProcedureVersion version = publishedVersion(definition);
+        when(procedureDefinitionRepository.findById(procedureId)).thenReturn(Optional.of(definition));
+        when(procedureVersionRepository.findByProcedureDefinitionIdAndStatus(
+                        definition.getId(), ProcedureVersionStatus.PUBLISHED))
+                .thenReturn(Optional.of(version));
+        when(eligibilityEvaluator.evaluate(eq(version.getEligibilityRules()), any())).thenReturn(true);
+        when(caseFileRepository.existsByOrganizationIdAndReference(eq(orgId), any())).thenReturn(false);
+        when(caseFileRepository.saveAndFlush(any(CaseFile.class))).thenAnswer(invocation -> {
+            CaseFile saved = invocation.getArgument(0);
+            saved.setId(UUID.randomUUID());
+            saved.setOrganizationId(orgId);
+            return saved;
+        });
+        when(caseResponseAssembler.toResponse(any(CaseFile.class)))
+                .thenReturn(minimalResponse(UUID.randomUUID(), "KV-1"));
     }
 
     private CaseFile caseOwnedBy(String subject) {

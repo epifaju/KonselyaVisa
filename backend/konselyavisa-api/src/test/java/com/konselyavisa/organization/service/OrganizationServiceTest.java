@@ -7,6 +7,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.konselyavisa.common.api.PageResponse;
 import com.konselyavisa.common.exception.BusinessException;
 import com.konselyavisa.organization.api.CreateOrganizationRequest;
 import com.konselyavisa.organization.api.OrganizationMapper;
@@ -20,6 +21,8 @@ import com.konselyavisa.tenancy.TenantContext;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -132,6 +135,75 @@ class OrganizationServiceTest {
         assertThat(organization.getStatus()).isEqualTo(OrganizationStatus.SUSPENDED);
         assertThat(organization.getDefaultCurrency()).isEqualTo("USD");
         assertThat(organization.getNameI18n()).containsEntry("fr", "Nouveau");
+    }
+
+    @Test
+    void createRejectsDuplicateSlugAndTrimsExplicitLocale() {
+        CreateOrganizationRequest duplicate = new CreateOrganizationRequest(
+                "ACME", "acme", Map.of("fr", "Acme"), "fr", "EUR", null, OrganizationStatus.SUSPENDED);
+        when(organizationRepository.existsByCodeIgnoreCase("ACME")).thenReturn(false);
+        when(organizationRepository.existsBySlugIgnoreCase("acme")).thenReturn(true);
+
+        assertThatThrownBy(() -> service.create(duplicate))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.organization.slug_taken");
+
+        CreateOrganizationRequest request = new CreateOrganizationRequest(
+                "ACME", "acme", Map.of("fr", "Acme"), "  fr  ", "   ", null, OrganizationStatus.SUSPENDED);
+        when(organizationRepository.existsBySlugIgnoreCase("acme")).thenReturn(false);
+        when(organizationRepository.save(any(Organization.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(organizationMapper.toResponse(any(Organization.class)))
+                .thenReturn(org.mockito.Mockito.mock(OrganizationResponse.class));
+
+        service.create(request);
+
+        ArgumentCaptor<Organization> captor = ArgumentCaptor.forClass(Organization.class);
+        verify(organizationRepository).save(captor.capture());
+        assertThat(captor.getValue().getDefaultLocale()).isEqualTo("fr");
+        assertThat(captor.getValue().getDefaultCurrency()).isEqualTo("EUR");
+        assertThat(captor.getValue().getStatus()).isEqualTo(OrganizationStatus.SUSPENDED);
+        assertThat(captor.getValue().getSettings().getSettings()).isEmpty();
+    }
+
+    @Test
+    void updateIgnoresBlankFieldsAndMergesSettings() {
+        TenantContext.setOrganizationId(orgId);
+        Organization organization = organization();
+        when(organizationRepository.findById(orgId)).thenReturn(Optional.of(organization));
+        when(organizationMapper.toResponse(organization))
+                .thenReturn(org.mockito.Mockito.mock(OrganizationResponse.class));
+
+        service.update(orgId, new UpdateOrganizationRequest(Map.of(), "  ", " ", Map.of("theme", "green"), null));
+
+        assertThat(organization.getNameI18n()).containsEntry("fr", "Demo");
+        assertThat(organization.getDefaultLocale()).isEqualTo("fr");
+        assertThat(organization.getDefaultCurrency()).isEqualTo("EUR");
+        assertThat(organization.getSettings().getSettings()).containsEntry("theme", "green");
+    }
+
+    @Test
+    void updateRejectsUnknownOrganization() {
+        TenantContext.setPlatformAdmin(true);
+        when(organizationRepository.findById(orgId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.update(orgId, new UpdateOrganizationRequest(null, "pt", null, null, null)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.organization.not_found");
+    }
+
+    @Test
+    void listMapsTheRepositoryPage() {
+        Organization organization = organization();
+        OrganizationResponse mapped = org.mockito.Mockito.mock(OrganizationResponse.class);
+        when(organizationRepository.findAll(PageRequest.of(0, 5)))
+                .thenReturn(new PageImpl<>(java.util.List.of(organization)));
+        when(organizationMapper.toResponse(organization)).thenReturn(mapped);
+
+        PageResponse<OrganizationResponse> page = service.list(PageRequest.of(0, 5));
+
+        assertThat(page.content()).containsExactly(mapped);
     }
 
     private Organization organization() {

@@ -42,3 +42,7 @@ infrastructure/minio/data/
 # Test / coverage
 coverage/
 .nyc_output/
+playwright-report/
+playwright-live-report/
+test-results/
+blob-report/

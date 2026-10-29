@@ -14,6 +14,8 @@ import com.konselyavisa.common.exception.BusinessException;
 import com.konselyavisa.dossier.CaseFile;
 import com.konselyavisa.dossier.CaseService;
 import com.konselyavisa.dossier.CaseStatus;
+import com.konselyavisa.organization.domain.Organization;
+import com.konselyavisa.organization.domain.OrganizationSettings;
 import com.konselyavisa.organization.persistence.OrganizationRepository;
 import com.konselyavisa.outbox.OutboxAppender;
 import com.konselyavisa.payment.api.OrderMapper;
@@ -121,6 +123,74 @@ class PaymentServiceTest {
                 .isInstanceOf(BusinessException.class)
                 .extracting(ex -> ((BusinessException) ex).getMessageKey())
                 .isEqualTo("error.case.not_modifiable");
+    }
+
+    @Test
+    void createCheckoutRejectsCancelledCase() {
+        when(caseService.requireAccessible(caseId)).thenReturn(openCase(CaseStatus.CANCELLED));
+
+        assertThatThrownBy(() -> service.createCheckout(caseId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.case.not_modifiable");
+    }
+
+    @Test
+    void createCheckoutFailsWhenEveryOrderReferenceCollides() {
+        CaseFile caseFile = openCase(CaseStatus.CREATED);
+        when(caseService.requireAccessible(caseId)).thenReturn(caseFile);
+        when(caseOrderRepository.existsByCaseFile_IdAndStatusIn(eq(caseId), any())).thenReturn(false);
+        when(organizationRepository.findById(orgId)).thenReturn(Optional.empty());
+        when(providerRegistry.require(PaymentProviderCodes.MOCK)).thenReturn(paymentProvider);
+        when(caseOrderRepository.existsByOrganizationIdAndReference(eq(orgId), any())).thenReturn(true);
+
+        assertThatThrownBy(() -> service.createCheckout(caseId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.order.reference_collision");
+        verify(caseOrderRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void createCheckoutUsesConfiguredProviderAndFallsBackWhenSettingsAreBlank() {
+        Organization organization = new Organization();
+        organization.setId(orgId);
+        OrganizationSettings settings = new OrganizationSettings();
+        settings.setSettings(new java.util.HashMap<>(Map.of("paymentProvider", "stripe")));
+        organization.setSettings(settings);
+        CaseFile caseFile = openCase(CaseStatus.IN_PROGRESS);
+        when(caseService.requireAccessible(caseId)).thenReturn(caseFile);
+        when(caseOrderRepository.existsByCaseFile_IdAndStatusIn(eq(caseId), any())).thenReturn(false);
+        when(organizationRepository.findById(orgId)).thenReturn(Optional.of(organization));
+        when(paymentProviderAccessGuard.resolveEnabledCode("stripe")).thenReturn("stripe");
+        when(providerRegistry.require("stripe")).thenReturn(paymentProvider);
+        when(paymentProvider.code()).thenReturn("stripe");
+        when(caseOrderRepository.existsByOrganizationIdAndReference(eq(orgId), any())).thenReturn(false);
+        when(caseOrderRepository.saveAndFlush(any(CaseOrder.class))).thenAnswer(invocation -> {
+            CaseOrder order = invocation.getArgument(0);
+            order.setId(UUID.randomUUID());
+            return order;
+        });
+        when(paymentRepository.saveAndFlush(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(paymentProvider.createCheckout(any()))
+                .thenReturn(new CheckoutSession("ref", "https://pay.example.test", PaymentStatus.PENDING));
+        when(orderMapper.toResponse(any(CaseOrder.class), any(Payment.class)))
+                .thenReturn(org.mockito.Mockito.mock(OrderResponse.class));
+
+        service.createCheckout(caseId);
+        verify(providerRegistry).require("stripe");
+
+        settings.setSettings(null);
+        when(providerRegistry.require(PaymentProviderCodes.MOCK)).thenReturn(paymentProvider);
+        when(paymentProvider.code()).thenReturn(PaymentProviderCodes.MOCK);
+        service.createCheckout(caseId);
+
+        settings.setSettings(new java.util.HashMap<>(Map.of("paymentProvider", "  ")));
+        service.createCheckout(caseId);
+
+        organization.setSettings(null);
+        service.createCheckout(caseId);
+        verify(providerRegistry, org.mockito.Mockito.times(3)).require(PaymentProviderCodes.MOCK);
     }
 
     @Test
@@ -242,6 +312,44 @@ class PaymentServiceTest {
         assertThat(payment.getStatus()).isEqualTo(PaymentStatus.FAILED);
         assertThat(payment.getOrder().getStatus()).isEqualTo(OrderStatus.PENDING_PAYMENT);
         verify(outboxAppender, never()).appendPaymentCompleted(any(), any());
+    }
+
+    @Test
+    void handleWebhookLeavesCompletedPaymentUntouchedWhenProviderReportsFailure() {
+        Payment payment = pendingPayment();
+        payment.setStatus(PaymentStatus.COMPLETED);
+        when(providerRegistry.require("mock")).thenReturn(paymentProvider);
+        when(paymentProvider.code()).thenReturn(PaymentProviderCodes.MOCK);
+        when(paymentProvider.handleWebhook(any(WebhookPayload.class)))
+                .thenReturn(new ParsedWebhook("ref-1", "evt-late-fail", false));
+        when(webhookReceiptRepository.existsByProviderCodeAndIdempotencyKey(
+                        PaymentProviderCodes.MOCK, "evt-late-fail"))
+                .thenReturn(false);
+        when(paymentRepository.findByProviderCodeAndProviderReference(PaymentProviderCodes.MOCK, "ref-1"))
+                .thenReturn(Optional.of(payment));
+
+        service.handleWebhook("mock", Map.of());
+
+        assertThat(payment.getStatus()).isEqualTo(PaymentStatus.COMPLETED);
+    }
+
+    @Test
+    void handleWebhookDoesNotMoveCaseAlreadyInProgress() {
+        Payment payment = pendingPayment();
+        payment.getOrder().getCaseFile().setStatus(CaseStatus.IN_PROGRESS);
+        when(providerRegistry.require("mock")).thenReturn(paymentProvider);
+        when(paymentProvider.code()).thenReturn(PaymentProviderCodes.MOCK);
+        when(paymentProvider.handleWebhook(any(WebhookPayload.class)))
+                .thenReturn(new ParsedWebhook("ref-1", "evt-ok", true));
+        when(webhookReceiptRepository.existsByProviderCodeAndIdempotencyKey(PaymentProviderCodes.MOCK, "evt-ok"))
+                .thenReturn(false);
+        when(paymentRepository.findByProviderCodeAndProviderReference(PaymentProviderCodes.MOCK, "ref-1"))
+                .thenReturn(Optional.of(payment));
+
+        service.handleWebhook("mock", Map.of());
+
+        assertThat(payment.getStatus()).isEqualTo(PaymentStatus.COMPLETED);
+        assertThat(payment.getOrder().getCaseFile().getStatus()).isEqualTo(CaseStatus.IN_PROGRESS);
     }
 
     @Test

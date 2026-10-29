@@ -125,4 +125,63 @@ class S3ObjectStorageTest {
                 .extracting(ex -> ((BusinessException) ex).getMessageKey())
                 .isEqualTo("error.document.storage_unavailable");
     }
+
+    @Test
+    void ensureBucketCreatesBucketOnHeadStatus404() {
+        properties.setAutoCreateBucket(true);
+        storage = new S3ObjectStorage(s3Client, properties);
+        doThrow(S3Exception.builder().message("missing").statusCode(404).build())
+                .when(s3Client)
+                .headBucket(any(HeadBucketRequest.class));
+
+        storage.put("k", new byte[] {1}, "text/plain");
+
+        verify(s3Client).createBucket(any(CreateBucketRequest.class));
+    }
+
+    @Test
+    void ensureBucketCreatesBucketOnHeadStatus301() {
+        properties.setAutoCreateBucket(true);
+        storage = new S3ObjectStorage(s3Client, properties);
+        doThrow(S3Exception.builder().message("redirect").statusCode(301).build())
+                .when(s3Client)
+                .headBucket(any(HeadBucketRequest.class));
+
+        storage.exists("k");
+
+        verify(s3Client).createBucket(any(CreateBucketRequest.class));
+        verify(s3Client).headObject(any(HeadObjectRequest.class));
+    }
+
+    @Test
+    void existsReturnsFalseOnStatus404() {
+        doThrow(S3Exception.builder().message("missing").statusCode(404).build())
+                .when(s3Client)
+                .headObject(any(HeadObjectRequest.class));
+
+        assertThat(storage.exists("missing")).isFalse();
+    }
+
+    @Test
+    void existsMarksUnavailableOnOtherS3Errors() {
+        doThrow(S3Exception.builder().message("fail").statusCode(500).build())
+                .when(s3Client)
+                .headObject(any(HeadObjectRequest.class));
+
+        assertThatThrownBy(() -> storage.exists("k"))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.document.storage_unavailable");
+    }
+
+    @Test
+    void getMarksUnavailableOnGenericS3Error() {
+        when(s3Client.getObjectAsBytes(any(GetObjectRequest.class)))
+                .thenThrow(S3Exception.builder().message("fail").statusCode(500).build());
+
+        assertThatThrownBy(() -> storage.get("k"))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.document.storage_unavailable");
+    }
 }

@@ -18,6 +18,19 @@ public class CinetPayHmacTest {
         String signature = CinetPayHmac.sign(fields, FakeCinetPayGateway.SECRET);
         assertThat(CinetPayHmac.matches(fields, signature, FakeCinetPayGateway.SECRET)).isTrue();
         assertThat(CinetPayHmac.matches(fields, "deadbeef", FakeCinetPayGateway.SECRET)).isFalse();
+        assertThat(CinetPayHmac.matches(fields, "  " + signature.toUpperCase() + " ", FakeCinetPayGateway.SECRET))
+                .isTrue();
+    }
+
+    @Test
+    void rejectsMissingSignatureOrSecretAndTreatsAbsentFieldsAsEmpty() {
+        Map<String, Object> fields = notifyFields("pay-1");
+        assertThat(CinetPayHmac.matches(fields, null, FakeCinetPayGateway.SECRET)).isFalse();
+        assertThat(CinetPayHmac.matches(fields, "   ", FakeCinetPayGateway.SECRET)).isFalse();
+        assertThat(CinetPayHmac.matches(fields, "abc", null)).isFalse();
+        assertThat(CinetPayHmac.matches(fields, "abc", "  ")).isFalse();
+        assertThat(CinetPayHmac.canonicalPayload(null)).isEmpty();
+        assertThat(CinetPayHmac.sign(Map.of(), FakeCinetPayGateway.SECRET)).hasSize(64);
     }
 
     @Test

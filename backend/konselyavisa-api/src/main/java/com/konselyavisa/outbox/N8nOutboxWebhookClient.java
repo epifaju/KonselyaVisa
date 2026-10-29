@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.HexFormat;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class N8nOutboxWebhookClient implements OutboxWebhookClient {
     private final ObjectMapper objectMapper;
     private final RestClient restClient;
 
+    @Autowired
     public N8nOutboxWebhookClient(OutboxProperties properties, ObjectMapper objectMapper) {
         this(properties, objectMapper, defaultRestClient(properties));
     }

@@ -347,6 +347,103 @@ class ProcedureServiceTest {
     }
 
     @Test
+    void createVersionCopiesPublishedSourceWhenRequestOmitsRules() {
+        ProcedureDefinition definition = definition();
+        ProcedureVersion published = draftVersion();
+        published.setStatus(ProcedureVersionStatus.PUBLISHED);
+        published.setEligibilityRules(Map.of("copied", true));
+        published.setDocumentRequirements(List.of(Map.of("code", "ID")));
+        published.setPricing(Map.of("currency", "EUR"));
+        published.setEstimatedInstructionDays(12);
+        when(procedureDefinitionRepository.findDetailedById(procedureId)).thenReturn(Optional.of(definition));
+        when(procedureVersionRepository.findByProcedureDefinitionIdAndStatus(
+                        procedureId, ProcedureVersionStatus.PUBLISHED))
+                .thenReturn(Optional.of(published));
+        when(procedureVersionRepository.findTopByProcedureDefinitionIdOrderByVersionNumberDesc(procedureId))
+                .thenReturn(Optional.of(published));
+        when(procedureVersionRepository.save(any(ProcedureVersion.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(procedureVersionMapper.toResponse(any(ProcedureVersion.class)))
+                .thenReturn(org.mockito.Mockito.mock(ProcedureVersionResponse.class));
+
+        service.createVersion(procedureId, new CreateProcedureVersionRequest(null, null, null, null));
+
+        ArgumentCaptor<ProcedureVersion> versionCaptor = ArgumentCaptor.forClass(ProcedureVersion.class);
+        verify(procedureVersionRepository).save(versionCaptor.capture());
+        assertThat(versionCaptor.getValue().getEligibilityRules()).containsEntry("copied", true);
+        assertThat(versionCaptor.getValue().getDocumentRequirements()).hasSize(1);
+        assertThat(versionCaptor.getValue().getPricing()).containsEntry("currency", "EUR");
+        assertThat(versionCaptor.getValue().getEstimatedInstructionDays()).isEqualTo(12);
+    }
+
+    @Test
+    void updateMovesCountriesAndRejectsZeroDays() {
+        ProcedureDefinition definition = definition();
+        UUID originId = UUID.randomUUID();
+        UUID destinationId = UUID.randomUUID();
+        Country origin = country("SN");
+        Country destination = country("PT");
+        when(procedureDefinitionRepository.findDetailedById(procedureId)).thenReturn(Optional.of(definition));
+        when(countryService.getCountry(originId)).thenReturn(origin);
+        when(countryService.getCountry(destinationId)).thenReturn(destination);
+        when(procedureVersionRepository.findByProcedureDefinitionIdOrderByVersionNumberDesc(procedureId))
+                .thenReturn(List.of());
+        when(procedureMapper.toResponse(definition, null, List.of()))
+                .thenReturn(org.mockito.Mockito.mock(ProcedureResponse.class));
+
+        service.update(
+                procedureId,
+                new UpdateProcedureRequest(originId, destinationId, null, null, null, null));
+
+        assertThat(definition.getOriginCountry()).isSameAs(origin);
+        assertThat(definition.getDestinationCountry()).isSameAs(destination);
+
+        ProcedureVersion draft = draftVersion();
+        when(procedureVersionRepository.findByIdAndProcedureDefinitionId(versionId, procedureId))
+                .thenReturn(Optional.of(draft));
+        assertThatThrownBy(() -> service.updateVersion(
+                        procedureId, versionId, new UpdateProcedureVersionRequest(null, null, 0)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.catalog.estimated_days_invalid");
+    }
+
+    @Test
+    void publishRejectsBlankCodeAndNonMapLabels() {
+        ProcedureVersion blankCode = draftVersion();
+        blankCode.setDocumentRequirements(List.of(Map.of("code", "  ", "labelI18n", Map.of("fr", "Pièce"))));
+        when(procedureVersionRepository.findByIdAndProcedureDefinitionId(versionId, procedureId))
+                .thenReturn(Optional.of(blankCode));
+        assertThatThrownBy(() -> service.publish(procedureId, versionId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.catalog.requirement_code_required");
+
+        ProcedureVersion badLabels = draftVersion();
+        badLabels.setDocumentRequirements(List.of(Map.of("code", "ID", "labelI18n", "Passeport")));
+        when(procedureVersionRepository.findByIdAndProcedureDefinitionId(versionId, procedureId))
+                .thenReturn(Optional.of(badLabels));
+        assertThatThrownBy(() -> service.publish(procedureId, versionId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.catalog.i18n_required");
+
+        ProcedureVersion partialLabels = draftVersion();
+        Map<Object, Object> labels = new java.util.LinkedHashMap<>();
+        labels.put("fr", 1);
+        labels.put(1, "ignored");
+        Map<String, Object> requirement = new java.util.LinkedHashMap<>();
+        requirement.put("code", "ID");
+        requirement.put("labelI18n", labels);
+        partialLabels.setDocumentRequirements(List.of(requirement));
+        when(procedureVersionRepository.findByIdAndProcedureDefinitionId(versionId, procedureId))
+                .thenReturn(Optional.of(partialLabels));
+        assertThatThrownBy(() -> service.publish(procedureId, versionId))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.catalog.i18n_required");
+    }
+
+    @Test
     void archiveMarksVersionArchived() {
         ProcedureVersion version = draftVersion();
         version.setStatus(ProcedureVersionStatus.PUBLISHED);

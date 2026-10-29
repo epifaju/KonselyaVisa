@@ -119,6 +119,72 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void createSlotRaisesCapacityBelowOne() {
+        TenantContext.setOrganizationId(orgId);
+        Instant start = Instant.now().plusSeconds(3600);
+        when(slotRepository.saveAndFlush(any(AppointmentSlot.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        AppointmentSlotResponse mapped = org.mockito.Mockito.mock(AppointmentSlotResponse.class);
+        when(appointmentMapper.toSlotResponse(any(AppointmentSlot.class), eq(1))).thenReturn(mapped);
+
+        assertThat(service.createSlot(new CreateSlotRequest(start, start.plusSeconds(1800), 0, Map.of("fr", "Accueil"))))
+                .isSameAs(mapped);
+    }
+
+    @Test
+    void listSlotsUsesADefaultWindowWhenBoundsAreMissing() {
+        TenantContext.setOrganizationId(orgId);
+        when(slotRepository.findByStatusAndStartsAtGreaterThanEqualAndStartsAtLessThanOrderByStartsAtAsc(
+                        eq(AppointmentSlotStatus.OPEN), any(), any()))
+                .thenReturn(List.of());
+
+        assertThat(service.listSlots(null, null)).isEmpty();
+    }
+
+    @Test
+    void holdRejectsClosedCases() {
+        TenantContext.setOrganizationId(orgId);
+        CaseFile completed = openCase();
+        completed.setStatus(CaseStatus.COMPLETED);
+        when(caseService.requireAccessible(caseId)).thenReturn(completed);
+
+        assertThatThrownBy(() -> service.hold(caseId, new HoldAppointmentRequest(slotId)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.case.not_modifiable");
+
+        CaseFile cancelled = openCase();
+        cancelled.setStatus(CaseStatus.CANCELLED);
+        when(caseService.requireAccessible(caseId)).thenReturn(cancelled);
+        assertThatThrownBy(() -> service.hold(caseId, new HoldAppointmentRequest(slotId)))
+                .isInstanceOf(BusinessException.class)
+                .extracting(ex -> ((BusinessException) ex).getMessageKey())
+                .isEqualTo("error.case.not_modifiable");
+    }
+
+    @Test
+    void holdUsesTwoMinutesWhenTtlIsMissing() {
+        TenantContext.setOrganizationId(orgId);
+        redisProperties.setSlotHoldTtl(null);
+        when(caseService.requireAccessible(caseId)).thenReturn(openCase());
+        when(appointmentRepository.existsByCaseFile_IdAndStatus(caseId, AppointmentStatus.BOOKED))
+                .thenReturn(false);
+        when(slotRepository.findById(slotId)).thenReturn(Optional.of(openSlot()));
+        when(appointmentRepository.countBySlot_IdAndStatus(slotId, AppointmentStatus.BOOKED)).thenReturn(0L);
+        when(slotHoldStore.tryAcquire(eq(orgId), eq(slotId), eq(caseId), eq(2), eq(Duration.ofMinutes(2))))
+                .thenReturn(true);
+
+        assertThat(service.hold(caseId, new HoldAppointmentRequest(slotId)).expiresAt())
+                .isAfter(Instant.now().plus(Duration.ofMinutes(1)));
+
+        redisProperties.setSlotHoldTtl(Duration.ZERO);
+        service.hold(caseId, new HoldAppointmentRequest(slotId));
+        redisProperties.setSlotHoldTtl(Duration.ofMinutes(-1));
+        service.hold(caseId, new HoldAppointmentRequest(slotId));
+        verify(slotHoldStore, org.mockito.Mockito.times(3))
+                .tryAcquire(eq(orgId), eq(slotId), eq(caseId), eq(2), eq(Duration.ofMinutes(2)));
+    }
+
+    @Test
     void holdRejectsPastSlot() {
         TenantContext.setOrganizationId(orgId);
         CaseFile caseFile = openCase();

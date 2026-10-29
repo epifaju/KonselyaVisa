@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -39,6 +40,17 @@ jobs:
         run: |
           chmod +x mvnw
           ./mvnw --batch-mode --no-transfer-progress verify
+
+      - name: Upload test and coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          if-no-files-found: warn
+          path: |
+            backend/konselyavisa-api/target/surefire-reports
+            backend/konselyavisa-api/target/failsafe-reports
+            backend/konselyavisa-api/target/site/jacoco
 
   supply-chain:
     name: supply-chain
@@ -91,3 +103,97 @@ jobs:
           severity: CRITICAL
           ignore-unfixed: true
           exit-code: "1"
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Design token unit tests
+        working-directory: packages/design-tokens
+        run: |
+          npm install --ignore-scripts
+          npm test
+
+      - name: Citizen portal unit tests
+        working-directory: frontend/citizen-portal
+        run: |
+          npm install --ignore-scripts
+          npm test
+
+      - name: Admin portal unit tests
+        working-directory: frontend/admin-portal
+        run: |
+          npm install --ignore-scripts
+          npm test
+
+      - name: Install Playwright
+        working-directory: tests
+        run: |
+          npm install --ignore-scripts
+          npx playwright install --with-deps chromium
+
+      - name: Playwright UI tests
+        working-directory: tests
+        env:
+          CI: "true"
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          if-no-files-found: warn
+          path: |
+            playwright-report
+            test-results
+
+  e2e-live:
+    name: e2e-live
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Start the local stack
+        working-directory: infrastructure
+        run: docker compose up -d --wait postgres redis keycloak minio backend
+
+      - name: Install portals and Playwright
+        run: |
+          npm install --ignore-scripts --prefix frontend/citizen-portal
+          npm install --ignore-scripts --prefix frontend/admin-portal
+          npm install --ignore-scripts --prefix tests
+          npx --prefix tests playwright install --with-deps chromium
+
+      - name: Live Playwright smoke
+        working-directory: tests
+        env:
+          CI: "true"
+        run: npx playwright test -c playwright.live.config.ts
+
+      - name: Upload live Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-live-report
+          if-no-files-found: warn
+          path: |
+            playwright-live-report
+            test-results

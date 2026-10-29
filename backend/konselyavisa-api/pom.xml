@@ -26,6 +26,7 @@
         <aws-sdk.version>2.31.78</aws-sdk.version>
         <stripe.version>28.4.0</stripe.version>
         <cyclonedx.version>2.9.1</cyclonedx.version>
+        <jacoco.haltOnFailure>true</jacoco.haltOnFailure>
     </properties>
 
     <dependencies>
@@ -190,6 +191,16 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                        <exclude>**/*ITCase.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
                     <execution>
@@ -204,6 +215,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.13</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/konselyavisa/KonselyaVisaApplication.class</exclude>
+                        <exclude>**/*MapperImpl.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -217,6 +234,54 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>report-verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <haltOnFailure>${jacoco.haltOnFailure}</haltOnFailure>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <includes>
+                                        <include>com.konselyavisa.dossier.*</include>
+                                        <include>com.konselyavisa.document.*</include>
+                                        <include>com.konselyavisa.eligibility.*</include>
+                                        <include>com.konselyavisa.payment.*</include>
+                                        <include>com.konselyavisa.appointment.*</include>
+                                        <include>com.konselyavisa.catalog.*</include>
+                                        <include>com.konselyavisa.guest.*</include>
+                                        <include>com.konselyavisa.organization.*</include>
+                                        <include>com.konselyavisa.privacy.*</include>
+                                        <include>com.konselyavisa.identity.*</include>
+                                        <include>com.konselyavisa.tenancy.*</include>
+                                        <include>com.konselyavisa.outbox.*</include>
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.85</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
